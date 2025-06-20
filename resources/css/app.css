@@ -4,8 +4,109 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+:root {
+    --color-primary: #b91c1c;
+    /* red-700 */
+    --color-card: #fef2f2;
+    /* red-50 */
+    --color-text: #1e1e1e;
+    /* dark readable */
+    --color-accent: #ef4444;
+    /* red-500 */
+    --color-accent-2: #f87171;
+    /* red-400 */
+    --color-cta: #ffffff;
+    /* white */
+
+    --font-primary: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+
+@layer utilities {
+
+    /* Backgrounds */
+    .bg-primary {
+        background-color: var(--color-primary);
+    }
+
+    .bg-card {
+        background-color: var(--color-card);
+    }
+
+    .bg-accent {
+        background-color: var(--color-accent);
+    }
+
+    .bg-accent-2 {
+        background-color: var(--color-accent-2);
+    }
+
+    .bg-cta {
+        background-color: var(--color-cta);
+    }
+
+    /* Text colors */
+    .text-primary {
+        color: var(--color-primary);
+    }
+
+    .text-card {
+        color: var(--color-card);
+    }
+
+    .text-text {
+        color: var(--color-text);
+    }
+
+    .text-accent {
+        color: var(--color-accent);
+    }
+
+    .text-accent-2 {
+        color: var(--color-accent-2);
+    }
+
+    .text-cta {
+        color: var(--color-cta);
+    }
+
+    /* Font family */
+    .font-primary {
+        font-family: var(--font-primary);
+    }
+
+    /* Hover states */
+    .hover\:bg-primary:hover {
+        background-color: var(--color-primary);
+    }
+
+    .hover\:bg-accent:hover {
+        background-color: var(--color-accent);
+    }
+
+    .hover\:text-primary:hover {
+        color: var(--color-primary);
+    }
+
+    .hover\:text-accent:hover {
+        color: var(--color-accent);
+    }
+
+    /* Animations */
+    .animate-scale-fade-in {
+        animation: scale-fade-in 0.3s ease-out both;
+    }
+
+    .animate-fade-in {
+        animation: fade-in 0.3s ease-out both;
+    }
 }
