@@ -18,15 +18,22 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach ([['name' => 'ЦСКА', 'played' => 18, 'win' => 14, 'draw' => 3, 'loss' => 1, 'points' => 45], ['name' => 'Левски', 'played' => 18, 'win' => 13, 'draw' => 2, 'loss' => 3, 'points' => 41], ['name' => 'Берое', 'played' => 18, 'win' => 10, 'draw' => 5, 'loss' => 3, 'points' => 35]] as $i => $team)
+                    @foreach ($standings as $i => $standing)
                         <tr class="hover:bg-card transition">
                             <td class="px-4 py-3 font-semibold">{{ $i + 1 }}</td>
-                            <td class="px-4 py-3 font-bold text-primary">{{ $team['name'] }}</td>
-                            <td class="px-4 py-3">{{ $team['played'] }}</td>
-                            <td class="px-4 py-3">{{ $team['win'] }}</td>
-                            <td class="px-4 py-3">{{ $team['draw'] }}</td>
-                            <td class="px-4 py-3">{{ $team['loss'] }}</td>
-                            <td class="px-4 py-3 font-bold text-accent">{{ $team['points'] }}</td>
+                            <td class="px-4 py-3 font-bold text-primary flex items-center gap-2">
+                                @if ($standing->team?->logo)
+                                    <img src="{{ asset('storage/' . $standing->team->logo) }}"
+                                        alt="{{ $standing->team->name }}"
+                                        class="w-6 h-6 rounded-full object-cover border border-gray-300" />
+                                @endif
+                                {{ $standing->team?->name ?? '—' }}
+                            </td>
+                            <td class="px-4 py-3">{{ $standing->played }}</td>
+                            <td class="px-4 py-3">{{ $standing->wins }}</td>
+                            <td class="px-4 py-3">{{ $standing->draws }}</td>
+                            <td class="px-4 py-3">{{ $standing->losses }}</td>
+                            <td class="px-4 py-3 font-bold text-accent">{{ $standing->points }}</td>
                         </tr>
                     @endforeach
                 </tbody>

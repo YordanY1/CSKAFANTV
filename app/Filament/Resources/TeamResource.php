@@ -24,17 +24,34 @@ class TeamResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->required()->maxLength(255),
-                FileUpload::make('logo')
+                Forms\Components\TextInput::make('name')
+                    ->label('Име на клуба')
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\FileUpload::make('logo')
+                    ->label('Лого')
                     ->image()
                     ->disk('public')
                     ->directory('team-logos')
-                    ->label('Лого')
                     ->nullable(),
-                Forms\Components\TextInput::make('country')->nullable(),
-                Forms\Components\TextInput::make('founded_at')->numeric()->label('Основан през')->nullable(),
-                Forms\Components\TextInput::make('stadium')->nullable(),
-                Forms\Components\TextInput::make('manager')->nullable(),
+
+                Forms\Components\TextInput::make('country')
+                    ->label('Държава')
+                    ->nullable(),
+
+                Forms\Components\TextInput::make('founded_at')
+                    ->label('Основан през')
+                    ->numeric()
+                    ->nullable(),
+
+                Forms\Components\TextInput::make('stadium')
+                    ->label('Стадион')
+                    ->nullable(),
+
+                Forms\Components\TextInput::make('manager')
+                    ->label('Треньор')
+                    ->nullable(),
             ]);
     }
 
