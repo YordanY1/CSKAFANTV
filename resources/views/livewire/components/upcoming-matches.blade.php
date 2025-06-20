@@ -1,7 +1,7 @@
 <section class="px-6 py-12 bg-card text-text animate-fade-in">
     <div class="max-w-7xl mx-auto">
         <h2 class="text-3xl text-primary font-extrabold uppercase mb-8 text-center tracking-wide">
-            Последни Мачове
+            Предстоящи Мачове
         </h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -9,6 +9,7 @@
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden transition hover:scale-105 duration-200">
                     <div class="bg-primary text-cta px-4 py-2 text-sm font-semibold tracking-wider">
                         {{ $match->match_datetime->locale('bg')->translatedFormat('d F Y • H:i \ч.') }}
+
                     </div>
 
                     <div class="p-6">
@@ -25,9 +26,7 @@
                                     class="w-12 h-12 mx-auto">
                                 <p class="text-xs mt-1 font-semibold">{{ $match->homeTeam->name }}</p>
                             </div>
-                            <span class="text-2xl font-bold">
-                                {{ $match->home_score }} : {{ $match->away_score }}
-                            </span>
+                            <span class="text-2xl font-bold text-gray-400">– : –</span>
                             <div class="text-center">
                                 <img src="{{ $match->awayTeam->logo_url }}" alt="{{ $match->awayTeam->name }}"
                                     class="w-12 h-12 mx-auto">
@@ -41,7 +40,7 @@
                     </div>
                 </div>
             @empty
-                <p class="text-center col-span-3 text-gray-500">Няма приключени мачове.</p>
+                <p class="text-center col-span-3 text-gray-500">Няма предстоящи мачове.</p>
             @endforelse
         </div>
     </div>

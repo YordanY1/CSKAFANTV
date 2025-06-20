@@ -5,18 +5,20 @@ namespace App\Livewire\Components;
 use App\Models\FootballMatch;
 use Livewire\Component;
 
-class LatestMatches extends Component
+class UpcomingMatches extends Component
 {
     public function render()
     {
         $matches = FootballMatch::with(['homeTeam', 'awayTeam'])
-            ->where('is_finished', true)
-            ->orderByDesc('match_datetime')
+            ->where('is_finished', 0)
+            ->where('match_datetime', '>', now())
+            ->orderBy('match_datetime')
             ->take(6)
             ->get();
 
-        return view('livewire.components.latest-matches', [
+
+        return view('livewire.components.upcoming-matches', [
             'matches' => $matches,
-        ]);
+        ])->layout('layouts.app');
     }
 }

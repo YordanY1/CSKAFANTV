@@ -2,9 +2,6 @@
 
     {{-- HERO --}}
     <section class="relative bg-primary text-cta py-24 px-6 text-center overflow-hidden shadow-md">
-        <div
-            class="absolute inset-0 opacity-10 bg-[url('/images/football-texture.svg')] bg-cover bg-center pointer-events-none">
-        </div>
 
         <div class="relative z-10 max-w-4xl mx-auto animate-scale-fade-in">
             <h1 class="text-5xl md:text-6xl font-extrabold uppercase tracking-wide mb-6">
@@ -19,11 +16,12 @@
             </p>
 
             <div class="mt-8">
-                <a href="#matches"
+                <a href="{{ route('matches.upcoming') }}" livewire:navigate
                     class="inline-flex items-center px-6 py-3 bg-accent text-cta font-semibold rounded hover:bg-accent-2 transition">
                     <i class="fas fa-futbol mr-2"></i> Виж предстоящите мачове
                 </a>
             </div>
+
         </div>
     </section>
 

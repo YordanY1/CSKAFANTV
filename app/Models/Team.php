@@ -37,4 +37,11 @@ class Team extends Model
     {
         return $this->name . ($this->stadium ? ' | ' . $this->stadium : '');
     }
+
+    public function getLogoUrlAttribute(): string
+    {
+        return $this->logo
+            ? asset('storage/' . $this->logo)
+            : asset('images/default-team.png');
+    }
 }
