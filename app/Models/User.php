@@ -70,4 +70,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(SocialAccount::class);
     }
+
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar
+            ? asset('storage/avatars/' . $this->avatar)
+            : asset('images/logo/logo.jpg');
+    }
 }

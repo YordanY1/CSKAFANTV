@@ -16,7 +16,7 @@
             </p>
 
             <div class="mt-8">
-                <a href="{{ route('matches.upcoming') }}" livewire:navigate
+                <a href="{{ route('matches.upcoming') }}" wire:navigate
                     class="inline-flex items-center px-6 py-3 bg-accent text-cta font-semibold rounded hover:bg-accent-2 transition">
                     <i class="fas fa-futbol mr-2"></i> Виж предстоящите мачове
                 </a>
