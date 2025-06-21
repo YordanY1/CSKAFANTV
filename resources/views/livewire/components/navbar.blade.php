@@ -11,11 +11,10 @@
 
             {{-- Desktop Menu --}}
             <div class="hidden md:flex space-x-6 items-center">
-                <a href="/" class="hover:text-accent">Начало</a>
-                <a href="#matches" class="hover:text-accent">Мачове</a>
-                <a href="#standings" class="hover:text-accent">Класиране</a>
-                <a href="#players" class="hover:text-accent">Играчите</a>
-                <a href="#contact" class="hover:text-accent">Контакти</a>
+                <a href="/" wire:navigate class="block py-2 hover:text-accent">Начало</a>
+                <a href="{{ route('matches.upcoming') }}" wire:navigate class="hover:text-accent">Мачове</a>
+                <a href="{{ route('players') }}" wire:navigate class="hover:text-accent">Отбор</a>
+                <a href="#contact" class="block py-2 hover:text-accent">Контакти</a>
                 @guest
                     <button @click="openRegister = true"
                         class="text-sm font-medium text-white bg-accent hover:bg-primary px-4 py-2 rounded transition cursor-pointer">
@@ -43,10 +42,9 @@
 
     {{-- Mobile Menu --}}
     <div x-show="open" x-transition class="md:hidden bg-primary px-4 pb-4 flex flex-col items-center space-y-2">
-        <a href="/" class="block py-2 hover:text-accent">Начало</a>
-        <a href="#matches" class="block py-2 hover:text-accent">Мачове</a>
-        <a href="#standings" class="block py-2 hover:text-accent">Класиране</a>
-        <a href="#players" class="block py-2 hover:text-accent">Играчите</a>
+        <a href="/" wire:navigate class="block py-2 hover:text-accent">Начало</a>
+        <a href="{{ route('matches.upcoming') }}" wire:navigate class="hover:text-accent">Мачове</a>
+        <a href="{{ route('players') }}" wire:navigate class="hover:text-accent">Отбор</a>
         <a href="#contact" class="block py-2 hover:text-accent">Контакти</a>
         @guest
             <button @click="openRegister = true"

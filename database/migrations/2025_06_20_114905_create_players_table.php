@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('number')->nullable();
             $table->string('position')->nullable();
             $table->foreignId('team_id')->constrained()->cascadeOnDelete();
+            $table->string('image_path')->nullable();
             $table->timestamps();
         });
     }

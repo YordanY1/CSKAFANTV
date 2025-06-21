@@ -12,9 +12,12 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('player_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('match_id')->constrained('football_matches')->cascadeOnDelete();
             $table->text('review')->nullable();
             $table->unsignedTinyInteger('rating');
             $table->timestamps();
+
+            $table->unique(['user_id', 'player_id', 'match_id']);
         });
     }
 
