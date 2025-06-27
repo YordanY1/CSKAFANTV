@@ -30,6 +30,12 @@
                     Отбор
                 </a>
 
+                <a href="{{ route('videos.index') }}" wire:navigate
+                    class="block py-2 px-3 rounded-md transition duration-200
+          {{ request()->routeIs('videos.index') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+                    Видео Галерия
+                </a>
+
 
                 <a href="#contact" class="block py-2 hover:text-accent">Контакти</a>
                 @guest
@@ -82,6 +88,12 @@
             class="block py-2 px-3 rounded-md transition duration-200
           {{ request()->routeIs('players') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
             Отбор
+        </a>
+
+        <a href="{{ route('videos.index') }}" wire:navigate
+            class="block py-2 px-3 rounded-md transition duration-200
+          {{ request()->routeIs('videos.index') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+            Видео Галерия
         </a>
 
         <a href="#contact" class="block py-2 hover:text-accent">Контакти</a>

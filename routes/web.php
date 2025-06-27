@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Livewire\Pages\Players;
 use App\Livewire\Pages\Match\Show;
+use App\Livewire\Pages\Videos;
 
 
 Route::get('/', Home::class)->name('home');
@@ -19,6 +20,8 @@ Route::get('/match/{match}', Show::class)->name('match.show');
 
 Route::get('/auth/google/redirect', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google.redirect');
 Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
+
+Route::get('/videos', Videos::class)->name('videos.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', UserProfile::class)->name('profile');
