@@ -28,12 +28,13 @@
     {{-- LATEST MATCHES --}}
     <livewire:components.latest-matches />
 
+    {{-- FEATURED PLAYERS --}}
+    <livewire:components.featured-players />
 
     {{-- STANDINGS PREVIEW --}}
     <livewire:components.league-standings />
 
-
-    {{-- FEATURED PLAYERS --}}
-    <livewire:components.featured-players />
+    {{-- TOP DISCIPLINED PLAYERS --}}
+    <livewire:components.top-disciplined-players />
 
 </div>
