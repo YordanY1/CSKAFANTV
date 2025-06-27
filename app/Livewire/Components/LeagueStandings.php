@@ -10,8 +10,11 @@ class LeagueStandings extends Component
     public function render()
     {
         $standings = Standing::with('team')
-            ->orderByDesc('points')
-            ->get();
+            ->get()
+            ->sortBy(function ($standing) {
+                return $standing->manual_rank ?? 1000;
+            })
+            ->values();
 
         return view('livewire.components.league-standings', [
             'standings' => $standings,

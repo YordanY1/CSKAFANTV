@@ -1,10 +1,10 @@
 <?php
 
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\StandingResource\Pages;
 use App\Models\Standing;
-use App\Models\Team;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -27,36 +27,20 @@ class StandingResource extends Resource
                 ->relationship('team', 'name', fn($query) => $query->orderBy('name'))
                 ->required(),
 
-            Forms\Components\TextInput::make('played')
-                ->label('Изиграни мачове')
-                ->numeric()
-                ->default(0)
-                ->required(),
+            Forms\Components\TextInput::make('played')->label('Изиграни')->numeric()->default(0)->required(),
+            Forms\Components\TextInput::make('wins')->label('Победи')->numeric()->default(0)->required(),
+            Forms\Components\TextInput::make('draws')->label('Равенства')->numeric()->default(0)->required(),
+            Forms\Components\TextInput::make('losses')->label('Загуби')->numeric()->default(0)->required(),
+            Forms\Components\TextInput::make('points')->label('Точки')->numeric()->default(0)->required(),
 
-            Forms\Components\TextInput::make('wins')
-                ->label('Победи')
-                ->numeric()
-                ->default(0)
-                ->required(),
+            Forms\Components\TextInput::make('goals_scored')->label('Вкарани голове')->numeric()->default(0)->required(),
+            Forms\Components\TextInput::make('goals_conceded')->label('Допуснати голове')->numeric()->default(0)->required(),
 
-            Forms\Components\TextInput::make('draws')
-                ->label('Равенства')
+            Forms\Components\TextInput::make('manual_rank')
+                ->label('Ръчна позиция')
                 ->numeric()
-                ->default(0)
-                ->required(),
-
-            Forms\Components\TextInput::make('losses')
-                ->label('Загуби')
-                ->numeric()
-                ->default(0)
-                ->required(),
-
-            Forms\Components\TextInput::make('points')
-                ->label('Точки')
-                ->numeric()
-                ->default(0)
-                ->required(),
-
+                ->minValue(1)
+                ->helperText('Остави празно за автоматично класиране'),
         ]);
     }
 
@@ -64,13 +48,21 @@ class StandingResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('manual_rank')->label('#')->sortable()->badge()->color('info'),
                 Tables\Columns\TextColumn::make('team.name')->label('Отбор')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('played')->label('Изиграни'),
                 Tables\Columns\TextColumn::make('wins')->label('Победи'),
                 Tables\Columns\TextColumn::make('draws')->label('Равенства'),
                 Tables\Columns\TextColumn::make('losses')->label('Загуби'),
                 Tables\Columns\TextColumn::make('points')->label('Точки')->sortable(),
+                Tables\Columns\TextColumn::make('goals_scored')->label('Вкарани'),
+                Tables\Columns\TextColumn::make('goals_conceded')->label('Допуснати'),
+                Tables\Columns\TextColumn::make('goal_difference')
+                    ->label('ГР')
+                    ->description('Голова разлика')
+                    ->sortable(),
             ])
+            ->defaultSort('manual_rank')
             ->defaultSort('points', 'desc')
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -10,17 +10,21 @@
                     <tr>
                         <th class="px-4 py-3">#</th>
                         <th class="px-4 py-3">Отбор</th>
-                        <th class="px-4 py-3">Изиграни</th>
-                        <th class="px-4 py-3">Победи</th>
-                        <th class="px-4 py-3">Равни</th>
-                        <th class="px-4 py-3">Загуби</th>
-                        <th class="px-4 py-3">Точки</th>
+                        <th class="px-4 py-3">И</th>
+                        <th class="px-4 py-3">П</th>
+                        <th class="px-4 py-3">Р</th>
+                        <th class="px-4 py-3">З</th>
+                        <th class="px-4 py-3">В:Д</th>
+                        <th class="px-4 py-3">ГР</th>
+                        <th class="px-4 py-3">Т</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @foreach ($standings as $i => $standing)
                         <tr class="hover:bg-card transition">
-                            <td class="px-4 py-3 font-semibold">{{ $i + 1 }}</td>
+                            <td class="px-4 py-3 font-semibold">
+                                {{ $standing->manual_rank ?? $i + 1 }}
+                            </td>
                             <td class="px-4 py-3 font-bold text-primary flex items-center gap-2">
                                 @if ($standing->team?->logo)
                                     <img src="{{ asset('storage/' . $standing->team->logo) }}"
@@ -33,6 +37,12 @@
                             <td class="px-4 py-3">{{ $standing->wins }}</td>
                             <td class="px-4 py-3">{{ $standing->draws }}</td>
                             <td class="px-4 py-3">{{ $standing->losses }}</td>
+                            <td class="px-4 py-3">
+                                {{ $standing->goals_scored }}:{{ $standing->goals_conceded }}
+                            </td>
+                            <td class="px-4 py-3">
+                                {{ $standing->goals_scored - $standing->goals_conceded }}
+                            </td>
                             <td class="px-4 py-3 font-bold text-accent">{{ $standing->points }}</td>
                         </tr>
                     @endforeach

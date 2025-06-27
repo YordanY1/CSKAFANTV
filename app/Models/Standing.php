@@ -13,4 +13,9 @@ class Standing extends Model
     {
         return $this->belongsTo(Team::class);
     }
+
+    public function getGoalDifferenceAttribute(): int
+    {
+        return $this->goals_scored - $this->goals_conceded;
+    }
 }
