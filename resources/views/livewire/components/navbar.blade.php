@@ -17,6 +17,7 @@
                     Начало
                 </a>
 
+
                 <a href="{{ route('matches.upcoming') }}" wire:navigate
                     class="block py-2 px-3 rounded-md transition duration-200
           {{ request()->routeIs('matches.upcoming') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
@@ -45,6 +46,13 @@
                     </a>
                 @endauth
 
+                @if ($liveMatchYoutubeUrl)
+                    <a href="{{ $liveMatchYoutubeUrl }}" target="_blank" rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 bg-red-600 text-white font-semibold text-sm px-4 py-2 rounded-lg animate-pulse shadow hover:bg-red-700 transition">
+                        <i class="fab fa-youtube text-lg"></i>
+                        НА ЖИВО
+                    </a>
+                @endif
             </div>
 
             {{-- Mobile toggle --}}
@@ -91,6 +99,13 @@
             </a>
         @endauth
 
+        @if ($liveMatchYoutubeUrl)
+            <a href="{{ $liveMatchYoutubeUrl }}" target="_blank" rel="noopener noreferrer"
+                class="w-full flex items-center justify-center gap-2 bg-red-600 text-white font-semibold text-sm px-4 py-2 rounded-lg animate-pulse shadow hover:bg-red-700 transition">
+                <i class="fab fa-youtube text-lg"></i>
+                НА ЖИВО
+            </a>
+        @endif
     </div>
 
 

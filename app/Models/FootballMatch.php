@@ -40,4 +40,21 @@ class FootballMatch extends Model
         return $this->hasMany(MatchLineup::class);
     }
 
+    public function getMatchStatusDataAttribute(): array
+    {
+        $now = now();
+        $start = $this->match_datetime;
+
+        if (! $this->is_finished) {
+            return [
+                'label' => '⏳ Започва след ' . $now->diffForHumans($start, ['parts' => 1, 'short' => true]),
+                'class' => 'text-yellow-600',
+            ];
+        }
+
+        return [
+            'label' => '✅ Приключил ' . $start->diffForHumans($now, ['parts' => 1, 'short' => true]),
+            'class' => 'text-gray-500',
+        ];
+    }
 }

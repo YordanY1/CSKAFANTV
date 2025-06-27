@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('home_score')->nullable();
             $table->unsignedTinyInteger('away_score')->nullable();
             $table->text('youtube_embed_url')->nullable();
+            $table->string('youtube_url')->nullable();
             $table->boolean('is_finished')->default(false);
             $table->timestamps();
         });

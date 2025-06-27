@@ -58,6 +58,12 @@ class FootballMatchResource extends Resource
                 ->nullable()
                 ->columnSpanFull(),
 
+            Forms\Components\TextInput::make('youtube_url')
+                ->label('YouTube линк (на живо)')
+                ->url()
+                ->placeholder('https://www.youtube.com/watch?v=...')
+                ->nullable(),
+
 
             Forms\Components\TextInput::make('home_score')
                 ->label('Голове на домакин')

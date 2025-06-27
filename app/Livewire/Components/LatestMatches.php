@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Livewire\Components;
 
 use App\Models\FootballMatch;
@@ -9,6 +10,21 @@ use Livewire\Component;
 class LatestMatches extends Component
 {
     public string $filter = 'upcoming';
+
+    public function mount()
+    {
+        $now = Carbon::now();
+
+        $hasLive = FootballMatch::whereBetween('match_datetime', [
+                $now->copy()->subHours(2),
+                $now->copy()->addMinutes(30),
+            ])
+            ->exists();
+
+        if ($hasLive) {
+            $this->filter = 'live';
+        }
+    }
 
     public function setFilter(string $type)
     {
@@ -20,9 +36,19 @@ class LatestMatches extends Component
         $now = Carbon::now();
 
         $matches = FootballMatch::with(['homeTeam', 'awayTeam'])
-            ->when($this->filter === 'upcoming', fn($q) => $q->where('match_datetime', '>', $now))
-            ->when($this->filter === 'completed', fn($q) => $q->where('match_datetime', '<=', $now))
-            ->orderBy('match_datetime', $this->filter === 'upcoming' ? 'asc' : 'desc')
+            ->when($this->filter === 'live', fn($q) =>
+                $q->whereBetween('match_datetime', [
+                    $now->copy()->subHours(2),
+                    $now->copy()->addMinutes(30),
+                ])
+            )
+            ->when($this->filter === 'upcoming', fn($q) =>
+                $q->where('match_datetime', '>', $now)
+            )
+            ->when($this->filter === 'completed', fn($q) =>
+                $q->where('match_datetime', '<=', $now->copy()->subHours(2))
+            )
+            ->orderBy('match_datetime', $this->filter === 'completed' ? 'desc' : 'asc')
             ->get();
 
         return view('livewire.components.latest-matches', [
