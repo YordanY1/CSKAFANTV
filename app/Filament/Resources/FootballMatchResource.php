@@ -12,6 +12,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 
+
 class FootballMatchResource extends Resource
 {
     protected static ?string $model = FootballMatch::class;
@@ -49,6 +50,14 @@ class FootballMatchResource extends Resource
                 ->label('Стадион')
                 ->maxLength(255)
                 ->nullable(),
+
+            Forms\Components\Textarea::make('youtube_embed_url')
+                ->label('YouTube Embed код')
+                ->rows(3)
+                ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>')
+                ->nullable()
+                ->columnSpanFull(),
+
 
             Forms\Components\TextInput::make('home_score')
                 ->label('Голове на домакин')
