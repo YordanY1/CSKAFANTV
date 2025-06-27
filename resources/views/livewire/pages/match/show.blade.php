@@ -94,7 +94,7 @@
 
                     <div class="text-center mt-6">
                         <button type="submit"
-                            class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-accent transition">
+                            class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-accent transition cursor-pointer font-semibold">
                             Изпрати оценки
                         </button>
                     </div>
