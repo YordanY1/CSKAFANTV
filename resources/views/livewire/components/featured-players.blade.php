@@ -4,6 +4,26 @@
             Избрани играчи
         </h2>
 
+
+        @if ($playerOfMonth)
+            <div class="mb-12 text-center">
+                <h3 class="text-2xl font-bold text-accent mb-6">Играч на месеца</h3>
+                <div class="flex justify-center">
+                    <div
+                        class="bg-white rounded-xl shadow-lg overflow-hidden text-center transform hover:scale-105 transition duration-300">
+                        <img src="{{ $playerOfMonth['image'] }}" alt="{{ $playerOfMonth['name'] }}"
+                            class="w-24 h-24 mx-auto mt-6 rounded-full object-cover ring-4 ring-primary" />
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-primary">{{ $playerOfMonth['name'] }}</h3>
+                            <p class="text-sm text-gray-600">#{{ $playerOfMonth['number'] }} |
+                                {{ $playerOfMonth['position'] }}</p>
+                            <p class="text-sm text-green-600 font-semibold mt-1">Средна: {{ $playerOfMonth['avg'] }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
             @foreach ($players as $player)
                 <div
@@ -14,6 +34,7 @@
                     <div class="p-4">
                         <h3 class="text-lg font-bold text-primary">{{ $player['name'] }}</h3>
                         <p class="text-sm text-gray-600">#{{ $player['number'] }} | {{ $player['position'] }}</p>
+                        <p class="text-sm text-green-600 font-semibold mt-1">Средна: {{ $player['avg'] }}</p>
                     </div>
                 </div>
             @endforeach

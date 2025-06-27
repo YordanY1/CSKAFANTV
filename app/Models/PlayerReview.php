@@ -10,6 +10,7 @@ use App\Models\Player;
 class PlayerReview extends Model
 {
     protected $guarded = ['id'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -18,5 +19,10 @@ class PlayerReview extends Model
     public function player()
     {
         return $this->belongsTo(Player::class);
+    }
+
+    public function match(): BelongsTo
+    {
+        return $this->belongsTo(FootballMatch::class, 'match_id');
     }
 }

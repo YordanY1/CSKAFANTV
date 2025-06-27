@@ -11,9 +11,25 @@
 
             {{-- Desktop Menu --}}
             <div class="hidden md:flex space-x-6 items-center">
-                <a href="/" wire:navigate class="block py-2 hover:text-accent">Начало</a>
-                <a href="{{ route('matches.upcoming') }}" wire:navigate class="hover:text-accent">Мачове</a>
-                <a href="{{ route('players') }}" wire:navigate class="hover:text-accent">Отбор</a>
+                <a href="/" wire:navigate
+                    class="block py-2 px-3 rounded-md transition duration-200
+          {{ request()->routeIs('home') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+                    Начало
+                </a>
+
+                <a href="{{ route('matches.upcoming') }}" wire:navigate
+                    class="block py-2 px-3 rounded-md transition duration-200
+          {{ request()->routeIs('matches.upcoming') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+                    Мачове
+                </a>
+
+                <a href="{{ route('players') }}" wire:navigate
+                    class="block py-2 px-3 rounded-md transition duration-200
+          {{ request()->routeIs('players') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+                    Отбор
+                </a>
+
+
                 <a href="#contact" class="block py-2 hover:text-accent">Контакти</a>
                 @guest
                     <button @click="openRegister = true"
@@ -42,9 +58,24 @@
 
     {{-- Mobile Menu --}}
     <div x-show="open" x-transition class="md:hidden bg-primary px-4 pb-4 flex flex-col items-center space-y-2">
-        <a href="/" wire:navigate class="block py-2 hover:text-accent">Начало</a>
-        <a href="{{ route('matches.upcoming') }}" wire:navigate class="hover:text-accent">Мачове</a>
-        <a href="{{ route('players') }}" wire:navigate class="hover:text-accent">Отбор</a>
+        <a href="/" wire:navigate
+            class="block py-2 px-3 rounded-md transition duration-200
+          {{ request()->routeIs('home') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+            Начало
+        </a>
+
+        <a href="{{ route('matches.upcoming') }}" wire:navigate
+            class="block py-2 px-3 rounded-md transition duration-200
+          {{ request()->routeIs('matches.upcoming') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+            Мачове
+        </a>
+
+        <a href="{{ route('players') }}" wire:navigate
+            class="block py-2 px-3 rounded-md transition duration-200
+          {{ request()->routeIs('players') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+            Отбор
+        </a>
+
         <a href="#contact" class="block py-2 hover:text-accent">Контакти</a>
         @guest
             <button @click="openRegister = true"

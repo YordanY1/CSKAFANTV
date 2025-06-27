@@ -35,7 +35,8 @@
                             </div>
                         </div>
 
-                        <a href="#" class="block mt-4 text-center text-primary font-semibold hover:underline">
+                        <a href="{{ route('match.show', $match->id) }}" wire:navigate
+                            class="block mt-4 text-center text-primary font-semibold hover:underline">
                             Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
                         </a>
                     </div>

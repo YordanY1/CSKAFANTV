@@ -11,6 +11,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
+
 class FootballMatchResource extends Resource
 {
     protected static ?string $model = FootballMatch::class;
@@ -59,9 +60,49 @@ class FootballMatchResource extends Resource
                 ->numeric()
                 ->nullable(),
 
+            Forms\Components\Repeater::make('lineup')
+                ->label('Състав')
+                ->relationship('lineup')
+                ->schema([
+                    Forms\Components\Select::make('player_id')
+                        ->label('Играч')
+                        ->relationship('player', 'name')
+                        ->required()
+                        ->searchable()
+                        ->preload(),
+
+                    Forms\Components\Toggle::make('is_starter')
+                        ->label('Стартов състав')
+                        ->default(true)
+                        ->reactive(),
+
+                    Forms\Components\Select::make('replaces_player_id')
+                        ->label('Сменя играч')
+                        ->options(function (callable $get) {
+                            $lineup = $get('../../lineup') ?? [];
+
+                            return collect($lineup)
+                                ->filter(fn($item) => ($item['is_starter'] ?? false) && isset($item['player_id']))
+                                ->mapWithKeys(function ($item) {
+                                    $player = \App\Models\Player::find($item['player_id']);
+                                    return $player ? [$player->id => $player->name] : [];
+                                });
+                        })
+                        ->searchable()
+                        ->preload()
+                        ->nullable()
+                        ->visible(fn($get) => $get('is_starter') === false)
+                        ->helperText('Избери кого сменя'),
+                ])
+                ->defaultItems(11)
+                ->collapsible()
+                ->columnSpanFull(),
+
+
             Forms\Components\Toggle::make('is_finished')
                 ->label('Приключил ли е мачът?')
                 ->default(false),
+
         ]);
     }
 

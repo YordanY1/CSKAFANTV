@@ -4,8 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Models\Team;
 use App\Models\PlayerReview;
+use Illuminate\Support\Facades\Log;
+
+
 
 class FootballMatch extends Model
 {
@@ -30,4 +34,10 @@ class FootballMatch extends Model
     {
         return $this->hasMany(PlayerReview::class);
     }
+
+    public function lineup()
+    {
+        return $this->hasMany(MatchLineup::class);
+    }
+
 }
