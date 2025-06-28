@@ -4,9 +4,9 @@
         <div class="flex justify-between items-center py-2">
             {{-- Logo --}}
             <a href="/" class="flex items-center space-x-2 hover:text-accent">
-                <img src="{{ asset('images/logo/logo.jpg') }}" alt="ЦСКА Лого"
+                <img src="{{ asset('images/logo/logo.jpg') }}" alt="CSKA FAN TV"
                     class="h-14 w-auto object-contain rounded-full ring-2 ring-accent transition duration-200" />
-                <span class="text-xl font-extrabold uppercase tracking-wide">ЦСКА ФЕН ТВ</span>
+                <span class="text-xl font-extrabold uppercase tracking-wide">CSKA FAN TV</span>
             </a>
 
             {{-- Desktop Menu --}}
@@ -144,7 +144,7 @@
                     <img src="{{ asset('images/logo/logo.jpg') }}" alt="Лого"
                         class="w-20 h-20 mx-auto rounded-full mb-4">
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">Добре дошъл!</h2>
-                    <p class="text-sm text-gray-500 mb-6">Влез в ЦСКА ФЕН ТВ с един клик</p>
+                    <p class="text-sm text-gray-500 mb-6">Влез в CSKA FAN TV с един клик</p>
 
                     <a href="{{ route('auth.google.redirect') }}"
                         class="inline-flex items-center justify-center w-full gap-2 py-3 px-6 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition shadow-sm">

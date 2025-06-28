@@ -8,11 +8,13 @@
     @livewireStyles
 </head>
 
-<body class="bg-card text-text font-primary">
+<body class="bg-card text-text font-primary min-h-screen flex flex-col">
 
     <livewire:components.navbar />
 
-    {{ $slot }}
+    <main class="flex-grow">
+        {{ $slot }}
+    </main>
 
     <livewire:components.footer />
 

@@ -21,8 +21,4 @@
             </div>
         @endforeach
     </div>
-
-    <div class="mt-10">
-        {{ $players->links() }}
-    </div>
 </div>

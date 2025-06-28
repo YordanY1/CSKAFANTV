@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm text-center sm:text-left">
 
         <div>
-            <h3 class="text-lg font-bold uppercase tracking-wide mb-2">ЦСКА ФЕН ТВ</h3>
+            <h3 class="text-lg font-bold uppercase tracking-wide mb-2">CSKA FAN TV</h3>
             <p class="text-accent">
                 Онлайн домът на червените фенове. Мачове, прогнози, награди и още.
             </p>
@@ -24,11 +24,14 @@
                 <a href="#" class="hover:text-accent" title="Facebook"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" class="hover:text-accent" title="Instagram"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="hover:text-accent" title="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="https://discord.gg/ТВОЯ_КАНАЛ" class="hover:text-accent" title="Discord"><i
+                        class="fab fa-discord"></i></a>
             </div>
         </div>
+
     </div>
 
     <div class="mt-8 text-center text-xs text-card">
-        &copy; {{ date('Y') }} ЦСКА ФЕН ТВ. Всички права запазени.
+        &copy; {{ date('Y') }} CSKA FAN TV. Всички права запазени.
     </div>
 </footer>
