@@ -7,7 +7,6 @@ window.Konva = Konva;
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 const dt = DateTime.now().setZone("Europe/Sofia");
-console.log(dt.toFormat("dd LLL yyyy, HH:mm"));
 
 window.matchCountdown = function (matchTime, isFinished = false, youtube = "") {
     return {
@@ -58,3 +57,5 @@ window.matchCountdown = function (matchTime, isFinished = false, youtube = "") {
         },
     };
 };
+
+

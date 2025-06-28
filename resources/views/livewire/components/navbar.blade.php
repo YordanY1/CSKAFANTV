@@ -37,6 +37,13 @@
                 </a>
 
 
+                <a href="{{ route('tactics') }}" wire:navigate
+                    class="block py-2 px-3 rounded-md transition duration-200
+          {{ request()->routeIs('tactics') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+                    Дъска за тактики
+                </a>
+
+
                 <a href="#contact" class="block py-2 hover:text-accent">Контакти</a>
                 @guest
                     <button @click="openRegister = true"
