@@ -44,7 +44,11 @@
                 </a>
 
 
-                <a href="#contact" class="block py-2 hover:text-accent">Контакти</a>
+                <a href="{{ route('contact') }}" wire:navigate
+                    class="block py-2 px-3 rounded-md transition duration-200
+          {{ request()->routeIs('contact') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+                    Контакти
+                </a>
                 @guest
                     <button @click="openRegister = true"
                         class="text-sm font-medium text-white bg-accent hover:bg-primary px-4 py-2 rounded transition cursor-pointer">
@@ -103,7 +107,11 @@
             Видео Галерия
         </a>
 
-        <a href="#contact" class="block py-2 hover:text-accent">Контакти</a>
+        <a href="{{ route('contact') }}" wire:navigate
+            class="block py-2 px-3 rounded-md transition duration-200
+          {{ request()->routeIs('contact') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+            Контакти
+        </a>
         @guest
             <button @click="openRegister = true"
                 class="text-sm font-medium text-white bg-accent hover:bg-primary px-4 py-2 rounded transition cursor-pointer">

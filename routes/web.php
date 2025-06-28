@@ -11,6 +11,8 @@ use App\Livewire\Pages\Players;
 use App\Livewire\Pages\Match\Show;
 use App\Livewire\Pages\Videos;
 use App\Livewire\Pages\Tactics;
+use App\Livewire\Pages\Contact;
+
 
 
 
@@ -26,6 +28,9 @@ Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCa
 Route::get('/videos', Videos::class)->name('videos.index');
 
 Route::get('/tactics', Tactics::class)->name('tactics');
+
+Route::get('/contact', Contact::class)->name('contact');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', UserProfile::class)->name('profile');
