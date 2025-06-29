@@ -82,7 +82,7 @@ class FootballMatchResource extends Resource
                     Forms\Components\Select::make('player_id')
                         ->label('Играч')
                         ->relationship('player', 'name')
-                        ->required()
+                        // ->required()
                         ->searchable()
                         ->preload(),
 

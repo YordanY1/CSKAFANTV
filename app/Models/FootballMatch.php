@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Models\Team;
 use App\Models\PlayerReview;
-use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Str;
 
 
 class FootballMatch extends Model
@@ -56,5 +55,41 @@ class FootballMatch extends Model
             'label' => '✅ Приключил ' . $start->diffForHumans($now, ['parts' => 1, 'short' => true]),
             'class' => 'text-gray-500',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function ($match) {
+            $match->generateSlug();
+        });
+
+        static::updating(function ($match) {
+
+            if ($match->isDirty(['home_team_id', 'away_team_id', 'match_datetime'])) {
+                $match->generateSlug();
+            }
+        });
+    }
+
+    public function generateSlug(): void
+    {
+        $home = optional($this->homeTeam)->name ?? 'home';
+        $away = optional($this->awayTeam)->name ?? 'away';
+        $date = optional($this->match_datetime)?->format('Y-m-d') ?? now()->format('Y-m-d');
+
+        $this->slug = Str::slug("{$home}-vs-{$away}-{$date}");
+
+        $originalSlug = $this->slug;
+        $counter = 1;
+
+        while (static::where('slug', $this->slug)->where('id', '!=', $this->id)->exists()) {
+            $this->slug = "{$originalSlug}-{$counter}";
+            $counter++;
+        }
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
     }
 }

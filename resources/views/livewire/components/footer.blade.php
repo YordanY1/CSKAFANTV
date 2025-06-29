@@ -13,7 +13,7 @@
             <ul class="space-y-1">
                 <ul class="space-y-1">
                     <li><a href="{{ route('home') }}" wire:navigate class="hover:text-accent">Начало</a></li>
-                    <li><a href="{{ route('matches.upcoming') }}" wire:navigate class="hover:text-accent">Мачове</a></li>
+                    <li><a href="{{ route('matches') }}" wire:navigate class="hover:text-accent">Мачове</a></li>
                     <li><a href="{{ route('contact') }}" wire:navigate class="hover:text-accent">Контакти</a></li>
                     <li><a href="{{ route('videos') }}" wire:navigate class="hover:text-accent">Видео галерия</a></li>
                     <li><a href="{{ route('privacy-policy') }}" wire:navigate class="hover:text-accent">Политика за

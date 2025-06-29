@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('match_lineups', function (Blueprint $table) {
             $table->id();
             $table->foreignId('football_match_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('player_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('player_id')->nullable()->constrained()->nullOnDelete();
             $table->boolean('is_starter')->default(true);
             $table->foreignId('replaces_player_id')->nullable()->constrained('players')->nullOnDelete();
             $table->unsignedTinyInteger('minute_entered')->nullable();

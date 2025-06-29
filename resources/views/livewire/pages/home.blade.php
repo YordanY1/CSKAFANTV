@@ -16,7 +16,7 @@
             </p>
 
             <div class="mt-8">
-                <a href="{{ route('matches.upcoming') }}" wire:navigate
+                <a href="{{ route('matches') }}" wire:navigate
                     class="inline-flex items-center px-6 py-3 bg-accent text-cta font-semibold rounded hover:bg-accent-2 transition">
                     <i class="fas fa-futbol mr-2"></i> Виж предстоящите мачове
                 </a>
@@ -46,7 +46,7 @@
             </p>
 
             <div class="mt-8">
-                <a href="{{ route('matches.upcoming') }}" wire:navigate
+                <a href="{{ route('matches') }}" wire:navigate
                     class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent-2 transition shadow-lg hover:scale-105 duration-300">
                     <i class="fas fa-futbol"></i> Виж предстоящите мачове
                 </a>

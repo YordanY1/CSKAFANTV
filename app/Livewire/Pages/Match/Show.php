@@ -24,7 +24,8 @@ class Show extends Component
 
         $home = $this->match->homeTeam->name;
         $away = $this->match->awayTeam->name;
-        $date = $this->match->match_date->format('d.m.Y');
+        $date = $this->match->match_date?->format('d.m.Y') ?? '';
+
 
         $this->layoutData = [
             'title' => "$home vs $away – $date | CSKA FAN TV",

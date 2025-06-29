@@ -74,7 +74,7 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('match.show', $match->id) }}" wire:navigate
+                        <a href="{{ route('match.show', $match) }}" wire:navigate
                             class="block mt-4 text-center text-primary font-semibold hover:underline">
                             Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
                         </a>

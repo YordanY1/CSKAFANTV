@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('football_matches', function (Blueprint $table) {
             $table->id();
+            $table->string('slug')->unique();
             $table->foreignId('home_team_id')->constrained('teams')->cascadeOnDelete();
             $table->foreignId('away_team_id')->constrained('teams')->cascadeOnDelete();
             $table->dateTime('match_datetime');

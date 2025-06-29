@@ -18,9 +18,10 @@ use App\Livewire\Pages\CookiePolicy;
 
 
 Route::get('/', Home::class)->name('home');
-Route::get('/matches/upcoming', UpcomingMatches::class)->name('matches.upcoming');
+Route::get('/matches', UpcomingMatches::class)->name('matches');
 Route::get('/players', Players::class)->name('players');
-Route::get('/match/{match}', Show::class)->name('match.show');
+Route::get('/match/{match:slug}', Show::class)->name('match.show');
+
 
 
 Route::get('/auth/google/redirect', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google.redirect');

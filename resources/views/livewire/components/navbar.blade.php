@@ -18,9 +18,9 @@
                 </a>
 
 
-                <a href="{{ route('matches.upcoming') }}" wire:navigate
+                <a href="{{ route('matches') }}" wire:navigate
                     class="block py-2 px-3 rounded-md transition duration-200
-          {{ request()->routeIs('matches.upcoming') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+          {{ request()->routeIs('matches') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
                     Мачове
                 </a>
 
@@ -89,9 +89,9 @@
             Начало
         </a>
 
-        <a href="{{ route('matches.upcoming') }}" wire:navigate
+        <a href="{{ route('matches') }}" wire:navigate
             class="block py-2 px-3 rounded-md transition duration-200
-          {{ request()->routeIs('matches.upcoming') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+          {{ request()->routeIs('matches') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
             Мачове
         </a>
 
