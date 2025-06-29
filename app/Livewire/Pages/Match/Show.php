@@ -11,6 +11,8 @@ class Show extends Component
     public FootballMatch $match;
     public array $ratings = [];
 
+    public array $layoutData = [];
+
     public function mount(FootballMatch $match)
     {
         $this->match = $match->load([
@@ -19,6 +21,22 @@ class Show extends Component
             'lineup.player',
             'lineup.replacesPlayer',
         ]);
+
+        $home = $this->match->homeTeam->name;
+        $away = $this->match->awayTeam->name;
+        $date = $this->match->match_date->format('d.m.Y');
+
+        $this->layoutData = [
+            'title' => "$home vs $away – $date | CSKA FAN TV",
+            'description' => "Преглед на мача между $home и $away, проведен на $date. Виж съставите, оцени играчите и сподели мнение.",
+            'robots' => 'index, follow',
+            'canonical' => url()->current(),
+            'og_title' => "$home срещу $away – $date | CSKA FAN TV",
+            'og_description' => "Фенски анализ на двубоя $home срещу $away. Оцени футболистите и виж какво мислят другите фенове на ЦСКА.",
+            'og_image' => asset('images/og-cska.jpg'),
+            'og_url' => url()->current(),
+            'og_type' => 'article',
+        ];
     }
 
     public function submitPlayerReviews(): void
@@ -43,7 +61,7 @@ class Show extends Component
 
     public function render()
     {
-        return view('livewire.pages.match.show')->layout('layouts.app')
-            ->title("Match: " . $this->match->homeTeam->name . " vs " . $this->match->awayTeam->name);
+        return view('livewire.pages.match.show')
+            ->layout('layouts.app', $this->layoutData);
     }
 }

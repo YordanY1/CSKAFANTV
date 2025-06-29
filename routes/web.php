@@ -12,7 +12,8 @@ use App\Livewire\Pages\Match\Show;
 use App\Livewire\Pages\Videos;
 use App\Livewire\Pages\Tactics;
 use App\Livewire\Pages\Contact;
-
+use App\Livewire\Pages\PrivacyPolicy;
+use App\Livewire\Pages\CookiePolicy;
 
 
 
@@ -25,12 +26,14 @@ Route::get('/match/{match}', Show::class)->name('match.show');
 Route::get('/auth/google/redirect', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google.redirect');
 Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
 
-Route::get('/videos', Videos::class)->name('videos.index');
+Route::get('/videos', Videos::class)->name('videos');
 
 Route::get('/tactics', Tactics::class)->name('tactics');
 
 Route::get('/contact', Contact::class)->name('contact');
 
+Route::get('/privacy-policy', PrivacyPolicy::class)->name('privacy-policy');
+Route::get('/cookie-policy', CookiePolicy::class)->name('cookie-policy');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', UserProfile::class)->name('profile');

@@ -30,10 +30,10 @@
                     Отбор
                 </a>
 
-                <a href="{{ route('videos.index') }}" wire:navigate
+                <a href="{{ route('videos') }}" wire:navigate
                     class="block py-2 px-3 rounded-md transition duration-200
-          {{ request()->routeIs('videos.index') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
-                    Видео Галерия
+          {{ request()->routeIs('videos') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+                    Видео галерия
                 </a>
 
 
@@ -101,10 +101,10 @@
             Отбор
         </a>
 
-        <a href="{{ route('videos.index') }}" wire:navigate
+        <a href="{{ route('videos') }}" wire:navigate
             class="block py-2 px-3 rounded-md transition duration-200
-          {{ request()->routeIs('videos.index') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
-            Видео Галерия
+          {{ request()->routeIs('videos') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+            Видео галерия
         </a>
 
         <a href="{{ route('contact') }}" wire:navigate

@@ -11,10 +11,17 @@
         <div>
             <h4 class="font-semibold uppercase mb-2">Навигация</h4>
             <ul class="space-y-1">
-                <li><a href="/" class="hover:text-accent">Начало</a></li>
-                <li><a href="#matches" class="hover:text-accent">Мачове</a></li>
-                <li><a href="#standings" class="hover:text-accent">Класиране</a></li>
-                <li><a href="#contact" class="hover:text-accent">Контакти</a></li>
+                <ul class="space-y-1">
+                    <li><a href="{{ route('home') }}" wire:navigate class="hover:text-accent">Начало</a></li>
+                    <li><a href="{{ route('matches.upcoming') }}" wire:navigate class="hover:text-accent">Мачове</a></li>
+                    <li><a href="{{ route('contact') }}" wire:navigate class="hover:text-accent">Контакти</a></li>
+                    <li><a href="{{ route('videos') }}" wire:navigate class="hover:text-accent">Видео галерия</a></li>
+                    <li><a href="{{ route('privacy-policy') }}" wire:navigate class="hover:text-accent">Политика за
+                            поверителност</a></li>
+                    <li><a href="{{ route('cookie-policy') }}" wire:navigate class="hover:text-accent">Политика за
+                            бисквитки</a></li>
+                </ul>
+
             </ul>
         </div>
 
