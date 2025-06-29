@@ -9,9 +9,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-
-
+use App\Models\Prediction;
+use App\Models\PredictionResult;
 
 class FootballMatchResource extends Resource
 {
@@ -116,8 +115,41 @@ class FootballMatchResource extends Resource
 
             Forms\Components\Toggle::make('is_finished')
                 ->label('Приключил ли е мачът?')
-                ->default(false),
+                ->default(false)
+                ->afterStateUpdated(function ($state, $component, $set, $record) {
+                    if ($state && $record->home_score !== null && $record->away_score !== null) {
+                        $predictions = Prediction::where('football_match_id', $record->id)->get();
 
+                        foreach ($predictions as $prediction) {
+                            $points = 0;
+
+                            $exact = $prediction->home_score_prediction === $record->home_score &&
+                                $prediction->away_score_prediction === $record->away_score;
+
+                            if ($exact) {
+                                $points = 4;
+                            } else {
+                                $matchSign = match (true) {
+                                    $record->home_score > $record->away_score => '1',
+                                    $record->home_score < $record->away_score => '2',
+                                    default => 'X',
+                                };
+
+                                if ($prediction->result_sign_prediction === $matchSign) {
+                                    $points = 1;
+                                }
+                            }
+
+                            PredictionResult::updateOrCreate(
+                                ['prediction_id' => $prediction->id],
+                                [
+                                    'is_correct' => $points > 0,
+                                    'points_awarded' => $points,
+                                ]
+                            );
+                        }
+                    }
+                }),
         ]);
     }
 

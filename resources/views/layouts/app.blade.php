@@ -89,6 +89,8 @@
         {{ $slot }}
     </main>
 
+    <livewire:components.prediction-modal />
+
     <livewire:components.footer />
     <livewire:components.cookie-consent-banner />
     @livewireScripts

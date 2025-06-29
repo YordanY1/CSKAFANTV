@@ -69,6 +69,12 @@ class FootballMatch extends Model
                 $match->generateSlug();
             }
         });
+
+        static::saved(function (FootballMatch $match) {
+            if ($match->is_finished && $match->home_score !== null && $match->away_score !== null) {
+                \Artisan::call('predictions:calculate-points');
+            }
+        });
     }
 
     public function generateSlug(): void

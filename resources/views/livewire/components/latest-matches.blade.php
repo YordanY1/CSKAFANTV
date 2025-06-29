@@ -74,10 +74,29 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('match.show', $match) }}" wire:navigate
-                            class="block mt-4 text-center text-primary font-semibold hover:underline">
-                            Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
-                        </a>
+                        <div class="flex justify-center items-center gap-4 mt-4">
+                            <a href="{{ route('match.show', $match) }}" wire:navigate
+                                class="text-primary font-semibold hover:underline">
+                                Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
+                            </a>
+
+                            @auth
+                                @php
+                                    $now = now();
+                                    $hasPrediction = \App\Models\Prediction::where('user_id', auth()->id())
+                                        ->where('football_match_id', $match->id)
+                                        ->exists();
+                                @endphp
+
+                                @if (!$match->is_finished && !$hasPrediction && $match->match_datetime->isFuture())
+                                    <button x-data
+                                        @click="$dispatch('open-prediction-modal', { matchId: {{ $match->id }} })"
+                                        class="bg-primary text-white px-3 py-1.5 rounded text-sm cursor-pointer">
+                                        Прогнозирай
+                                    </button>
+                                @endif
+                            @endauth
+                        </div>
                     </div>
                 </div>
             @empty
