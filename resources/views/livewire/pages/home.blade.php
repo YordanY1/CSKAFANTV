@@ -4,7 +4,7 @@
     <section class="relative bg-primary text-cta py-24 px-6 text-center overflow-hidden shadow-md">
 
         <div class="relative z-10 max-w-4xl mx-auto animate-scale-fade-in">
-            <h1 class="text-5xl md:text-6xl font-extrabold uppercase tracking-wide mb-6">
+            <h1 class="text-4xl md:text-6xl font-extrabold uppercase tracking-wide mb-6">
                 Добре дошли в<br>
                 <span class="text-cta bg-accent px-4 py-1 rounded inline-block mt-2 shadow-lg">
                     CSKA FAN TV

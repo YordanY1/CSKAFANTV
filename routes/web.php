@@ -12,8 +12,10 @@ use App\Livewire\Pages\Match\Show;
 use App\Livewire\Pages\Videos;
 use App\Livewire\Pages\Tactics;
 use App\Livewire\Pages\Contact;
+use App\Livewire\Pages\CardsPage;
 use App\Livewire\Pages\PrivacyPolicy;
 use App\Livewire\Pages\CookiePolicy;
+
 
 
 
@@ -32,6 +34,8 @@ Route::get('/videos', Videos::class)->name('videos');
 Route::get('/tactics', Tactics::class)->name('tactics');
 
 Route::get('/contact', Contact::class)->name('contact');
+
+Route::get('/cards', CardsPage::class)->name('cards');
 
 Route::get('/privacy-policy', PrivacyPolicy::class)->name('privacy-policy');
 Route::get('/cookie-policy', CookiePolicy::class)->name('cookie-policy');

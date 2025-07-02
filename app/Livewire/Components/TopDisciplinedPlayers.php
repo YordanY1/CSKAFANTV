@@ -11,14 +11,9 @@ class TopDisciplinedPlayers extends Component
     {
         $mostCards = Card::with('player')
             ->orderByRaw('(yellow_cards + red_cards + second_yellow_reds) DESC')
-            ->take(5)
+            ->take(4)
             ->get();
 
-        $leastCards = Card::with('player')
-            ->orderByRaw('(yellow_cards + red_cards + second_yellow_reds) ASC')
-            ->take(5)
-            ->get();
-
-        return view('livewire.components.top-disciplined-players', compact('mostCards', 'leastCards'));
+        return view('livewire.components.top-disciplined-players', compact('mostCards'));
     }
 }
