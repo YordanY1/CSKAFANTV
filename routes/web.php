@@ -15,6 +15,8 @@ use App\Livewire\Pages\Contact;
 use App\Livewire\Pages\CardsPage;
 use App\Livewire\Pages\PrivacyPolicy;
 use App\Livewire\Pages\CookiePolicy;
+use App\Livewire\Pages\FullStandingsPage;
+
 
 
 
@@ -39,6 +41,9 @@ Route::get('/cards', CardsPage::class)->name('cards');
 
 Route::get('/privacy-policy', PrivacyPolicy::class)->name('privacy-policy');
 Route::get('/cookie-policy', CookiePolicy::class)->name('cookie-policy');
+
+Route::get('/standings', FullStandingsPage::class)->name('standings');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', UserProfile::class)->name('profile');

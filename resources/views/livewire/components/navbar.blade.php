@@ -50,6 +50,8 @@
                             class="block px-4 py-2 hover:bg-accent hover:text-white transition">Програма</a>
                         <a href="{{ route('tactics') }}" wire:navigate
                             class="block px-4 py-2 hover:bg-accent hover:text-white transition">Дъска</a>
+                        <a href="{{ route('standings') }}" wire:navigate
+                            class="block px-4 py-2 hover:bg-accent hover:text-white transition">Класиране</a>
                     </div>
                 </div>
 
@@ -139,7 +141,7 @@
             Начало
         </a>
 
-        <!-- Отбор Dropdown Mobile -->
+        <!--  Dropdown Mobile -->
         <div x-data="{ openTeam: false }" class="w-full">
             <button @click="openTeam = !openTeam"
                 class="w-full py-2 px-3 rounded-md hover:text-accent transition duration-200 flex justify-center items-center gap-2">
@@ -157,7 +159,7 @@
             </div>
         </div>
 
-        <!-- Мачове Dropdown Mobile -->
+        <!-- Dropdown Mobile -->
         <div x-data="{ openMatches: false }" class="w-full">
             <button @click="openMatches = !openMatches"
                 class="w-full py-2 px-3 rounded-md hover:text-accent transition duration-200 flex justify-center items-center gap-2">
@@ -172,10 +174,12 @@
                     class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Програма</a>
                 <a href="{{ route('tactics') }}" wire:navigate
                     class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Дъска</a>
+                <a href="{{ route('standings') }}" wire:navigate
+                    class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Класиране</a>
             </div>
         </div>
 
-        <!-- Видео Dropdown Mobile -->
+        <!-- Dropdown Mobile -->
         <div x-data="{ openVideo: false }" class="w-full">
             <button @click="openVideo = !openVideo"
                 class="w-full py-2 px-3 rounded-md hover:text-accent transition duration-200 flex justify-center items-center gap-2">

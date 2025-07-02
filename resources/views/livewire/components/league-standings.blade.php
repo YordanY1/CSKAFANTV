@@ -4,6 +4,13 @@
             Класиране
         </h2>
 
+        <div class="text-center mt-6 mb-5">
+            <a href="{{ route('standings') }}" wire:navigate
+                class="inline-block bg-accent text-white font-semibold px-6 py-2 rounded-lg shadow hover:bg-primary transition duration-200">
+                📊 Пълно класиране
+            </a>
+        </div>
+
         <div class="overflow-x-auto bg-white rounded-xl shadow-lg">
             <table class="min-w-full text-sm text-left">
                 <thead class="bg-accent text-cta uppercase tracking-wider">
@@ -14,7 +21,6 @@
                         <th class="px-4 py-3">П</th>
                         <th class="px-4 py-3">Р</th>
                         <th class="px-4 py-3">З</th>
-                        <th class="px-4 py-3">В:Д</th>
                         <th class="px-4 py-3">ГР</th>
                         <th class="px-4 py-3">Т</th>
                     </tr>
@@ -39,9 +45,6 @@
                             <td class="px-4 py-3">{{ $standing->losses }}</td>
                             <td class="px-4 py-3">
                                 {{ $standing->goals_scored }}:{{ $standing->goals_conceded }}
-                            </td>
-                            <td class="px-4 py-3">
-                                {{ $standing->goals_scored - $standing->goals_conceded }}
                             </td>
                             <td class="px-4 py-3 font-bold text-accent">{{ $standing->points }}</td>
                         </tr>
