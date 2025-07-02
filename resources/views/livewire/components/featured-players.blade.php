@@ -1,9 +1,17 @@
 <section class="px-6 py-12 bg-card text-text animate-fade-in">
     <div class="max-w-6xl mx-auto">
+
+
         <h2 class="text-3xl text-primary font-extrabold uppercase mb-8 text-center tracking-wide">
             Избрани играчи
         </h2>
 
+        <div class="text-center mb-6">
+            <a href="{{ route('player.ratings') }}" wire:navigate
+                class="inline-block bg-accent text-white font-semibold px-6 py-2 rounded-lg shadow hover:bg-primary transition duration-200">
+                🏆 Пълна класация
+            </a>
+        </div>
 
         @if ($playerOfMonth)
             <div class="mb-12 text-center">
@@ -33,8 +41,7 @@
 
                     <div class="p-4">
                         <h3 class="text-lg font-bold text-primary">{{ $player['name'] }}</h3>
-                        <p class="text-sm text-gray-600">#{{ $player['number'] }} | {{ $player['position'] }}</p>
-                        <p class="text-sm text-green-600 font-semibold mt-1">Средна: {{ $player['avg'] }}</p>
+                        <p class="text-sm text-accent font-semibold mt-1">Средна: {{ $player['avg'] }}</p>
                     </div>
                 </div>
             @endforeach

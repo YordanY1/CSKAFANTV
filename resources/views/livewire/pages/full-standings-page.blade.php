@@ -1,5 +1,5 @@
 <section class="px-6 py-12 max-w-7xl mx-auto bg-card text-text">
-    <h2 class="text-3xl text-primary font-extrabold uppercase mb-8 text-center">Пълно класиране</h2>
+    <h2 class="text-3xl text-primary font-extrabold uppercase mb-8 text-center"> 📊 Пълно класиране</h2>
 
     <div class="overflow-x-auto bg-white rounded-xl shadow-lg">
         <table class="min-w-full text-sm text-left">

@@ -28,14 +28,19 @@ class FeaturedPlayers extends Component
                 ];
             });
 
-        $monthStart = Carbon::now()->startOfMonth();
-        $monthEnd = Carbon::now()->endOfMonth();
+        $monthStart = Carbon::now()->subMonthNoOverflow()->startOfMonth();
+        $monthEnd = Carbon::now()->subMonthNoOverflow()->endOfMonth();
 
-        $playerOfMonth = PlayerReview::select('player_id', DB::raw('AVG(rating) as avg_rating'))
-            ->whereBetween('created_at', [$monthStart, $monthEnd])
-            ->groupBy('player_id')
-            ->orderByDesc('avg_rating')
-            ->first();
+        $playerOfMonth = null;
+
+        if (Carbon::now()->greaterThan(Carbon::now()->startOfMonth())) {
+            $playerOfMonth = PlayerReview::select('player_id', DB::raw('AVG(rating) as avg_rating'))
+                ->whereBetween('created_at', [$monthStart, $monthEnd])
+                ->groupBy('player_id')
+                ->havingRaw('COUNT(*) >= 3')
+                ->orderByDesc('avg_rating')
+                ->first();
+        }
 
         $playerOfMonthData = null;
 
