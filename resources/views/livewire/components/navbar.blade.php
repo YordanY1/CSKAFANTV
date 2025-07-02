@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center py-2">
             {{-- Logo --}}
-            <a href="/" class="flex items-center space-x-2 hover:text-accent">
+            <a href="/" wire:navigate class="flex items-center space-x-2 hover:text-accent">
                 <img src="{{ asset('images/logo/logo.jpg') }}" alt="CSKA FAN TV"
                     class="h-14 w-auto object-contain rounded-full ring-2 ring-accent transition duration-200" />
                 <span class="text-xl font-extrabold uppercase tracking-wide">CSKA FAN TV</span>

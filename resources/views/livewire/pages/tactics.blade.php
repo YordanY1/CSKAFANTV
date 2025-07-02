@@ -62,6 +62,11 @@
                         <span x-text="isFullscreen ? '❌ Изход от цял екран' : '🔳 Голям екран'"></span>
                     </button>
 
+                    <button @click="downloadBoard"
+                        class="border px-3 py-2 rounded text-sm bg-white text-gray-700 hover:bg-gray-50 transition">
+                        💾 Свали състава
+                    </button>
+
                 </div>
 
                 <div>
@@ -80,8 +85,13 @@
             </div>
 
             <div class="relative mx-auto" style="width: 1104px; height: 596px;">
-                <img src="/images/cska-logo.png" alt="CSKA"
-                    class="absolute top-2 right-2 w-16 h-16 opacity-90 z-10">
+                <img src="/images/cska-logo.png" alt="CSKA Emblem"
+                    class="absolute top-2 left-2 w-20 h-20 opacity-90 z-10 rounded-full ring-2 ring-white">
+                <div
+                    class="absolute top-2 right-2 flex items-center gap-2 z-10 bg-white/80 px-2 py-1 rounded-full shadow">
+                    <img src="/images/logo/logo.jpg" alt="CSKA FAN TV"
+                        class="w-20 h-20 object-contain rounded-full" />
+                </div>
                 <div id="tactic-stage" class="border-2 border-gray-300 rounded shadow-lg bg-white relative z-0"
                     style="width: 1104px; height: 596px;">
                 </div>

@@ -1,4 +1,4 @@
-import './bootstrap';
+import "./bootstrap";
 
 import Konva from "konva";
 
@@ -212,21 +212,22 @@ window.tacticBoard = function () {
                 img.onload = () => {
                     const playerImg = new Konva.Image({
                         image: img,
-                        width: 120,
-                        height: 120,
+                        width: 70,
+                        height: 70,
                         x: 0,
                         y: 0,
                         cornerRadius: 60,
                     });
 
                     const playerName = new Konva.Text({
-                        y: 130,
+                        x: 0,
+                        y: 75,
+                        width: 70,
                         text: player.name.split(" ").pop(),
-                        fontSize: 20,
+                        fontSize: 14,
                         fontFamily: "Calibri",
                         fill: "white",
                         align: "center",
-                        width: 120,
                     });
 
                     const deleteBtn = new Konva.Text({
@@ -398,6 +399,52 @@ window.tacticBoard = function () {
                     setTimeout(() => this.resizeStage(), 300);
                 });
             }
+        },
+        downloadBoard() {
+            const logoImg = new Image();
+            logoImg.src = "/images/logo/logo.jpg";
+
+            logoImg.onload = () => {
+                const padding = 16;
+                const logoSize = 56;
+
+                const logo = new Konva.Image({
+                    image: logoImg,
+                    x: this.stage.width() - logoSize - padding,
+                    y: padding,
+                    width: logoSize,
+                    height: logoSize,
+                    cornerRadius: logoSize / 2,
+                });
+
+
+                const label = new Konva.Text({
+                    x: this.stage.width() - logoSize - padding - 140,
+                    y: padding + 15,
+                    fontSize: 18,
+                    fontFamily: "Calibri",
+                    fill: "white",
+                    fontStyle: "bold",
+                });
+
+                this.layer.add(logo);
+                this.layer.add(label);
+                this.layer.draw();
+
+                // Сваляне след кратка пауза
+                setTimeout(() => {
+                    const dataURL = this.stage.toDataURL({ pixelRatio: 2 });
+
+                    logo.destroy();
+                    label.destroy();
+                    this.layer.draw();
+
+                    const link = document.createElement("a");
+                    link.download = "tactic-board.png";
+                    link.href = dataURL;
+                    link.click();
+                }, 150);
+            };
         },
     };
 };
