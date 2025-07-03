@@ -15,8 +15,9 @@
                 <form wire:submit.prevent="save" class="space-y-4">
                     <div>
                         <label for="homeScore" class="block text-sm font-medium mb-1 text-primary">
-                            Резултат за домакина:
+                            {{ $match?->homeTeam?->name ?? 'Домакин' }}
                         </label>
+
                         <input type="number" id="homeScore" wire:model="homeScore" min="0" max="20"
                             class="w-full rounded-lg border border-red-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" />
                         @error('homeScore')
@@ -26,49 +27,16 @@
 
                     <div>
                         <label for="awayScore" class="block text-sm font-medium mb-1 text-primary">
-                            Резултат за госта:
+                            {{ $match?->awayTeam?->name ?? 'Гост' }}
                         </label>
+
                         <input type="number" id="awayScore" wire:model="awayScore" min="0" max="20"
                             class="w-full rounded-lg border border-red-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" />
                         @error('awayScore')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-1 text-primary">
-                            Прогнозиран знак:
-                        </label>
-                        <div class="flex gap-3 flex-wrap">
-                            <label class="flex items-center gap-1">
-                                <input type="radio" wire:model="resultSign" value=""
-                                    class="text-primary focus:ring-accent" />
-                                <span>Без знак</span>
-                            </label>
-                            <label class="flex items-center gap-1">
-                                <input type="radio" wire:model="resultSign" value="1"
-                                    class="text-primary focus:ring-accent" />
-                                <span>1</span>
-                            </label>
-                            <label class="flex items-center gap-1">
-                                <input type="radio" wire:model="resultSign" value="X"
-                                    class="text-primary focus:ring-accent" />
-                                <span>Х</span>
-                            </label>
-                            <label class="flex items-center gap-1">
-                                <input type="radio" wire:model="resultSign" value="2"
-                                    class="text-primary focus:ring-accent" />
-                                <span>2</span>
-                            </label>
-                        </div>
-                        @error('resultSign')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                        @error('empty')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
+                    
                     <div class="flex justify-end gap-3 pt-4">
                         <button type="button" wire:click="$set('isOpen', false)"
                             class="px-4 py-2 text-sm border border-red-200 text-text rounded-lg hover:bg-accent-2 transition cursor-pointer">

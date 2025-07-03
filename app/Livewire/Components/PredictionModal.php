@@ -5,6 +5,7 @@ namespace App\Livewire\Components;
 use Livewire\Component;
 use App\Models\Prediction;
 use Illuminate\Support\Facades\Auth;
+use App\Models\FootballMatch;
 
 class PredictionModal extends Component
 {
@@ -12,14 +13,14 @@ class PredictionModal extends Component
     public $matchId;
     public $homeScore = null;
     public $awayScore = null;
-    public $resultSign = null;
+    public $match;
+
 
     protected function rules()
     {
         return [
             'homeScore' => 'nullable|integer|min:0|max:20',
             'awayScore' => 'nullable|integer|min:0|max:20',
-            'resultSign' => 'nullable|in:1,X,2',
         ];
     }
 
@@ -31,6 +32,7 @@ class PredictionModal extends Component
     {
         $this->resetValidation();
         $this->matchId = $matchId;
+        $this->match = FootballMatch::with(['homeTeam', 'awayTeam'])->findOrFail($matchId);
         $this->isOpen = true;
     }
 
@@ -41,7 +43,6 @@ class PredictionModal extends Component
         if (
             is_null($this->homeScore)
             && is_null($this->awayScore)
-            && empty($this->resultSign)
         ) {
             $this->addError('empty', 'Трябва да въведеш поне знак или резултат.');
             return;
@@ -52,7 +53,6 @@ class PredictionModal extends Component
             'football_match_id' => $this->matchId,
             'home_score_prediction' => $this->homeScore,
             'away_score_prediction' => $this->awayScore,
-            'result_sign_prediction' => $this->resultSign ?: null,
         ]);
 
         session()->flash('success', 'Прогнозата е записана успешно!');

@@ -11,6 +11,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use App\Models\Prediction;
 use App\Models\PredictionResult;
+use Illuminate\Support\Facades\Log;
+
 
 class FootballMatchResource extends Resource
 {
@@ -73,7 +75,6 @@ class FootballMatchResource extends Resource
                 ->label('Голове на гост')
                 ->numeric()
                 ->nullable(),
-
             Forms\Components\Repeater::make('lineup')
                 ->label('Състав')
                 ->relationship('lineup')
@@ -81,36 +82,31 @@ class FootballMatchResource extends Resource
                     Forms\Components\Select::make('player_id')
                         ->label('Играч')
                         ->relationship('player', 'name')
-                        // ->required()
                         ->searchable()
                         ->preload(),
 
                     Forms\Components\Toggle::make('is_starter')
                         ->label('Стартов състав')
                         ->default(true)
-                        ->reactive(),
+                        ->reactive()
+                        ->helperText('Ако е изключено, играчът ще бъде считан за резерва.'),
 
                     Forms\Components\Select::make('replaces_player_id')
-                        ->label('Сменя играч')
-                        ->options(function (callable $get) {
-                            $lineup = $get('../../lineup') ?? [];
-
-                            return collect($lineup)
-                                ->filter(fn($item) => ($item['is_starter'] ?? false) && isset($item['player_id']))
-                                ->mapWithKeys(function ($item) {
-                                    $player = \App\Models\Player::find($item['player_id']);
-                                    return $player ? [$player->id => $player->name] : [];
-                                });
+                        ->label('Кого замества?')
+                        ->options(function () {
+                            return \App\Models\Player::pluck('name', 'id')->toArray();
                         })
                         ->searchable()
                         ->preload()
                         ->nullable()
                         ->visible(fn($get) => $get('is_starter') === false)
-                        ->helperText('Избери кого сменя'),
+                        ->helperText('Избери играча, когото този замества.')
+
                 ])
                 ->defaultItems(11)
                 ->collapsible()
                 ->columnSpanFull(),
+
 
 
             Forms\Components\Toggle::make('is_finished')
@@ -127,17 +123,9 @@ class FootballMatchResource extends Resource
                                 $prediction->away_score_prediction === $record->away_score;
 
                             if ($exact) {
-                                $points = 4;
+                                $points = 3;
                             } else {
-                                $matchSign = match (true) {
-                                    $record->home_score > $record->away_score => '1',
-                                    $record->home_score < $record->away_score => '2',
-                                    default => 'X',
-                                };
-
-                                if ($prediction->result_sign_prediction === $matchSign) {
-                                    $points = 1;
-                                }
+                                $points = 0;
                             }
 
                             PredictionResult::updateOrCreate(

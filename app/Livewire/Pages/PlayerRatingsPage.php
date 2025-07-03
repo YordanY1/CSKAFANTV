@@ -8,6 +8,8 @@ use Livewire\Component;
 
 class PlayerRatingsPage extends Component
 {
+    protected $listeners = ['player-reviewed' => '$refresh'];
+
     public function render()
     {
         $ratings = PlayerReview::with('player')

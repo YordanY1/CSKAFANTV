@@ -35,9 +35,9 @@ class CalculatePredictionPoints extends Command
                     && $prediction->away_score_prediction === $match->away_score;
 
                 if ($exact) {
-                    $points = 4;
-                } elseif ($prediction->result_sign_prediction === $matchSign) {
-                    $points = 1;
+                    $points = 3;
+                } else {
+                    $points = 0;
                 }
 
                 PredictionResult::updateOrCreate(
