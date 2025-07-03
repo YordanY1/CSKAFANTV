@@ -1,9 +1,9 @@
 <section class="bg-white py-12 px-6 rounded-xl shadow-md">
-    <h2 class="text-3xl font-bold text-center text-primary mb-8">Картони на играчи</h2>
+    <h2 class="text-3xl text-primary font-extrabold uppercase mb-8 text-center tracking-wide">Картони на играчи</h2>
 
     <div class="mt-10 mb-10 text-center">
         <a href="/cards" wire:navigate
-            class="inline-block bg-red-600 text-white font-semibold px-6 py-2 rounded-lg shadow hover:bg-red-700 transition duration-200">
+            class="inline-block bg-accent text-white font-semibold px-6 py-2 rounded-lg shadow hover:bg-red-700 transition duration-200">
             📋 Виж всички картони
         </a>
     </div>

@@ -54,6 +54,8 @@
                             class="block px-4 py-2 hover:bg-accent hover:text-white transition">Дъска</a>
                         <a href="{{ route('standings') }}" wire:navigate
                             class="block px-4 py-2 hover:bg-accent hover:text-white transition">Класиране</a>
+                        <a href="{{ route('predictions.rankings') }}" wire:navigate
+                            class="block px-4 py-2 hover:bg-accent hover:text-white transition">Прогнози класация</a>
                     </div>
                 </div>
 
@@ -180,6 +182,9 @@
                     class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Дъска</a>
                 <a href="{{ route('standings') }}" wire:navigate
                     class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Класиране</a>
+                <a href="{{ route('predictions.rankings') }}" wire:navigate
+                    class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Прогнози
+                    класация</a>
             </div>
         </div>
 

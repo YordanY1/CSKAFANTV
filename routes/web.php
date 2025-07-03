@@ -17,6 +17,7 @@ use App\Livewire\Pages\PrivacyPolicy;
 use App\Livewire\Pages\CookiePolicy;
 use App\Livewire\Pages\FullStandingsPage;
 use App\Livewire\Pages\PlayerRatingsPage;
+use App\Livewire\Pages\PredictionRankingsPage;
 
 
 Route::get('/', Home::class)->name('home');
@@ -43,6 +44,7 @@ Route::get('/cookie-policy', CookiePolicy::class)->name('cookie-policy');
 Route::get('/standings', FullStandingsPage::class)->name('standings');
 
 Route::get('/player-ratings', PlayerRatingsPage::class)->name('player.ratings');
+Route::get('/predictions/rankings', PredictionRankingsPage::class)->name('predictions.rankings');
 
 
 
