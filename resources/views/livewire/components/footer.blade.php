@@ -20,7 +20,7 @@
         </div>
 
         <div>
-            <h4 class="font-semibold uppercase mb-2">Още</h4>
+            <h4 class="font-semibold uppercase mb-2">Статистики и Играчите</h4>
             <ul class="space-y-1">
                 <li><a href="{{ route('players') }}" wire:navigate class="hover:text-accent">Играчите</a></li>
                 <li><a href="{{ route('cards') }}" wire:navigate class="hover:text-accent">Картони</a></li>
