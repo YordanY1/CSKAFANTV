@@ -37,18 +37,20 @@ class UpcomingMatches extends Component
                 fn($q) =>
                 $q->whereBetween('match_datetime', [
                     $now->copy()->subHours(2),
-                    $now->copy()->addMinutes(30)
+                    $now->copy()->addMinutes(30),
                 ])
+                    ->where('is_finished', false) 
             )
             ->when(
                 $this->filter === 'upcoming',
                 fn($q) =>
                 $q->where('match_datetime', '>', $now)
+                    ->where('is_finished', false)
             )
             ->when(
                 $this->filter === 'completed',
                 fn($q) =>
-                $q->where('match_datetime', '<=', $now->copy()->subHours(2))
+                $q->where('is_finished', true)
             )
             ->orderBy('match_datetime', 'asc')
             ->get();

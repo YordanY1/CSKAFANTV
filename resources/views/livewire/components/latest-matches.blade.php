@@ -29,7 +29,7 @@
         {{-- Matches --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($matches as $match)
-                <div
+                <div wire:key="match-{{ $match->id }}"
                     class="bg-white rounded-xl shadow-lg overflow-hidden transition transform hover:scale-[1.02] duration-200">
 
                     <div class="bg-primary text-cta px-4 py-2 text-sm font-semibold tracking-wider">
@@ -37,10 +37,21 @@
                     </div>
 
                     <div class="flex justify-center mt-4">
-                        <div x-data="matchCountdown('{{ $match->match_datetime->toIso8601String() }}', {{ (int) $match->is_finished }}, '{{ $match->youtube_url }}')" x-init="init()" x-show="isLive && youtubeUrl"
-                            @click="window.open(youtubeUrl, '_blank')"
-                            class="flex items-center gap-2 cursor-pointer px-5 py-3 rounded-lg bg-red-600 text-white font-semibold shadow-lg hover:bg-red-700 transition-all duration-300 animate-pulse">
-                            <i class="fab fa-youtube text-xl"></i>
+                        <div x-data="matchCountdown({
+                            id: {{ $match->id }},
+                            matchTime: '{{ $match->match_datetime->toIso8601String() }}',
+                            isFinished: {{ (int) $match->is_finished }},
+                            youtube: '{{ $match->youtube_url }}'
+                        })" x-init="init()" x-ref="matchTimer{{ $match->id }}"
+                            x-show="label !== ''" @click="if (isLive && youtubeUrl) window.open(youtubeUrl, '_blank')"
+                            class="flex items-center gap-2 px-5 py-3 rounded-lg text-white font-semibold shadow-lg transition-all duration-300"
+                            x-bind:class="{
+                                'bg-red-600 hover:bg-red-700 animate-pulse cursor-pointer': isLive && youtubeUrl,
+                                'bg-yellow-500 hover:bg-yellow-600': !isLive && label.includes('⏳'),
+                                'bg-gray-400': label.includes('✅'),
+                                'cursor-default': !isLive
+                            }">
+                            <i class="fab fa-youtube text-xl" x-show="isLive && youtubeUrl"></i>
                             <span x-text="label"></span>
                         </div>
                     </div>

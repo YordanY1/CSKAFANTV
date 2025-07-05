@@ -16,9 +16,9 @@ class LatestMatches extends Component
         $now = Carbon::now();
 
         $hasLive = FootballMatch::whereBetween('match_datetime', [
-                $now->copy()->subHours(2),
-                $now->copy()->addMinutes(30),
-            ])
+            $now->copy()->subHours(2),
+            $now->copy()->addMinutes(30),
+        ])
             ->exists();
 
         if ($hasLive) {
@@ -36,17 +36,25 @@ class LatestMatches extends Component
         $now = Carbon::now();
 
         $matches = FootballMatch::with(['homeTeam', 'awayTeam'])
-            ->when($this->filter === 'live', fn($q) =>
+            ->when(
+                $this->filter === 'live',
+                fn($q) =>
                 $q->whereBetween('match_datetime', [
                     $now->copy()->subHours(2),
                     $now->copy()->addMinutes(30),
                 ])
+                    ->where('is_finished', false)
             )
-            ->when($this->filter === 'upcoming', fn($q) =>
+            ->when(
+                $this->filter === 'upcoming',
+                fn($q) =>
                 $q->where('match_datetime', '>', $now)
+                    ->where('is_finished', false)
             )
-            ->when($this->filter === 'completed', fn($q) =>
-                $q->where('match_datetime', '<=', $now->copy()->subHours(2))
+            ->when(
+                $this->filter === 'completed',
+                fn($q) =>
+                $q->where('is_finished', true)
             )
             ->orderBy('match_datetime', $this->filter === 'completed' ? 'desc' : 'asc')
             ->get();

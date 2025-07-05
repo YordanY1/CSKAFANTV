@@ -417,7 +417,6 @@ window.tacticBoard = function () {
                     cornerRadius: logoSize / 2,
                 });
 
-
                 const label = new Konva.Text({
                     x: this.stage.width() - logoSize - padding - 140,
                     y: padding + 15,
@@ -448,3 +447,18 @@ window.tacticBoard = function () {
         },
     };
 };
+
+document.addEventListener("alpine:init", () => {
+    Livewire.hook("element.removed", (el) => {
+        const alpineComponents = el.querySelectorAll("[x-data]");
+        alpineComponents.forEach((comp) => {
+            if (
+                comp._x_dataStack &&
+                typeof comp._x_dataStack[0]?.destroy === "function"
+            ) {
+                comp._x_dataStack[0].destroy();
+            }
+        });
+    });
+});
+
