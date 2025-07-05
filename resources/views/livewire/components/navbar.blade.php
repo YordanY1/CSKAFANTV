@@ -178,8 +178,6 @@
             <div x-show="openMatches" x-collapse class="space-y-2">
                 <a href="{{ route('matches') }}" wire:navigate
                     class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Програма</a>
-                <a href="{{ route('tactics') }}" wire:navigate
-                    class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Дъска</a>
                 <a href="{{ route('standings') }}" wire:navigate
                     class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Класиране</a>
                 <a href="{{ route('predictions.rankings') }}" wire:navigate

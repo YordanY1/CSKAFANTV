@@ -4,23 +4,24 @@
             Мачове
         </h2>
 
-        <div class="flex justify-center mb-10 space-x-4">
+        <div class="flex justify-center mb-8 flex-wrap gap-2 sm:gap-4">
             <button wire:click="setFilter('live')"
-                class="px-6 py-2 rounded-full text-sm font-semibold transition
-            {{ $filter === 'live' ? 'bg-accent text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+                class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition
+        {{ $filter === 'live' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
                 На живо
             </button>
             <button wire:click="setFilter('upcoming')"
-                class="px-6 py-2 rounded-full text-sm font-semibold transition
-            {{ $filter === 'upcoming' ? 'bg-accent text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+                class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition
+        {{ $filter === 'upcoming' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
                 Предстоящи
             </button>
             <button wire:click="setFilter('completed')"
-                class="px-6 py-2 rounded-full text-sm font-semibold transition
-            {{ $filter === 'completed' ? 'bg-accent text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+                class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition
+        {{ $filter === 'completed' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
                 Приключени
             </button>
         </div>
+
 
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
