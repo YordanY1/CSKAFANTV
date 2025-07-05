@@ -233,6 +233,27 @@
                 НА ЖИВО
             </a>
         @endif
+
+        <!-- Mobile Social Icons -->
+        <div class="flex justify-center gap-4 text-2xl mt-4">
+            <a href="https://facebook.com" target="_blank" class="text-blue-600 hover:scale-110 transition"
+                title="Facebook">
+                <i class="fab fa-facebook-square"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" class="text-pink-500 hover:scale-110 transition"
+                title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://youtube.com" target="_blank" class="text-red-600 hover:scale-110 transition"
+                title="YouTube">
+                <i class="fab fa-youtube"></i>
+            </a>
+            <a href="https://discord.gg/ТВОЯ_КАНАЛ" target="_blank"
+                class="text-indigo-500 hover:scale-110 transition" title="Discord">
+                <i class="fab fa-discord"></i>
+            </a>
+        </div>
+
     </div>
 
     <!-- Register Modal -->
