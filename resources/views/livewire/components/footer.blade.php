@@ -14,7 +14,10 @@
                 <li><a href="{{ route('home') }}" wire:navigate class="hover:text-accent">Начало</a></li>
                 <li><a href="{{ route('matches') }}" wire:navigate class="hover:text-accent">Мачове</a></li>
                 <li><a href="{{ route('standings') }}" wire:navigate class="hover:text-accent">Класиране</a></li>
-                <li><a href="{{ route('tactics') }}" wire:navigate class="hover:text-accent">Дъска</a></li>
+                <li class="hidden sm:block">
+                    <a href="{{ route('tactics') }}" wire:navigate class="hover:text-accent">Дъска</a>
+                </li>
+
                 <li><a href="{{ route('contact') }}" wire:navigate class="hover:text-accent">Контакти</a></li>
             </ul>
         </div>
@@ -35,11 +38,22 @@
         <div>
             <h4 class="font-semibold uppercase mb-2">Последвай ни</h4>
             <div class="flex justify-center sm:justify-start space-x-4 mt-2 text-xl">
-                <a href="#" class="hover:text-accent" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="hover:text-accent" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="hover:text-accent" title="YouTube"><i class="fab fa-youtube"></i></a>
-                <a href="https://discord.gg/ТВОЯ_КАНАЛ" class="hover:text-accent" title="Discord"><i
-                        class="fab fa-discord"></i></a>
+                <a href="https://facebook.com/CSKAFENTV48" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-accent" title="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://instagram.com/cskafantv" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-accent" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.youtube.com/@CSKAFANTV48" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-accent" title="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="https://discord.com/invite/GY29Xccj42" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-accent" title="Discord">
+                    <i class="fab fa-discord"></i>
+                </a>
             </div>
 
             <div class="mt-4">
