@@ -8,7 +8,7 @@
         localStorage.setItem('cookie_consent', 'rejected');
         this.show = false;
     }
-}" x-show="show" x-transition
+}" x-show="show" x-transition x-transition x-cloak
     class="fixed bottom-4 left-4 right-4 max-w-xl mx-auto bg-white text-black border border-gray-300 shadow-lg rounded-lg p-4 z-50">
 
     <div class="text-sm leading-relaxed">
