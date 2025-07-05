@@ -11,7 +11,7 @@
             </a>
         </div>
 
-        <div class="overflow-x-auto bg-white rounded-xl shadow-lg">
+        <div class="overflow-x-auto bg-white rounded-xl shadow-lg hidden sm:block">
             <table class="min-w-full text-sm text-left">
                 <thead class="bg-accent text-cta uppercase tracking-wider">
                     <tr>
@@ -52,5 +52,44 @@
                 </tbody>
             </table>
         </div>
+        <!-- Mobile Card View -->
+        <!-- Mobile Card View -->
+        <div class="sm:hidden space-y-4 mt-6">
+            @foreach ($standings as $i => $standing)
+                <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-4 relative overflow-hidden">
+
+                    <!-- Ранк в ъгъла -->
+                    <div class="absolute top-2 left-2 bg-accent text-white text-xs px-2 py-0.5 rounded-full shadow">
+                        #{{ $standing->manual_rank ?? $i + 1 }}
+                    </div>
+
+                    <!-- Име и лого -->
+                    <div class="flex items-center gap-3 mb-2">
+                        @if ($standing->team?->logo)
+                            <img src="{{ asset('storage/' . $standing->team->logo) }}"
+                                alt="{{ $standing->team->name }}"
+                                class="w-10 h-10 rounded-full object-cover ring-2 ring-accent" />
+                        @endif
+                        <div>
+                            <div class="font-bold text-primary text-base">{{ $standing->team?->name ?? '—' }}</div>
+                            <div class="text-xs text-gray-400">ГР:
+                                {{ $standing->goals_scored }}:{{ $standing->goals_conceded }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Статистика -->
+                    <div class="grid grid-cols-3 text-xs text-gray-700 gap-y-1 mt-2">
+                        <div><span class="font-semibold text-gray-500">И:</span> {{ $standing->played }}</div>
+                        <div><span class="font-semibold text-gray-500">П:</span> {{ $standing->wins }}</div>
+                        <div><span class="font-semibold text-gray-500">Р:</span> {{ $standing->draws }}</div>
+                        <div><span class="font-semibold text-gray-500">З:</span> {{ $standing->losses }}</div>
+                        <div class="col-span-3"><span class="font-semibold text-gray-500">Точки:</span>
+                            <span class="text-accent font-bold text-sm">{{ $standing->points }}</span>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
     </div>
 </section>
