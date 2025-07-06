@@ -10,7 +10,7 @@
             <button wire:click="setFilter('live')"
                 class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition
         {{ $filter === 'live' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
-                Live
+                На живо
             </button>
             <button wire:click="setFilter('upcoming')"
                 class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition

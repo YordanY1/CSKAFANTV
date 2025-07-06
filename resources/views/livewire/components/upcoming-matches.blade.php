@@ -8,7 +8,7 @@
             <button wire:click="setFilter('live')"
                 class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition
         {{ $filter === 'live' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
-                LIVE
+                На живо
             </button>
             <button wire:click="setFilter('upcoming')"
                 class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition
@@ -83,17 +83,37 @@
                             </div>
                         </div>
 
-                        @if ($match->is_finished)
-                            <a href="{{ route('match.show', $match) }}" wire:navigate
-                                class="block mt-4 text-center text-red-600 font-extrabold uppercase tracking-wide hover:underline">
-                                ОЦЕНИ ИГРАЧИТЕ <i class="fas fa-star ml-1"></i>
-                            </a>
-                        @else
-                            <a href="{{ route('match.show', $match) }}" wire:navigate
-                                class="block mt-4 text-center text-primary font-semibold hover:underline">
-                                Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
-                            </a>
-                        @endif
+
+                        <div class="flex justify-center items-center gap-4 mt-4">
+                            @if ($match->is_finished)
+                                <a href="{{ route('match.show', $match) }}" wire:navigate
+                                    class="text-red-600 font-bold uppercase hover:underline">
+                                    ОЦЕНИ ИГРАЧИТЕ <i class="fas fa-star ml-1"></i>
+                                </a>
+                            @else
+                                <a href="{{ route('match.show', $match) }}" wire:navigate
+                                    class="text-primary font-semibold hover:underline">
+                                    Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
+                                </a>
+                            @endif
+
+                            @auth
+                                @php
+                                    $now = now();
+                                    $hasPrediction = \App\Models\Prediction::where('user_id', auth()->id())
+                                        ->where('football_match_id', $match->id)
+                                        ->exists();
+                                @endphp
+
+                                @if (!$match->is_finished && !$hasPrediction && $match->match_datetime->isFuture())
+                                    <button x-data
+                                        @click="$dispatch('open-prediction-modal', { matchId: {{ $match->id }} })"
+                                        class="bg-primary text-white px-3 py-1.5 rounded text-sm cursor-pointer">
+                                        Прогнозирай
+                                    </button>
+                                @endif
+                            @endauth
+                        </div>
                     </div>
                 </div>
             @empty
