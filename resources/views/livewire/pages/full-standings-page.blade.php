@@ -46,38 +46,36 @@
 
     <!-- Mobile Card View -->
     <div class="sm:hidden space-y-4 mt-6">
-        @foreach ($standings as $i => $team)
-            @if (str_contains(strtolower($team->team?->name), strtolower($search)))
-                <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-4 relative overflow-hidden">
-                    <!-- Ранг -->
-                    <div class="absolute top-2 left-2 bg-accent text-white text-xs px-2 py-0.5 rounded-full shadow">
-                        #{{ $team->manual_rank ?? $i + 1 }}
-                    </div>
+        @foreach ($standings as $standing)
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-4 relative overflow-hidden">
 
-                    <div class="flex items-center gap-3 mb-3">
-                        @if ($team->team?->logo)
-                            <img src="{{ asset('storage/' . $team->team->logo) }}" alt="{{ $team->team->name }}"
-                                class="w-10 h-10 rounded-full object-cover ring-2 ring-accent" />
-                        @endif
-                        <div>
-                            <div class="font-bold text-primary text-base">{{ $team->team->name ?? '—' }}</div>
-                        </div>
-                    </div>
+                <div class="absolute top-2 left-2 bg-accent text-white text-xs px-2 py-0.5 rounded-full shadow">
+                    #{{ $loop->iteration }}
+                </div>
 
-                    <div class="grid grid-cols-4 text-xs text-gray-700 gap-y-1">
-                        <div><span class="font-semibold text-gray-500">М:</span> {{ $team->played }}</div>
-                        <div><span class="font-semibold text-gray-500">П:</span> {{ $team->wins }}</div>
-                        <div><span class="font-semibold text-gray-500">Р:</span> {{ $team->draws }}</div>
-                        <div><span class="font-semibold text-gray-500">З:</span> {{ $team->losses }}</div>
-                        <div><span class="font-semibold text-gray-500">ГР:</span>
-                            {{ $team->goals_scored }}:{{ $team->goals_conceded }}</div>
-                        <div class="col-span-2 text-right">
-                            <span class="font-semibold text-gray-500">Точки:</span>
-                            <span class="text-accent font-bold text-sm">{{ $team->calculated_points }}</span>
-                        </div>
+                <div class="flex items-center gap-3 mb-3">
+                    @if ($standing->team?->logo)
+                        <img src="{{ asset('storage/' . $standing->team->logo) }}" alt="{{ $standing->team->name }}"
+                            class="w-10 h-10 rounded-full object-cover ring-2 ring-accent" />
+                    @endif
+                    <div>
+                        <div class="font-bold text-primary text-base">{{ $standing->team?->name ?? '—' }}</div>
                     </div>
                 </div>
-            @endif
+
+                <div class="grid grid-cols-4 text-xs text-gray-700 gap-y-1">
+                    <div><span class="font-semibold text-gray-500">М:</span> {{ $standing->played }}</div>
+                    <div><span class="font-semibold text-gray-500">П:</span> {{ $standing->wins }}</div>
+                    <div><span class="font-semibold text-gray-500">Р:</span> {{ $standing->draws }}</div>
+                    <div><span class="font-semibold text-gray-500">З:</span> {{ $standing->losses }}</div>
+                    <div class="col-span-2"><span class="font-semibold text-gray-500">ГР:</span>
+                        {{ $standing->goal_difference }}</div>
+                    <div class="col-span-2 text-right">
+                        <span class="font-semibold text-gray-500">Точки:</span>
+                        <span class="text-accent font-bold text-sm">{{ $standing->calculated_points }}</span>
+                    </div>
+                </div>
+            </div>
         @endforeach
     </div>
 
