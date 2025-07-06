@@ -126,20 +126,37 @@
     @endauth
 
     {{-- Video Section --}}
-    @if ($match->youtube_embed_url)
-        <div class="mt-20">
-            <div class="bg-white rounded-xl shadow-lg border border-accent/20 p-4">
-                <h3 class="text-xl font-semibold text-primary mb-4 text-center">Видео за мача</h3>
-                <div class="aspect-video rounded-xl overflow-hidden ring-2 ring-accent shadow-lg">
-                    <iframe class="w-full h-full"
-                        src="https://www.youtube.com/embed/{{ \Str::afterLast($match->youtube_embed_url, 'v=') }}"
+    @php
+        $videoId = Str::afterLast($match->youtube_embed_url, 'v=');
+    @endphp
+
+    <div class="mt-20">
+        <div class="bg-white rounded-xl shadow-lg border border-accent/20 p-4">
+            <h3 class="text-xl font-semibold text-primary mb-4 text-center">Видео от мача</h3>
+
+            <div x-data="{ showIframe: false }"
+                class="aspect-video rounded-xl overflow-hidden ring-2 ring-accent shadow-lg relative cursor-pointer"
+                @click="showIframe = true">
+                <template x-if="!showIframe">
+                    <div class="w-full h-full">
+                        <img src="https://img.youtube.com/vi/{{ $videoId }}/hqdefault.jpg" alt="Видео тъмбнейл"
+                            class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50">
+                            <svg class="w-16 h-16 text-white opacity-90" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M6 4l12 6-12 6V4z" />
+                            </svg>
+                        </div>
+                    </div>
+                </template>
+
+                <template x-if="showIframe">
+                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/{{ $videoId }}?autoplay=1"
                         title="Видео от мача" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
+                        allowfullscreen></iframe>
+                </template>
             </div>
         </div>
-    @endif
+    </div>
+
 </div>
