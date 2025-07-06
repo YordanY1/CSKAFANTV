@@ -127,9 +127,9 @@
 
     @if ($match->youtube_embed_url)
         <div class="mt-16 px-4">
-            <div class="mt-16 px-2 sm:px-4">
+            <div class="mt-16 sm:px-4 px-0">
                 <div
-                    class="bg-white rounded-2xl shadow-xl border border-accent/30 p-4 md:p-6 max-w-full sm:max-w-4xl md:max-w-5xl lg:max-w-6xl mx-auto">
+                    class="bg-white rounded-none sm:rounded-2xl shadow-none sm:shadow-xl border-none sm:border border-accent/30 p-0 sm:p-6 w-full max-w-full sm:max-w-4xl md:max-w-5xl lg:max-w-6xl mx-auto">
                     <h3
                         class="text-xl md:text-2xl font-bold text-primary mb-4 text-center flex items-center justify-center gap-2">
                         <i class="fas fa-video text-red-500"></i>
@@ -141,12 +141,13 @@
                         if (iframe) {
                             iframe.removeAttribute('width');
                             iframe.removeAttribute('height');
-                            iframe.classList.add('w-full', 'h-[240px]', 'sm:h-[320px]', 'md:h-[420px]', 'lg:h-[600px]', 'rounded-xl');
+                            iframe.classList.add('w-full', 'h-[230px]', 'sm:h-[320px]', 'md:h-[420px]', 'lg:h-[500px]', 'rounded-none', 'sm:rounded-xl');
                         }
                     })"
-                        class="overflow-hidden rounded-xl shadow-md ring-1 ring-accent/20">
+                        class="w-full overflow-hidden ring-0 sm:ring-1 ring-accent/20 shadow-none sm:shadow-lg">
                         {!! $match->youtube_embed_url !!}
                     </div>
+
                 </div>
             </div>
 
