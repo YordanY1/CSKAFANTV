@@ -125,17 +125,24 @@
         @endif
     @endauth
 
-    {{-- Video Section --}}
     @if ($match->youtube_embed_url)
-        <div class="mt-20">
-            <div
-                class="bg-gradient-to-br from-white via-red-50 to-white border border-accent/30 rounded-2xl shadow-2xl p-6">
-                <h3 class="text-2xl font-extrabold text-center text-primary tracking-wide mb-6">
-                    🎥 Видео от мача
+        <div class="mt-16 px-4">
+            <div class="bg-white rounded-2xl shadow-xl border border-accent/30 p-4 md:p-6 max-w-3xl mx-auto">
+                <h3
+                    class="text-xl md:text-2xl font-bold text-primary mb-4 text-center flex items-center justify-center gap-2">
+                    <i class="fas fa-video text-red-500"></i>
+                    Видео от мача
                 </h3>
 
-                <div class="aspect-video rounded-xl overflow-hidden ring-2 ring-accent shadow-lg">
-                    {!! $match->youtube_embed_url !!}
+                <div class="relative w-full overflow-hidden rounded-xl shadow-md ring-1 ring-accent/20">
+                    <div class="relative w-full" style="padding-bottom: 56.25%;">
+                        <iframe class="absolute top-0 left-0 w-full h-full rounded-xl"
+                            src="https://www.youtube.com/embed/{{ \Str::afterLast($match->youtube_embed_url, 'embed/') }}"
+                            title="Видео от мача" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen referrerpolicy="strict-origin-when-cross-origin">
+                        </iframe>
+                    </div>
                 </div>
             </div>
         </div>
