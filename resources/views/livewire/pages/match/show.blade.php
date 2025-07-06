@@ -135,14 +135,14 @@
                         <i class="fas fa-video text-red-500"></i>
                         Видео от мача
                     </h3>
-
                     <div x-data x-init="$nextTick(() => {
                         const iframe = $el.querySelector('iframe');
                         if (iframe) {
                             iframe.removeAttribute('width');
                             iframe.removeAttribute('height');
                             iframe.classList.add(
-                                'w-full',
+                                'w-[calc(100vw-1.5rem)]',
+                                'sm:w-full',
                                 'h-[230px]',
                                 'sm:h-[320px]',
                                 'md:h-[420px]',
@@ -151,9 +151,10 @@
                             );
                         }
                     })"
-                        class="w-full overflow-hidden ring-0 sm:ring-1 ring-accent/20 shadow-none sm:shadow-lg">
+                        class="overflow-x-hidden mx-auto ring-0 sm:ring-1 ring-accent/20 shadow-none sm:shadow-lg">
                         {!! $match->youtube_embed_url !!}
                     </div>
+
 
                 </div>
             </div>
