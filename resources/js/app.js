@@ -430,7 +430,6 @@ window.tacticBoard = function () {
                 this.layer.add(label);
                 this.layer.draw();
 
-                // Сваляне след кратка пауза
                 setTimeout(() => {
                     const dataURL = this.stage.toDataURL({ pixelRatio: 2 });
 
@@ -444,6 +443,21 @@ window.tacticBoard = function () {
                     link.click();
                 }, 150);
             };
+        },
+
+        onPlayerSelected(event) {
+            const playerId = event.target.value;
+            const player = this.players.find((p) => p.id == playerId);
+
+            this.tool = null;
+
+            if (player) {
+                const x = this.stage.width() / 2;
+                const y = this.stage.height() / 2;
+                this.addPlayerToBoard(player, x, y);
+                this.selectedPlayerId = null;
+                event.target.value = "";
+            }
         },
     };
 };
@@ -461,4 +475,3 @@ document.addEventListener("alpine:init", () => {
         });
     });
 });
-
