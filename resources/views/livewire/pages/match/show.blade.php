@@ -129,10 +129,16 @@
     @if ($match->youtube_embed_url)
         <div class="mt-20">
             <div class="bg-white rounded-xl shadow-lg border border-accent/20 p-4">
-                <h3 class="text-xl font-semibold text-primary mb-4 text-center">Видео от мача</h3>
-                <div class="aspect-video rounded overflow-hidden">
-                    {!! $match->youtube_embed_url !!}
+                <h3 class="text-xl font-semibold text-primary mb-4 text-center">Видео за мача</h3>
+                <div class="aspect-video rounded-xl overflow-hidden ring-2 ring-accent shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://www.youtube.com/embed/{{ \Str::afterLast($match->youtube_embed_url, 'v=') }}"
+                        title="Видео от мача" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
                 </div>
+
             </div>
         </div>
     @endif
