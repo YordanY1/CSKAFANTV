@@ -18,4 +18,9 @@ class Standing extends Model
     {
         return $this->goals_scored - $this->goals_conceded;
     }
+
+    public function getCalculatedPointsAttribute(): int
+    {
+        return ($this->wins * 3) + $this->draws;
+    }
 }

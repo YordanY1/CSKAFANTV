@@ -46,7 +46,8 @@
                             <td class="px-4 py-3">
                                 {{ $standing->goals_scored }}:{{ $standing->goals_conceded }}
                             </td>
-                            <td class="px-4 py-3 font-bold text-accent">{{ $standing->points }}</td>
+                            <td class="px-4 py-3 font-bold text-accent">{{ $standing->calculated_points }}
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -80,7 +81,7 @@
                         <div><span class="font-semibold text-gray-500">Р:</span> {{ $standing->draws }}</div>
                         <div><span class="font-semibold text-gray-500">З:</span> {{ $standing->losses }}</div>
                         <div class="col-span-3"><span class="font-semibold text-gray-500">Точки:</span>
-                            <span class="text-accent font-bold text-sm">{{ $standing->points }}</span>
+                            <span class="text-accent font-bold text-sm">{{ $standing->calculated_points }}</span>
                         </div>
                     </div>
                 </div>

@@ -11,8 +11,12 @@ class LeagueStandings extends Component
     {
         $standings = Standing::with('team')
             ->get()
-            ->sortBy(function ($standing) {
-                return $standing->manual_rank ?? 1000;
+            ->sortByDesc(function ($standing) {
+                return [
+                    ($standing->wins * 3) + $standing->draws,
+                    $standing->goals_scored - $standing->goals_conceded,
+                    $standing->team?->name
+                ];
             })
             ->take(5)
             ->values();

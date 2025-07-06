@@ -49,9 +49,12 @@ class FullStandingsPage extends Component
                 return str_contains(strtolower($item->team?->name), strtolower($this->search));
             })
             ->sortBy(function ($item) {
-                return $this->sortColumn === 'team'
-                    ? strtolower($item->team?->name)
-                    : $item->{$this->sortColumn};
+                return match ($this->sortColumn) {
+                    'team' => strtolower($item->team?->name),
+                    'points' => $item->calculated_points,
+                    'goal_diff' => $item->goal_difference,
+                    default => $item->{$this->sortColumn},
+                };
             }, SORT_REGULAR, $this->sortDirection === 'desc')
             ->values();
 

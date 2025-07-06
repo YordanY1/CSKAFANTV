@@ -6,7 +6,7 @@
         <table class="min-w-full text-sm text-left">
             <thead class="bg-accent text-cta uppercase tracking-wider">
                 <tr>
-                    @foreach ([['manual_rank', '#'], ['team', 'Отбор'], ['played', 'И'], ['wins', 'П'], ['draws', 'Р'], ['losses', 'З'], [null, 'ГР'], ['points', 'Т']] as [$column, $label])
+                    @foreach ([['manual_rank', '#'], ['team', 'Отбор'], ['played', 'И'], ['wins', 'П'], ['draws', 'Р'], ['losses', 'З'], ['goal_diff', 'ГР'], ['points', 'Т']] as [$column, $label])
                         <th class="px-4 py-3 {{ $column ? 'cursor-pointer' : '' }}"
                             @if ($column) wire:click="sortBy('{{ $column }}')" @endif>
                             {{ $label }}
@@ -35,8 +35,8 @@
                             <td class="px-4 py-3">{{ $team->wins }}</td>
                             <td class="px-4 py-3">{{ $team->draws }}</td>
                             <td class="px-4 py-3">{{ $team->losses }}</td>
-                            <td class="px-4 py-3">({{ $team->goals_scored - $team->goals_conceded }})</td>
-                            <td class="px-4 py-3 font-bold text-accent">{{ $team->points }}</td>
+                            <td class="px-4 py-3">({{ $team->goal_difference }})</td>
+                            <td class="px-4 py-3 font-bold text-accent">{{ $team->calculated_points }}</td>
                         </tr>
                     @endif
                 @endforeach
@@ -61,7 +61,8 @@
                         <div>
                             <div class="font-bold text-primary text-base">{{ $team->team->name ?? '—' }}</div>
                             <div class="text-xs text-gray-400">ГР:
-                                {{ $team->goals_scored }}:{{ $team->goals_conceded }}</div>
+                                {{ $team->goals_scored }}:{{ $team->goals_conceded }} ({{ $team->goal_difference }})
+                            </div>
                         </div>
                     </div>
 
@@ -72,7 +73,7 @@
                         <div><span class="font-semibold text-gray-500">З:</span> {{ $team->losses }}</div>
                         <div class="col-span-3">
                             <span class="font-semibold text-gray-500">Точки:</span>
-                            <span class="text-accent font-bold text-sm">{{ $team->points }}</span>
+                            <span class="text-accent font-bold text-sm">{{ $team->calculated_points }}</span>
                         </div>
                     </div>
                 </div>
