@@ -45,17 +45,31 @@ class FullStandingsPage extends Component
     {
         $standings = Standing::with('team')
             ->get()
-            ->filter(function ($item) {
-                return str_contains(strtolower($item->team?->name), strtolower($this->search));
+            ->filter(
+                fn($item) =>
+                str_contains(strtolower($item->team?->name), strtolower($this->search))
+            )
+            ->sort(function ($a, $b) {
+                $pointsA = $a->calculated_points;
+                $pointsB = $b->calculated_points;
+
+                if ($pointsA !== $pointsB) {
+                    return $pointsB <=> $pointsA;
+                }
+
+                $gdA = $a->goal_difference;
+                $gdB = $b->goal_difference;
+
+                if ($gdA !== $gdB) {
+                    return $gdB <=> $gdA;
+                }
+
+                if ($a->goals_scored !== $b->goals_scored) {
+                    return $b->goals_scored <=> $a->goals_scored;
+                }
+
+                return strcmp(strtolower($a->team?->name), strtolower($b->team?->name));
             })
-            ->sortBy(function ($item) {
-                return match ($this->sortColumn) {
-                    'team' => strtolower($item->team?->name),
-                    'points' => $item->calculated_points,
-                    'goal_diff' => $item->goal_difference,
-                    default => $item->{$this->sortColumn},
-                };
-            }, SORT_REGULAR, $this->sortDirection === 'desc')
             ->values();
 
         return view('livewire.pages.full-standings-page', [
