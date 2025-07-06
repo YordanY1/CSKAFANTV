@@ -141,7 +141,14 @@
                         if (iframe) {
                             iframe.removeAttribute('width');
                             iframe.removeAttribute('height');
-                            iframe.classList.add('w-full', 'h-[230px]', 'sm:h-[320px]', 'md:h-[420px]', 'lg:h-[600px]', 'rounded-none', 'sm:rounded-xl');
+                            iframe.classList.add(
+                                'w-full',
+                                'h-[230px]',
+                                'sm:h-[320px]',
+                                'md:h-[420px]',
+                                'lg:h-[600px]',
+                                'rounded-xl'
+                            );
                         }
                     })"
                         class="w-full overflow-hidden ring-0 sm:ring-1 ring-accent/20 shadow-none sm:shadow-lg">
@@ -153,7 +160,5 @@
 
         </div>
     @endif
-
-
 
 </div>
