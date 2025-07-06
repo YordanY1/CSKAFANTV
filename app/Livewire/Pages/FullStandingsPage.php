@@ -55,22 +55,24 @@ class FullStandingsPage extends Component
                 $pointsA = $a->calculated_points;
                 $pointsB = $b->calculated_points;
 
+                $multiplier = $this->sortDirection === 'asc' ? 1 : -1;
+
                 if ($pointsA !== $pointsB) {
-                    return $pointsB <=> $pointsA;
+                    return $multiplier * ($pointsA <=> $pointsB);
                 }
 
                 $gdA = $a->goal_difference;
                 $gdB = $b->goal_difference;
 
                 if ($gdA !== $gdB) {
-                    return $gdB <=> $gdA;
+                    return $multiplier * ($gdA <=> $gdB);
                 }
 
                 if ($a->goals_scored !== $b->goals_scored) {
-                    return $b->goals_scored <=> $a->goals_scored;
+                    return $multiplier * ($a->goals_scored <=> $b->goals_scored);
                 }
 
-                return strcmp(strtolower($a->team?->name), strtolower($b->team?->name));
+                return $multiplier * strcmp(strtolower($a->team?->name), strtolower($b->team?->name));
             });
         } else {
             $standings = $standings->sortBy(function ($item) {
