@@ -16,7 +16,7 @@
                     <tr class="hover:bg-gray-100 transition">
                         <td class="px-4 py-3 font-semibold">{{ $i + 1 }}</td>
                         <td class="px-4 py-3 font-bold text-primary">
-                            {{ $entry->prediction->user->name ?? '—' }}
+                            {{ $entry->name }}
                         </td>
                         <td class="px-4 py-3">{{ $entry->attempts }}</td>
                         <td class="px-4 py-3 text-accent font-bold">{{ $entry->total_points }}</td>

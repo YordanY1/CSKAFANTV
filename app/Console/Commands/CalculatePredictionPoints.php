@@ -31,19 +31,23 @@ class CalculatePredictionPoints extends Command
             foreach ($predictions as $prediction) {
                 $points = 0;
 
-                $exact = $prediction->home_score_prediction === $match->home_score
-                    && $prediction->away_score_prediction === $match->away_score;
+                $hasPrediction = !is_null($prediction->home_score_prediction) && !is_null($prediction->away_score_prediction);
 
-                if ($exact) {
-                    $points = 3;
-                } else {
-                    $points = 0;
+                if ($hasPrediction) {
+                    $exact = $prediction->home_score_prediction === $match->home_score
+                        && $prediction->away_score_prediction === $match->away_score;
+
+                    if ($exact) {
+                        $points = 3;
+                    } else {
+                        $points = 1;
+                    }
                 }
 
                 PredictionResult::updateOrCreate(
                     ['prediction_id' => $prediction->id],
                     [
-                        'is_correct' => $points > 0,
+                        'is_correct' => $points === 3,
                         'points_awarded' => $points,
                     ]
                 );

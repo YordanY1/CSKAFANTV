@@ -13,30 +13,42 @@
                 <h2 class="text-2xl font-bold text-center text-primary">Направи прогноза</h2>
 
                 <form wire:submit.prevent="save" class="space-y-4">
-                    <div>
-                        <label for="homeScore" class="block text-sm font-medium mb-1 text-primary">
-                            {{ $match?->homeTeam?->name ?? 'Домакин' }}
-                        </label>
+                    <div class="flex items-center gap-4">
+                        @if ($match?->homeTeam)
+                            <img src="{{ $match->homeTeam->logo_url }}" alt="{{ $match->homeTeam->name }}"
+                                class="w-10 h-10 rounded-full ring ring-accent">
+                            <div class="text-sm font-semibold text-primary">{{ $match->homeTeam->name }}</div>
+                        @endif
 
-                        <input type="number" id="homeScore" wire:model="homeScore" min="0" max="20"
-                            class="w-full rounded-lg border border-red-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" />
-                        @error('homeScore')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                        <select wire:model="homeScore"
+                            class="flex-1 rounded-lg border border-red-200 bg-white px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent">
+                            <option value="" disabled selected>Голове</option>
+                            @for ($i = 0; $i <= 20; $i++)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
                     </div>
 
-                    <div>
-                        <label for="awayScore" class="block text-sm font-medium mb-1 text-primary">
-                            {{ $match?->awayTeam?->name ?? 'Гост' }}
-                        </label>
+                    <div class="flex items-center gap-4">
+                        @if ($match?->awayTeam)
+                            <img src="{{ $match->awayTeam->logo_url }}" alt="{{ $match->awayTeam->name }}"
+                                class="w-10 h-10 rounded-full ring ring-accent">
+                            <div class="text-sm font-semibold text-primary">{{ $match->awayTeam->name }}</div>
+                        @endif
 
-                        <input type="number" id="awayScore" wire:model="awayScore" min="0" max="20"
-                            class="w-full rounded-lg border border-red-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" />
-                        @error('awayScore')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                        <select wire:model="awayScore"
+                            class="flex-1 rounded-lg border border-red-200 bg-white px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent">
+                            <option value="" disabled selected>Голове</option>
+                            @for ($i = 0; $i <= 20; $i++)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
                     </div>
-                    
+
+                    @error('empty')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+
                     <div class="flex justify-end gap-3 pt-4">
                         <button type="button" wire:click="$set('isOpen', false)"
                             class="px-4 py-2 text-sm border border-red-200 text-text rounded-lg hover:bg-accent-2 transition cursor-pointer">

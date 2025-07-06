@@ -27,9 +27,16 @@ class PredictionRankingsPage extends Component
 
     public function render()
     {
-        $rankings = PredictionResult::select('prediction_id', DB::raw('SUM(points_awarded) as total_points'), DB::raw('COUNT(*) as attempts'))
-            ->groupBy('prediction_id')
-            ->with('prediction.user')
+        $rankings = DB::table('prediction_results')
+            ->join('predictions', 'prediction_results.prediction_id', '=', 'predictions.id')
+            ->join('users', 'predictions.user_id', '=', 'users.id')
+            ->select(
+                'users.id as user_id',
+                'users.name',
+                DB::raw('SUM(prediction_results.points_awarded) as total_points'),
+                DB::raw('COUNT(prediction_results.id) as attempts')
+            )
+            ->groupBy('users.id', 'users.name')
             ->orderByDesc('total_points')
             ->get();
 
