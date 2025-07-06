@@ -19,12 +19,29 @@ class LatestMatches extends Component
             $now->copy()->subHours(2),
             $now->copy()->addMinutes(30),
         ])
+            ->where('is_finished', false)
             ->exists();
 
         if ($hasLive) {
             $this->filter = 'live';
+            return;
         }
+
+        $hasRecentCompleted = FootballMatch::where('is_finished', true)
+            ->whereBetween('match_datetime', [
+                $now->copy()->subHours(48),
+                $now
+            ])
+            ->exists();
+
+        if ($hasRecentCompleted) {
+            $this->filter = 'completed';
+            return;
+        }
+
+        $this->filter = 'upcoming';
     }
+
 
     public function setFilter(string $type)
     {

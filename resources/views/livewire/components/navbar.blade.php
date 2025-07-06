@@ -99,7 +99,7 @@
                     <a href="{{ $liveMatchYoutubeUrl }}" target="_blank" rel="noopener noreferrer"
                         class="inline-flex items-center gap-2 bg-red-600 text-white font-semibold text-sm px-4 py-2 rounded-lg animate-pulse shadow hover:bg-red-700 transition">
                         <i class="fab fa-youtube text-lg"></i>
-                        НА ЖИВО
+                        LIVE
                     </a>
                 @endif
 
@@ -200,7 +200,7 @@
                     class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Галерия</a>
                 @if ($liveMatchYoutubeUrl)
                     <a href="{{ $liveMatchYoutubeUrl }}" target="_blank"
-                        class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">🔴 На Живо</a>
+                        class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">🔴 LIVE</a>
                 @endif
             </div>
         </div>
@@ -229,7 +229,7 @@
             <a href="{{ $liveMatchYoutubeUrl }}" target="_blank" rel="noopener noreferrer"
                 class="w-full flex items-center justify-center gap-2 bg-red-600 text-white font-semibold text-sm px-4 py-2 rounded-lg animate-pulse shadow hover:bg-red-700 transition">
                 <i class="fab fa-youtube text-lg"></i>
-                НА ЖИВО
+                LIVE
             </a>
         @endif
         <!-- Mobile Social Icons -->
