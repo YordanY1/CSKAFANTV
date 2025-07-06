@@ -31,7 +31,7 @@ window.matchCountdown = function ({
                     this.label = "✅ Приключил";
                     this.isLive = false;
                 } else if (now >= start && now < extended) {
-                    this.label = "🔴 В ефир";
+                    this.label = "🔴 LIVE";
                     this.isLive = true;
                 } else if (now < start) {
                     const diff = start
