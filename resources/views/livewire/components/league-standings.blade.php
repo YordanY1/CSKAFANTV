@@ -11,6 +11,13 @@
             </a>
         </div>
 
+        @php
+            $rank = 0;
+            $prev = null;
+            $skip = 1;
+        @endphp
+
+        <!-- Desktop -->
         <div class="overflow-x-auto bg-white rounded-xl shadow-lg hidden sm:block">
             <table class="min-w-full text-sm text-left">
                 <thead class="bg-accent text-cta uppercase tracking-wider">
@@ -27,10 +34,27 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @foreach ($standings as $i => $standing)
+                        @php
+                            $current = [
+                                $standing->calculated_points,
+                                $standing->goal_difference,
+                                $standing->goals_scored,
+                            ];
+
+                            if ($prev && $current === $prev) {
+                                $displayRank = $rank;
+                                $skip++;
+                            } else {
+                                $rank += $skip;
+                                $displayRank = $rank;
+                                $skip = 1;
+                            }
+
+                            $prev = $current;
+                        @endphp
+
                         <tr class="hover:bg-card transition">
-                            <td class="px-4 py-3 font-semibold">
-                                {{ $standing->manual_rank ?? $i + 1 }}
-                            </td>
+                            <td class="px-4 py-3 font-semibold">{{ $displayRank }}</td>
                             <td class="px-4 py-3 font-bold text-primary flex items-center gap-2">
                                 @if ($standing->team?->logo)
                                     <img src="{{ asset('storage/' . $standing->team->logo) }}"
@@ -43,24 +67,41 @@
                             <td class="px-4 py-3">{{ $standing->wins }}</td>
                             <td class="px-4 py-3">{{ $standing->draws }}</td>
                             <td class="px-4 py-3">{{ $standing->losses }}</td>
-                            <td class="px-4 py-3">
-                                {{ $standing->goals_scored }}:{{ $standing->goals_conceded }}
-                            </td>
-                            <td class="px-4 py-3 font-bold text-accent">{{ $standing->calculated_points }}
-                            </td>
+                            <td class="px-4 py-3">{{ $standing->goals_scored }}:{{ $standing->goals_conceded }}</td>
+                            <td class="px-4 py-3 font-bold text-accent">{{ $standing->calculated_points }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
+
         <!-- Mobile Card View -->
         <div class="sm:hidden space-y-4 mt-6">
+            @php
+                $rank = 0;
+                $prev = null;
+                $skip = 1;
+            @endphp
+
             @foreach ($standings as $i => $standing)
+                @php
+                    $current = [$standing->calculated_points, $standing->goal_difference, $standing->goals_scored];
+
+                    if ($prev && $current === $prev) {
+                        $displayRank = $rank;
+                        $skip++;
+                    } else {
+                        $rank += $skip;
+                        $displayRank = $rank;
+                        $skip = 1;
+                    }
+
+                    $prev = $current;
+                @endphp
+
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-4 relative overflow-hidden">
-
-
                     <div class="absolute top-2 left-2 bg-accent text-white text-xs px-2 py-0.5 rounded-full shadow">
-                        #{{ $standing->manual_rank ?? $i + 1 }}
+                        #{{ $displayRank }}
                     </div>
 
                     <div class="flex items-center gap-3 mb-2">
@@ -71,22 +112,24 @@
                         @endif
                         <div>
                             <div class="font-bold text-primary text-base">{{ $standing->team?->name ?? '—' }}</div>
-                            <div class="text-xs text-gray-400">ГР:
-                                {{ $standing->goals_scored }}:{{ $standing->goals_conceded }}</div>
+                            <div class="text-xs text-gray-400">
+                                ГР: {{ $standing->goals_scored }}:{{ $standing->goals_conceded }}
+                            </div>
                         </div>
                     </div>
+
                     <div class="grid grid-cols-3 text-xs text-gray-700 gap-y-1 mt-2">
                         <div><span class="font-semibold text-gray-500">И:</span> {{ $standing->played }}</div>
                         <div><span class="font-semibold text-gray-500">П:</span> {{ $standing->wins }}</div>
                         <div><span class="font-semibold text-gray-500">Р:</span> {{ $standing->draws }}</div>
                         <div><span class="font-semibold text-gray-500">З:</span> {{ $standing->losses }}</div>
-                        <div class="col-span-3"><span class="font-semibold text-gray-500">Точки:</span>
+                        <div class="col-span-3">
+                            <span class="font-semibold text-gray-500">Точки:</span>
                             <span class="text-accent font-bold text-sm">{{ $standing->calculated_points }}</span>
                         </div>
                     </div>
                 </div>
             @endforeach
         </div>
-
     </div>
 </section>
