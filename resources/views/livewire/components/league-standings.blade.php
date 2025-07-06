@@ -76,7 +76,9 @@
                         <div><span class="font-semibold text-gray-500">Р:</span> {{ $standing->draws }}</div>
                         <div><span class="font-semibold text-gray-500">З:</span> {{ $standing->losses }}</div>
                         <div class="col-span-2"><span class="font-semibold text-gray-500">ГР:</span>
-                            {{ $standing->goal_difference }}</div>
+                            {{ $standing->goals_scored }}:{{ $standing->goals_conceded }}
+                        </div>
+
                         <div class="col-span-2 text-right">
                             <span class="font-semibold text-gray-500">Точки:</span>
                             <span class="text-accent font-bold text-sm">{{ $standing->calculated_points }}</span>
