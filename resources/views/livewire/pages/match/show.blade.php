@@ -127,25 +127,32 @@
 
     @if ($match->youtube_embed_url)
         <div class="mt-16 px-4">
-            <div class="bg-white rounded-2xl shadow-xl border border-accent/30 p-4 md:p-6 max-w-3xl mx-auto">
-                <h3
-                    class="text-xl md:text-2xl font-bold text-primary mb-4 text-center flex items-center justify-center gap-2">
-                    <i class="fas fa-video text-red-500"></i>
-                    Видео от мача
-                </h3>
+            <div class="mt-16 px-2 sm:px-4">
+                <div
+                    class="bg-white rounded-2xl shadow-xl border border-accent/30 p-4 md:p-6 max-w-full sm:max-w-4xl md:max-w-5xl lg:max-w-6xl mx-auto">
+                    <h3
+                        class="text-xl md:text-2xl font-bold text-primary mb-4 text-center flex items-center justify-center gap-2">
+                        <i class="fas fa-video text-red-500"></i>
+                        Видео от мача
+                    </h3>
 
-                <div class="relative w-full overflow-hidden rounded-xl shadow-md ring-1 ring-accent/20">
-                    <div class="relative w-full" style="padding-bottom: 56.25%;">
-                        <iframe class="absolute top-0 left-0 w-full h-full rounded-xl"
-                            src="https://www.youtube.com/embed/{{ \Str::afterLast($match->youtube_embed_url, 'embed/') }}"
-                            title="Видео от мача" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen referrerpolicy="strict-origin-when-cross-origin">
-                        </iframe>
+                    <div x-data x-init="$nextTick(() => {
+                        const iframe = $el.querySelector('iframe');
+                        if (iframe) {
+                            iframe.removeAttribute('width');
+                            iframe.removeAttribute('height');
+                            iframe.classList.add('w-full', 'h-[240px]', 'sm:h-[320px]', 'md:h-[420px]', 'lg:h-[600px]', 'rounded-xl');
+                        }
+                    })"
+                        class="overflow-hidden rounded-xl shadow-md ring-1 ring-accent/20">
+                        {!! $match->youtube_embed_url !!}
                     </div>
                 </div>
             </div>
+
         </div>
     @endif
+
+
 
 </div>
