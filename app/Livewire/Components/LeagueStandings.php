@@ -11,12 +11,26 @@ class LeagueStandings extends Component
     {
         $standings = Standing::with('team')
             ->get()
-            ->sortByDesc(function ($standing) {
-                return [
-                    ($standing->wins * 3) + $standing->draws,
-                    $standing->goals_scored - $standing->goals_conceded,
-                    $standing->team?->name
-                ];
+            ->sort(function ($a, $b) {
+                $pointsA = $a->calculated_points;
+                $pointsB = $b->calculated_points;
+
+                if ($pointsA !== $pointsB) {
+                    return $pointsB <=> $pointsA;
+                }
+
+                $gdA = $a->goal_difference;
+                $gdB = $b->goal_difference;
+
+                if ($gdA !== $gdB) {
+                    return $gdB <=> $gdA;
+                }
+
+                if ($a->goals_scored !== $b->goals_scored) {
+                    return $b->goals_scored <=> $a->goals_scored;
+                }
+
+                return strcmp(strtolower($a->team?->name), strtolower($b->team?->name));
             })
             ->take(5)
             ->values();
