@@ -11,12 +11,6 @@
             </a>
         </div>
 
-        @php
-            $rank = 0;
-            $prev = null;
-            $skip = 1;
-        @endphp
-
         <!-- Desktop -->
         <div class="overflow-x-auto bg-white rounded-xl shadow-lg hidden sm:block">
             <table class="min-w-full text-sm text-left">
@@ -33,28 +27,9 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach ($standings as $i => $standing)
-                        @php
-                            $current = [
-                                $standing->calculated_points,
-                                $standing->goal_difference,
-                                $standing->goals_scored,
-                            ];
-
-                            if ($prev && $current === $prev) {
-                                $displayRank = $rank;
-                                $skip++;
-                            } else {
-                                $rank += $skip;
-                                $displayRank = $rank;
-                                $skip = 1;
-                            }
-
-                            $prev = $current;
-                        @endphp
-
+                    @foreach ($standings as $standing)
                         <tr class="hover:bg-card transition">
-                            <td class="px-4 py-3 font-semibold">{{ $displayRank }}</td>
+                            <td class="px-4 py-3 font-semibold">{{ $loop->iteration }}</td>
                             <td class="px-4 py-3 font-bold text-primary flex items-center gap-2">
                                 @if ($standing->team?->logo)
                                     <img src="{{ asset('storage/' . $standing->team->logo) }}"
@@ -77,31 +52,10 @@
 
         <!-- Mobile Card View -->
         <div class="sm:hidden space-y-4 mt-6">
-            @php
-                $rank = 0;
-                $prev = null;
-                $skip = 1;
-            @endphp
-
-            @foreach ($standings as $i => $standing)
-                @php
-                    $current = [$standing->calculated_points, $standing->goal_difference, $standing->goals_scored];
-
-                    if ($prev && $current === $prev) {
-                        $displayRank = $rank;
-                        $skip++;
-                    } else {
-                        $rank += $skip;
-                        $displayRank = $rank;
-                        $skip = 1;
-                    }
-
-                    $prev = $current;
-                @endphp
-
+            @foreach ($standings as $standing)
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-4 relative overflow-hidden">
                     <div class="absolute top-2 left-2 bg-accent text-white text-xs px-2 py-0.5 rounded-full shadow">
-                        #{{ $displayRank }}
+                        #{{ $loop->iteration }}
                     </div>
 
                     <div class="flex items-center gap-3 mb-2">
