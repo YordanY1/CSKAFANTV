@@ -48,8 +48,10 @@ class FullStandingsPage extends Component
             ->filter(
                 fn($item) =>
                 str_contains(strtolower($item->team?->name), strtolower($this->search))
-            )
-            ->sort(function ($a, $b) {
+            );
+
+        if ($this->sortColumn === 'points') {
+            $standings = $standings->sort(function ($a, $b) {
                 $pointsA = $a->calculated_points;
                 $pointsB = $b->calculated_points;
 
@@ -69,8 +71,19 @@ class FullStandingsPage extends Component
                 }
 
                 return strcmp(strtolower($a->team?->name), strtolower($b->team?->name));
-            })
-            ->values();
+            });
+        } else {
+            $standings = $standings->sortBy(function ($item) {
+                return match ($this->sortColumn) {
+                    'team' => strtolower($item->team?->name),
+                    'goal_diff' => $item->goal_difference,
+                    'manual_rank' => $item->manual_rank,
+                    default => $item->{$this->sortColumn},
+                };
+            }, SORT_REGULAR, $this->sortDirection === 'desc');
+        }
+
+        $standings = $standings->values();
 
         return view('livewire.pages.full-standings-page', [
             'standings' => $standings,
