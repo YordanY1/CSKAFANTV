@@ -105,21 +105,19 @@
 
 
                 <!-- Social Icons -->
-                <div class="flex items-center space-x-4 text-2xl ml-4">
-                    <a href="https://facebook.com/CSKAFENTV48" target="_blank" rel="noopener noreferrer"
-                        class="text-blue-600 hover:scale-110 transition" title="Facebook">
+                <div class="flex items-center space-x-4 text-2xl ml-4 text-white">
+                    <a href="https://facebook.com/CSKAFENTV48" target="_blank" class="hover:text-blue-400 transition">
                         <i class="fab fa-facebook-square"></i>
                     </a>
-                    <a href="https://instagram.com/cskafantv" target="_blank" rel="noopener noreferrer"
-                        class="text-pink-500 hover:scale-110 transition" title="Instagram">
+                    <a href="https://instagram.com/cskafantv" target="_blank" class="hover:text-pink-400 transition">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="https://www.youtube.com/@CSKAFANTV48" target="_blank" rel="noopener noreferrer"
-                        class="text-red-600 hover:scale-110 transition" title="YouTube">
+                    <a href="https://www.youtube.com/@CSKAFANTV48" target="_blank"
+                        class="hover:text-red-500 transition">
                         <i class="fab fa-youtube"></i>
                     </a>
-                    <a href="https://discord.com/invite/GY29Xccj42" target="_blank" rel="noopener noreferrer"
-                        class="text-indigo-500 hover:scale-110 transition" title="Discord">
+                    <a href="https://discord.com/invite/GY29Xccj42" target="_blank"
+                        class="hover:text-indigo-400 transition">
                         <i class="fab fa-discord"></i>
                     </a>
                 </div>
@@ -235,26 +233,24 @@
             </a>
         @endif
         <!-- Mobile Social Icons -->
-        <div class="flex justify-center gap-4 text-2xl mt-4 sm:hidden">
+        <div class="flex justify-center gap-4 text-2xl mt-4 sm:hidden text-white">
             <a href="https://facebook.com/CSKAFENTV48" target="_blank" rel="noopener noreferrer"
-                class="text-blue-600 hover:scale-110 transition" title="Facebook">
+                class="hover:text-blue-500 transition" title="Facebook">
                 <i class="fab fa-facebook-square"></i>
             </a>
             <a href="https://instagram.com/cskafantv" target="_blank" rel="noopener noreferrer"
-                class="text-pink-500 hover:scale-110 transition" title="Instagram">
+                class="hover:text-pink-500 transition" title="Instagram">
                 <i class="fab fa-instagram"></i>
             </a>
             <a href="https://www.youtube.com/@CSKAFANTV48" target="_blank" rel="noopener noreferrer"
-                class="text-red-600 hover:scale-110 transition" title="YouTube">
+                class="hover:text-red-500 transition" title="YouTube">
                 <i class="fab fa-youtube"></i>
             </a>
             <a href="https://discord.com/invite/GY29Xccj42" target="_blank" rel="noopener noreferrer"
-                class="text-indigo-500 hover:scale-110 transition" title="Discord">
+                class="hover:text-indigo-400 transition" title="Discord">
                 <i class="fab fa-discord"></i>
             </a>
         </div>
-
-
     </div>
 
     <!-- Register Modal -->

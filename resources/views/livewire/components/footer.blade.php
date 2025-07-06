@@ -3,9 +3,10 @@
 
         <div>
             <h3 class="text-lg font-bold uppercase tracking-wide mb-2">CSKA FAN TV</h3>
-            <p class="text-accent">
+            <p class="text-white">
                 Онлайн домът на червените фенове. Мачове, прогнози, награди и още.
             </p>
+
         </div>
 
         <div>
@@ -37,24 +38,25 @@
         <!-- Socials -->
         <div>
             <h4 class="font-semibold uppercase mb-2">Последвай ни</h4>
-            <div class="flex justify-center sm:justify-start space-x-4 mt-2 text-xl">
+            <div class="flex justify-center sm:justify-start space-x-4 mt-2 text-xl text-white">
                 <a href="https://facebook.com/CSKAFENTV48" target="_blank" rel="noopener noreferrer"
-                    class="hover:text-accent" title="Facebook">
+                    class="hover:text-blue-500 transition" title="Facebook">
                     <i class="fab fa-facebook-f"></i>
                 </a>
                 <a href="https://instagram.com/cskafantv" target="_blank" rel="noopener noreferrer"
-                    class="hover:text-accent" title="Instagram">
+                    class="hover:text-pink-500 transition" title="Instagram">
                     <i class="fab fa-instagram"></i>
                 </a>
                 <a href="https://www.youtube.com/@CSKAFANTV48" target="_blank" rel="noopener noreferrer"
-                    class="hover:text-accent" title="YouTube">
+                    class="hover:text-red-600 transition" title="YouTube">
                     <i class="fab fa-youtube"></i>
                 </a>
                 <a href="https://discord.com/invite/GY29Xccj42" target="_blank" rel="noopener noreferrer"
-                    class="hover:text-accent" title="Discord">
+                    class="hover:text-indigo-400 transition" title="Discord">
                     <i class="fab fa-discord"></i>
                 </a>
             </div>
+
 
             <div class="mt-4">
                 <a href="{{ route('privacy-policy') }}" wire:navigate class="block hover:text-accent text-xs">Политика

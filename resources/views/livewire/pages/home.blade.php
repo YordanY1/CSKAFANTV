@@ -10,7 +10,7 @@
                     CSKA FAN TV
                 </span>
             </h1>
-            <p class="text-lg md:text-xl text-accent mt-4 font-medium max-w-xl mx-auto">
+            <p class="text-lg md:text-xl text-white mt-4 font-medium max-w-xl mx-auto">
                 Официалната онлайн арена за всички „червени“ сърца — следи мачове, гласувай за играчи и участвай в
                 томболи!
             </p>
