@@ -69,8 +69,6 @@
                                 : asset('images/default-player.jpg') }}"
                                 alt="{{ $line->player->name ?? 'Непознат играч' }}"
                                 class="w-16 h-16 rounded-full object-cover" />
-
-                            class="w-12 h-12 rounded-full object-cover border-2 border-accent shadow" />
                             <div class="text-text flex-1">
                                 <div class="text-lg font-semibold">
                                     #{{ $line->player->number ?? '–' }}
