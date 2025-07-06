@@ -6,7 +6,7 @@
         <table class="min-w-full text-sm text-left">
             <thead class="bg-accent text-cta uppercase tracking-wider">
                 <tr>
-                    @foreach ([['manual_rank', '#'], ['team', 'Отбор'], ['played', 'И'], ['wins', 'П'], ['draws', 'Р'], ['losses', 'З'], ['goal_diff', 'ГР'], ['points', 'Т']] as [$column, $label])
+                    @foreach ([['manual_rank', '#'], ['team', 'Отбор'], ['played', 'М'], ['wins', 'П'], ['draws', 'Р'], ['losses', 'З'], ['goal_diff', 'ГР'], ['points', 'Т']] as [$column, $label])
                         <th class="px-4 py-3 {{ $column ? 'cursor-pointer' : '' }}"
                             @if ($column) wire:click="sortBy('{{ $column }}')" @endif>
                             {{ $label }}
@@ -35,7 +35,7 @@
                             <td class="px-4 py-3">{{ $team->wins }}</td>
                             <td class="px-4 py-3">{{ $team->draws }}</td>
                             <td class="px-4 py-3">{{ $team->losses }}</td>
-                            <td class="px-4 py-3">({{ $team->goal_difference }})</td>
+                            <td class="px-4 py-3">{{ $team->goals_scored }}:{{ $team->goals_conceded }}</td>
                             <td class="px-4 py-3 font-bold text-accent">{{ $team->calculated_points }}</td>
                         </tr>
                     @endif
@@ -49,29 +49,29 @@
         @foreach ($standings as $i => $team)
             @if (str_contains(strtolower($team->team?->name), strtolower($search)))
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-4 relative overflow-hidden">
+                    <!-- Ранг -->
                     <div class="absolute top-2 left-2 bg-accent text-white text-xs px-2 py-0.5 rounded-full shadow">
                         #{{ $team->manual_rank ?? $i + 1 }}
                     </div>
 
-                    <div class="flex items-center gap-3 mb-2">
+                    <div class="flex items-center gap-3 mb-3">
                         @if ($team->team?->logo)
                             <img src="{{ asset('storage/' . $team->team->logo) }}" alt="{{ $team->team->name }}"
                                 class="w-10 h-10 rounded-full object-cover ring-2 ring-accent" />
                         @endif
                         <div>
                             <div class="font-bold text-primary text-base">{{ $team->team->name ?? '—' }}</div>
-                            <div class="text-xs text-gray-400">ГР:
-                                {{ $team->goals_scored }}:{{ $team->goals_conceded }} ({{ $team->goal_difference }})
-                            </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-3 text-xs text-gray-700 gap-y-1 mt-2">
-                        <div><span class="font-semibold text-gray-500">И:</span> {{ $team->played }}</div>
+                    <div class="grid grid-cols-4 text-xs text-gray-700 gap-y-1">
+                        <div><span class="font-semibold text-gray-500">М:</span> {{ $team->played }}</div>
                         <div><span class="font-semibold text-gray-500">П:</span> {{ $team->wins }}</div>
                         <div><span class="font-semibold text-gray-500">Р:</span> {{ $team->draws }}</div>
                         <div><span class="font-semibold text-gray-500">З:</span> {{ $team->losses }}</div>
-                        <div class="col-span-3">
+                        <div><span class="font-semibold text-gray-500">ГР:</span>
+                            {{ $team->goals_scored }}:{{ $team->goals_conceded }}</div>
+                        <div class="col-span-2 text-right">
                             <span class="font-semibold text-gray-500">Точки:</span>
                             <span class="text-accent font-bold text-sm">{{ $team->calculated_points }}</span>
                         </div>
@@ -80,4 +80,5 @@
             @endif
         @endforeach
     </div>
+
 </section>

@@ -43,29 +43,22 @@ class FullStandingsPage extends Component
 
     public function render()
     {
-        $standings = Standing::with('team')
+        $all = Standing::with('team')
             ->get()
-            ->filter(
-                fn($item) =>
-                str_contains(strtolower($item->team?->name), strtolower($this->search))
-            );
+            ->filter(fn($item) => str_contains(strtolower($item->team?->name), strtolower($this->search)));
+
+        $auto = $all->filter(fn($s) => $s->manual_rank === null);
 
         if ($this->sortColumn === 'points') {
-            $standings = $standings->sort(function ($a, $b) {
-                $pointsA = $a->calculated_points;
-                $pointsB = $b->calculated_points;
-
+            $auto = $auto->sort(function ($a, $b) {
                 $multiplier = $this->sortDirection === 'asc' ? 1 : -1;
 
-                if ($pointsA !== $pointsB) {
-                    return $multiplier * ($pointsA <=> $pointsB);
+                if ($a->calculated_points !== $b->calculated_points) {
+                    return $multiplier * ($a->calculated_points <=> $b->calculated_points);
                 }
 
-                $gdA = $a->goal_difference;
-                $gdB = $b->goal_difference;
-
-                if ($gdA !== $gdB) {
-                    return $multiplier * ($gdA <=> $gdB);
+                if ($a->goal_difference !== $b->goal_difference) {
+                    return $multiplier * ($a->goal_difference <=> $b->goal_difference);
                 }
 
                 if ($a->goals_scored !== $b->goals_scored) {
@@ -75,7 +68,7 @@ class FullStandingsPage extends Component
                 return $multiplier * strcmp(strtolower($a->team?->name), strtolower($b->team?->name));
             });
         } else {
-            $standings = $standings->sortBy(function ($item) {
+            $auto = $auto->sortBy(function ($item) {
                 return match ($this->sortColumn) {
                     'team' => strtolower($item->team?->name),
                     'goal_diff' => $item->goal_difference,
@@ -85,7 +78,25 @@ class FullStandingsPage extends Component
             }, SORT_REGULAR, $this->sortDirection === 'desc');
         }
 
-        $standings = $standings->values();
+        $auto = $auto->values();
+        $manuals = $all->filter(fn($s) => $s->manual_rank !== null);
+
+        $final = collect();
+
+        foreach ($manuals as $m) {
+            $final->put($m->manual_rank - 1, $m);
+        }
+
+        $i = 0;
+        foreach ($auto as $team) {
+            while ($final->has($i)) {
+                $i++;
+            }
+            $final->put($i, $team);
+            $i++;
+        }
+
+        $standings = $final->sortKeys()->values();
 
         return view('livewire.pages.full-standings-page', [
             'standings' => $standings,
