@@ -83,11 +83,17 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('match.show', $match) }}" wire:navigate
-                            class="block mt-4 text-center text-primary font-semibold hover:underline">
-                            Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
-                        </a>
-
+                        @if ($match->is_finished)
+                            <a href="{{ route('match.show', $match) }}" wire:navigate
+                                class="block mt-4 text-center text-red-600 font-extrabold uppercase tracking-wide hover:underline">
+                                ОЦЕНИ ИГРАЧИТЕ <i class="fas fa-star ml-1"></i>
+                            </a>
+                        @else
+                            <a href="{{ route('match.show', $match) }}" wire:navigate
+                                class="block mt-4 text-center text-primary font-semibold hover:underline">
+                                Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
+                            </a>
+                        @endif
                     </div>
                 </div>
             @empty

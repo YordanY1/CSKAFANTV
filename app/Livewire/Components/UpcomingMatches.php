@@ -13,13 +13,29 @@ class UpcomingMatches extends Component
     public function mount()
     {
         $now = now();
-        $hasLive = FootballMatch::where('match_datetime', '<=', $now)
-            ->where('match_datetime', '>=', $now->copy()->subHours(2))
+
+        $hasLive = FootballMatch::whereBetween('match_datetime', [
+            $now->copy()->subHours(2),
+            $now->copy()->addMinutes(30),
+        ])
+            ->where('is_finished', false)
             ->exists();
 
         if ($hasLive) {
             $this->filter = 'live';
+            return;
         }
+
+        $hasRecentCompleted = FootballMatch::where('is_finished', true)
+            ->whereBetween('match_datetime', [$now->copy()->subHours(48), $now])
+            ->exists();
+
+        if ($hasRecentCompleted) {
+            $this->filter = 'completed';
+            return;
+        }
+
+        $this->filter = 'upcoming';
     }
 
     public function setFilter(string $filter): void
@@ -39,7 +55,7 @@ class UpcomingMatches extends Component
                     $now->copy()->subHours(2),
                     $now->copy()->addMinutes(30),
                 ])
-                    ->where('is_finished', false) 
+                    ->where('is_finished', false)
             )
             ->when(
                 $this->filter === 'upcoming',
@@ -52,7 +68,7 @@ class UpcomingMatches extends Component
                 fn($q) =>
                 $q->where('is_finished', true)
             )
-            ->orderBy('match_datetime', 'asc')
+            ->orderBy('match_datetime', $this->filter === 'completed' ? 'desc' : 'asc')
             ->get();
 
         return view('livewire.components.upcoming-matches', [

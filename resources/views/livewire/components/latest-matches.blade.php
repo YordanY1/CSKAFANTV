@@ -88,10 +88,17 @@
                         </div>
 
                         <div class="flex justify-center items-center gap-4 mt-4">
-                            <a href="{{ route('match.show', $match) }}" wire:navigate
-                                class="text-primary font-semibold hover:underline">
-                                Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
-                            </a>
+                            @if ($match->is_finished)
+                                <a href="{{ route('match.show', $match) }}" wire:navigate
+                                    class="text-red-600 font-bold uppercase hover:underline">
+                                    ОЦЕНИ ИГРАЧИТЕ <i class="fas fa-star ml-1"></i>
+                                </a>
+                            @else
+                                <a href="{{ route('match.show', $match) }}" wire:navigate
+                                    class="text-primary font-semibold hover:underline">
+                                    Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
+                                </a>
+                            @endif
 
                             @auth
                                 @php
