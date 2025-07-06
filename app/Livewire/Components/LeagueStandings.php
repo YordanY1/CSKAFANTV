@@ -14,6 +14,7 @@ class LeagueStandings extends Component
             ->sortBy(function ($standing) {
                 return $standing->manual_rank ?? 1000;
             })
+            ->take(5)
             ->values();
 
         return view('livewire.components.league-standings', [
