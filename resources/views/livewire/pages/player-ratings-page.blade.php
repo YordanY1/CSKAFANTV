@@ -22,7 +22,7 @@
                             </td>
                             <td class="px-4 py-3 font-bold text-primary flex items-center gap-2">
                                 @if ($data['player']?->image_path)
-                                    <img src="{{ asset($data['player']->image_path) }}"
+                                    <img src="{{ asset('storage/' . $data['player']->image_path) }}"
                                         alt="{{ $data['player']->name }}"
                                         class="w-10 h-10 rounded-full object-cover border border-gray-300" />
                                 @endif
