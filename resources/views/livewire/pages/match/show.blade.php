@@ -124,16 +124,15 @@
             </form>
         @endif
     @endauth
-
     @if ($match->youtube_embed_url)
         <div class="mt-16">
             <div
                 class="bg-white sm:rounded-2xl rounded-none sm:shadow-xl shadow-none sm:border border-accent/30 border-none
-                sm:p-6 p-0 w-screen sm:w-full sm:max-w-4xl md:max-w-5xl lg:max-w-6xl mx-auto">
+            sm:p-6 p-0 max-w-full sm:max-w-4xl md:max-w-5xl lg:max-w-6xl mx-auto">
 
                 <h3
                     class="text-xl md:text-2xl font-bold text-primary mb-4 text-center flex items-center justify-center gap-2
-                    px-4 sm:px-0">
+                px-4 sm:px-0">
                     <i class="fas fa-video text-red-500"></i>
                     Видео от мача
                 </h3>
@@ -145,7 +144,7 @@
                         iframe.removeAttribute('height');
                         iframe.classList.add(
                             'w-full',
-                            'h-[250px]',
+                            'h-[360px]', //
                             'sm:h-[320px]',
                             'md:h-[420px]',
                             'lg:h-[600px]',
@@ -161,7 +160,5 @@
             </div>
         </div>
     @endif
-
-
 
 </div>
