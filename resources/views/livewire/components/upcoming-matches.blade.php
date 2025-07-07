@@ -84,7 +84,6 @@
                         </div>
 
                         @php
-                            use Illuminate\Support\Carbon;
                             $matchEndTime = $match->match_datetime->copy()->addMinutes($match->duration ?? 90);
                             $hoursSinceEnd = now()->diffInHours($matchEndTime, false);
                         @endphp
@@ -118,7 +117,6 @@
                                 @endif
                             @endauth
                         </div>
-
                     </div>
                 </div>
             @empty

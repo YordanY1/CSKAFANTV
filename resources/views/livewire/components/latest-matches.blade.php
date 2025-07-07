@@ -89,9 +89,7 @@
 
                         <div class="flex justify-center items-center gap-4 mt-4">
                             @php
-                                use Illuminate\Support\Carbon;
-
-                                $matchEndTime = Carbon::parse($match->match_datetime)->addMinutes(
+                                $matchEndTime = \Carbon\Carbon::parse($match->match_datetime)->addMinutes(
                                     $match->duration ?? 90,
                                 );
                                 $hoursSinceEnd = now()->diffInHours($matchEndTime, false);
@@ -109,10 +107,8 @@
                                 </a>
                             @endif
 
-
                             @auth
                                 @php
-                                    $now = now();
                                     $hasPrediction = \App\Models\Prediction::where('user_id', auth()->id())
                                         ->where('football_match_id', $match->id)
                                         ->exists();
@@ -127,6 +123,7 @@
                                 @endif
                             @endauth
                         </div>
+
                     </div>
                 </div>
             @empty
