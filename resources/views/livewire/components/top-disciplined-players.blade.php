@@ -19,8 +19,8 @@
                     <span class="text-gray-800 font-medium">{{ $card->player->name }}</span>
                     <span class="text-sm font-bold">
                         <span class="text-yellow-500">🟨 {{ $card->yellow_cards }}</span> /
-                        <span class="text-red-600">🟥 {{ $card->red_cards }}</span> /
-                        <span class="text-rose-800">🟧 {{ $card->second_yellow_reds }}</span>
+                        <span class="text-rose-800">🟧 {{ $card->second_yellow_reds }}</span> /
+                        <span class="text-red-600">⬛ {{ $card->red_cards }}</span>
                     </span>
                 </li>
             @endforeach
@@ -29,8 +29,8 @@
         <div class="text-xs text-gray-600 border-t pt-4 mt-6">
             <div class="flex items-center justify-between">
                 <div><span class="text-yellow-500">🟨</span> Жълт картон</div>
-                <div><span class="text-red-600">🟥</span> Червен картон</div>
                 <div><span class="text-rose-800">🟧</span> Втори жълт → червен</div>
+                <div><span class="text-red-600">⬛</span> Директен червен картон</div>
             </div>
         </div>
     </div>

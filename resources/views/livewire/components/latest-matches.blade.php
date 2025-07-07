@@ -88,17 +88,27 @@
                         </div>
 
                         <div class="flex justify-center items-center gap-4 mt-4">
-                            @if ($match->is_finished)
+                            @php
+                                use Illuminate\Support\Carbon;
+
+                                $matchEndTime = Carbon::parse($match->match_datetime)->addMinutes(
+                                    $match->duration ?? 90,
+                                );
+                                $hoursSinceEnd = now()->diffInHours($matchEndTime, false);
+                            @endphp
+
+                            @if ($match->is_finished && $hoursSinceEnd >= -48)
                                 <a href="{{ route('match.show', $match) }}" wire:navigate
                                     class="text-red-600 font-bold uppercase hover:underline">
                                     ОЦЕНИ ИГРАЧИТЕ <i class="fas fa-star ml-1"></i>
                                 </a>
-                            @else
+                            @elseif (!$match->is_finished)
                                 <a href="{{ route('match.show', $match) }}" wire:navigate
                                     class="text-primary font-semibold hover:underline">
                                     Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
                                 </a>
                             @endif
+
 
                             @auth
                                 @php

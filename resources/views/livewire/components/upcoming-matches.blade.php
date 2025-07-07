@@ -83,14 +83,19 @@
                             </div>
                         </div>
 
+                        @php
+                            use Illuminate\Support\Carbon;
+                            $matchEndTime = $match->match_datetime->copy()->addMinutes($match->duration ?? 90);
+                            $hoursSinceEnd = now()->diffInHours($matchEndTime, false);
+                        @endphp
 
                         <div class="flex justify-center items-center gap-4 mt-4">
-                            @if ($match->is_finished)
+                            @if ($match->is_finished && $hoursSinceEnd >= -48)
                                 <a href="{{ route('match.show', $match) }}" wire:navigate
                                     class="text-red-600 font-bold uppercase hover:underline">
                                     ОЦЕНИ ИГРАЧИТЕ <i class="fas fa-star ml-1"></i>
                                 </a>
-                            @else
+                            @elseif (!$match->is_finished)
                                 <a href="{{ route('match.show', $match) }}" wire:navigate
                                     class="text-primary font-semibold hover:underline">
                                     Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
@@ -99,7 +104,6 @@
 
                             @auth
                                 @php
-                                    $now = now();
                                     $hasPrediction = \App\Models\Prediction::where('user_id', auth()->id())
                                         ->where('football_match_id', $match->id)
                                         ->exists();
@@ -114,6 +118,7 @@
                                 @endif
                             @endauth
                         </div>
+
                     </div>
                 </div>
             @empty

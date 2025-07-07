@@ -1,5 +1,5 @@
 <section class="px-4 py-12 max-w-7xl mx-auto">
-    <h2 class="text-3xl font-bold text-center text-primary mb-8">Видео Галерия</h2>
+    <h2 class="text-3xl font-bold text-center text-primary mb-8">ВидеоГалерия</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach ($videos as $video)

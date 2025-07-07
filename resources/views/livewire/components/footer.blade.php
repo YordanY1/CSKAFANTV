@@ -31,7 +31,7 @@
                 <li><a href="{{ route('player.ratings') }}" wire:navigate class="hover:text-accent">Оценки</a></li>
                 <li><a href="{{ route('predictions.rankings') }}" wire:navigate class="hover:text-accent">Прогнози
                         класация</a></li>
-                <li><a href="{{ route('videos') }}" wire:navigate class="hover:text-accent">Видео галерия</a></li>
+                <li><a href="{{ route('videos') }}" wire:navigate class="hover:text-accent">Видеогалерия</a></li>
             </ul>
         </div>
 

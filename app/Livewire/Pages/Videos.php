@@ -29,7 +29,7 @@ class Videos extends Component
 
         return view('livewire.pages.videos', compact('videos', 'allTags'))
             ->layout('layouts.app', [
-                'title' => 'Видео Галерия | CSKA FAN TV',
+                'title' => 'ВидеоГалерия | CSKA FAN TV',
                 'description' => 'Гледайте най-добрите моменти от мачовете на ЦСКА – голове, интервюта, репортажи и вълнуващи кадри от стадиона.',
                 'robots' => 'index, follow',
                 'canonical' => url('/videos'),
