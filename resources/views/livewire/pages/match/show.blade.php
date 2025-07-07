@@ -133,7 +133,7 @@
                     <h3
                         class="text-xl md:text-2xl font-bold text-primary mb-4 text-center flex items-center justify-center gap-2">
                         <i class="fas fa-video text-red-500"></i>
-                        Видео от мача
+                        Видео за мача
                     </h3>
 
                     <div x-data x-init="$nextTick(() => {
