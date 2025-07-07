@@ -40,10 +40,11 @@ class PredictionModal extends Component
     {
         $this->validate();
 
-        if (!is_numeric($this->homeScore) || !is_numeric($this->awayScore)) {
+        if ($this->homeScore === '' || $this->awayScore === '') {
             $this->addError('empty', 'Попълни резултат и за двата отбора.');
             return;
         }
+
 
         Prediction::create([
             'user_id' => Auth::id(),

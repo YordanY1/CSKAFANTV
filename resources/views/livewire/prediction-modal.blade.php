@@ -24,10 +24,11 @@
 
                         <select wire:model="homeScore"
                             class="w-20 rounded-xl border border-gray-300 bg-white px-2 py-2 text-center text-base font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-accent">
-                            <option value="" disabled selected>–</option>
+                            <option value="" disabled>–</option>
                             @for ($i = 0; $i <= 20; $i++)
                                 <option value="{{ $i }}">{{ $i }}</option>
                             @endfor
+
                         </select>
                     </div>
 
@@ -42,10 +43,11 @@
 
                         <select wire:model="awayScore"
                             class="w-20 rounded-xl border border-gray-300 bg-white px-2 py-2 text-center text-base font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-accent">
-                            <option value="" disabled selected>–</option>
+                            <option value="" disabled>–</option>
                             @for ($i = 0; $i <= 20; $i++)
                                 <option value="{{ $i }}">{{ $i }}</option>
                             @endfor
+
                         </select>
                     </div>
 
