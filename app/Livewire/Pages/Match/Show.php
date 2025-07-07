@@ -13,12 +13,14 @@ class Show extends Component
     public FootballMatch $match;
     public array $ratings = [];
     public array $existingReviews = [];
+    public $coach;
 
 
     public array $layoutData = [];
 
     public function mount(FootballMatch $match)
     {
+
         $this->match = $match->load([
             'homeTeam',
             'awayTeam',
