@@ -36,25 +36,26 @@
                         {{ $match->match_datetime->timezone('Europe/Sofia')->locale('bg')->translatedFormat('d F Y • H:i \ч.') }}
                     </div>
 
-                    <div class="flex justify-center mt-4">
-                        <div x-data="matchCountdown({
-                            id: {{ $match->id }},
-                            matchTime: '{{ $match->match_datetime->toIso8601String() }}',
-                            isFinished: {{ (int) $match->is_finished }},
-                            youtube: '{{ $match->youtube_url }}'
-                        })" x-init="init()" x-ref="matchTimer{{ $match->id }}"
-                            x-show="label !== ''" @click="if (isLive && youtubeUrl) window.open(youtubeUrl, '_blank')"
+                    <div class="flex justify-center mt-4" x-data="matchCountdown({
+                        id: {{ $match->id }},
+                        matchTime: '{{ $match->match_datetime->toIso8601String() }}',
+                        isFinished: {{ (int) $match->is_finished }},
+                        youtube: '{{ $match->youtube_url }}'
+                    })" x-init="init()"
+                        x-show="youtubeUrl">
+                        <div x-show="label !== ''" @click="if (isLive && youtubeUrl) window.open(youtubeUrl, '_blank')"
                             class="flex items-center gap-2 px-5 py-3 rounded-lg text-white font-semibold shadow-lg transition-all duration-300"
                             x-bind:class="{
-                                'bg-red-600 hover:bg-red-700 animate-pulse cursor-pointer': isLive && youtubeUrl,
+                                'bg-red-600 hover:bg-red-700 animate-pulse cursor-pointer': isLive,
                                 'bg-yellow-500 hover:bg-yellow-600': !isLive && label.includes('⏳'),
-                                'bg-gray-400': label.includes('✅'),
-                                'cursor-default': !isLive
+                                'bg-gray-400': label.includes('✅')
                             }">
-                            <i class="fab fa-youtube text-xl" x-show="isLive && youtubeUrl"></i>
+                            <i class="fab fa-youtube text-xl" x-show="isLive"></i>
                             <span x-text="label"></span>
                         </div>
                     </div>
+
+
 
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-center text-accent mb-2">
