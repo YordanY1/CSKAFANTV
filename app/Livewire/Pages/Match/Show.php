@@ -5,6 +5,8 @@ namespace App\Livewire\Pages\Match;
 use App\Models\FootballMatch;
 use App\Models\PlayerReview;
 use Livewire\Component;
+use App\Models\Player;
+
 
 class Show extends Component
 {
@@ -23,6 +25,8 @@ class Show extends Component
             'lineup.player',
             'lineup.replacesPlayer',
         ]);
+
+        $this->coach = Player::where('is_coach', true)->first();
 
         $home = $this->match->homeTeam->name;
         $away = $this->match->awayTeam->name;
@@ -79,7 +83,8 @@ class Show extends Component
 
     public function render()
     {
-        return view('livewire.pages.match.show')
-            ->layout('layouts.app', $this->layoutData);
+        return view('livewire.pages.match.show', [
+            'coach' => $this->coach,
+        ])->layout('layouts.app', $this->layoutData);
     }
 }

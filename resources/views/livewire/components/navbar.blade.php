@@ -28,7 +28,7 @@
                     <div
                         class="absolute left-0 mt-2 bg-white text-primary rounded-md shadow-lg z-50 py-2 w-40 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition duration-200">
                         <a href="{{ route('players') }}" wire:navigate
-                            class="block px-4 py-2 hover:bg-accent hover:text-white transition">Играчите</a>
+                            class="block px-4 py-2 hover:bg-accent hover:text-white transition">Играчи и щаб</a>
                         <a href="{{ route('cards') }}" wire:navigate
                             class="block px-4 py-2 hover:bg-accent hover:text-white transition">Картони</a>
                         <a href="{{ route('player.ratings') }}" wire:navigate
@@ -156,7 +156,7 @@
             </button>
             <div x-show="openTeam" x-collapse class="space-y-2">
                 <a href="{{ route('players') }}" wire:navigate
-                    class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Играчите</a>
+                    class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Играчи и щаб</a>
                 <a href="{{ route('cards') }}" wire:navigate
                     class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Картони</a>
                 <a href="{{ route('player.ratings') }}" wire:navigate

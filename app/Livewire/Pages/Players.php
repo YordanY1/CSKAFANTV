@@ -27,7 +27,8 @@ class Players extends Component
     public function render()
     {
         return view('livewire.pages.players', [
-            'players' => Player::with('team')->get(),
+            'players' => Player::where('is_coach', false)->with('team')->get(),
+            'coaches' => Player::where('is_coach', true)->with('team')->get(),
         ])->layout('layouts.app', $this->layoutData);
     }
 }

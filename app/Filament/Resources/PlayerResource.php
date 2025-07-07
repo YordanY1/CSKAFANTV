@@ -14,13 +14,15 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Toggle;
+
 
 class PlayerResource extends Resource
 {
     protected static ?string $model = Player::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
-    protected static ?string $navigationLabel = 'Играчите';
+    protected static ?string $navigationLabel = 'Играчите и треньори';
     protected static ?string $pluralLabel = 'Играчите';
     protected static ?string $modelLabel = 'Играч';
     protected static ?int $navigationSort = 1;
@@ -55,6 +57,12 @@ class PlayerResource extends Resource
                     ->label('Отбор')
                     ->relationship('team', 'name')
                     ->required(),
+
+                Toggle::make('is_coach')
+                    ->label('Треньор')
+                    ->helperText('Маркирай, ако този човек е треньор')
+                    ->default(false),
+
             ]);
     }
 
@@ -71,6 +79,10 @@ class PlayerResource extends Resource
                 TextColumn::make('number')->label('№'),
                 TextColumn::make('position')->label('Позиция'),
                 TextColumn::make('team.name')->label('Отбор')->searchable(),
+                TextColumn::make('is_coach')
+                    ->label('Роля')
+                    ->formatStateUsing(fn($state) => $state ? 'Треньор' : 'Играч'),
+
             ])
             ->defaultSort('name');
     }

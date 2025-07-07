@@ -12,6 +12,23 @@
         @endif
     @endauth
 
+    @if ($coach)
+        <div
+            class="mt-16 max-w-xl mx-auto text-center bg-gradient-to-br from-white to-gray-50 p-8 rounded-2xl shadow-xl border border-accent/30">
+            <h2 class="text-3xl font-bold text-primary mb-6 flex justify-center items-center gap-2">
+                <i class="fas fa-chalkboard-teacher text-accent"></i> Треньор
+            </h2>
+
+            <img src="{{ $coach->image_path ? asset('storage/' . $coach->image_path) : asset('images/default-player.jpg') }}"
+                alt="{{ $coach->name }}"
+                class="w-28 h-28 rounded-full object-cover mx-auto mb-4 border-4 border-accent shadow-lg" />
+
+            <p class="text-xl font-semibold text-gray-800">{{ $coach->name }}</p>
+            <p class="text-sm text-gray-500 mt-1 italic">Старши треньор на ЦСКА</p>
+        </div>
+    @endif
+
+
     <div class="grid md:grid-cols-2 gap-10">
         {{-- Starters --}}
         <div>
