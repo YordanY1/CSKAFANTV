@@ -49,8 +49,8 @@ class PredictionModal extends Component
         Prediction::create([
             'user_id' => Auth::id(),
             'football_match_id' => $this->matchId,
-            'home_score_prediction' => $this->homeScore,
-            'away_score_prediction' => $this->awayScore,
+            'home_score_prediction' => (int)$this->homeScore,
+            'away_score_prediction' => (int)$this->awayScore,
         ]);
 
         session()->flash('success', 'Прогнозата е записана успешно!');
