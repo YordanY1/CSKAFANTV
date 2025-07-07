@@ -10,7 +10,7 @@
                     <tr>
                         <th class="px-4 py-3">#</th>
                         <th class="px-4 py-3">Играч</th>
-                        <th class="px-4 py-3">Средна оценка</th>
+                        <th class="px-4 py-3">Средна оценка за сезона</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">

@@ -13,6 +13,11 @@
     @endauth
 
     @if ($coach)
+        @php
+            $coachId = $coach->id;
+            $average = $averageRatings[$coachId] ?? null;
+        @endphp
+
         <div
             class="mt-16 max-w-xl mx-auto text-center bg-gradient-to-br from-white to-gray-50 p-8 rounded-2xl shadow-xl border border-accent/30">
             <h2 class="text-3xl font-bold text-primary mb-6 flex justify-center items-center gap-2">
@@ -25,8 +30,50 @@
 
             <p class="text-xl font-semibold text-gray-800">{{ $coach->name }}</p>
             <p class="text-sm text-gray-500 mt-1 italic">Старши треньор на ЦСКА</p>
+
+            @auth
+                @if ($match->is_finished)
+                    @if (!isset($existingReviews[$coachId]))
+                        <div x-data="{ selectedRating: '' }" class="mt-4">
+                            <label class="text-sm text-accent-2 mt-1 block">Оцени треньора:</label>
+                            <select x-model="selectedRating" wire:model.defer="ratings.{{ $coachId }}"
+                                class="mt-1 w-full border-gray-300 rounded text-sm">
+                                <option value="">– Избери –</option>
+                                @for ($i = 1; $i <= 10; $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+
+                            @if ($average)
+                                <p x-show="selectedRating" x-transition class="text-sm mt-2"
+                                    :class="{
+                                        'text-green-600 font-semibold': {{ $average }} >= 7,
+                                        'text-yellow-600': {{ $average }} >= 5 && {{ $average }} < 7,
+                                        'text-red-600': {{ $average }} < 5
+                                    }">
+                                    Средна оценка досега:
+                                    <strong>{{ $average }}</strong>
+                                </p>
+                            @endif
+                        </div>
+                    @else
+                        <p class="text-sm text-gray-500 mt-4">
+                            Вече си оценил треньора:
+                            <strong>{{ $existingReviews[$coachId] }}</strong>
+                        </p>
+
+                        @if ($average)
+                            <p class="text-sm text-gray-600">
+                                Средна оценка досега:
+                                <strong>{{ $average }}</strong>
+                            </p>
+                        @endif
+                    @endif
+                @endif
+            @endauth
         </div>
     @endif
+
 
 
     <div class="grid md:grid-cols-2 gap-10">
@@ -46,23 +93,51 @@
                                     #{{ $line->player->number ?? '–' }}
                                     {{ $line->player->name ?? 'Неизвестен' }}
                                 </div>
-
                                 @auth
                                     @if ($match->is_finished)
-                                        @if (!isset($existingReviews[$line->player->id]))
-                                            <label class="text-sm text-accent-2 mt-1 block">Оцени играча:</label>
-                                            <select wire:model.defer="ratings.{{ $line->player->id }}"
-                                                class="mt-1 w-full border-gray-300 rounded text-sm">
-                                                <option value="">– Избери –</option>
-                                                @for ($i = 1; $i <= 10; $i++)
-                                                    <option value="{{ $i }}">{{ $i }}</option>
-                                                @endfor
-                                            </select>
+                                        @php
+                                            $playerId = $line->player->id;
+                                            $average = $averageRatings[$playerId] ?? null;
+                                        @endphp
+
+                                        @if (!isset($existingReviews[$playerId]))
+                                            <div x-data="{ selectedRating: '' }">
+                                                <label class="text-sm text-accent-2 mt-1 block">Оцени играча:</label>
+
+                                                <select x-model="selectedRating"
+                                                    wire:model.defer="ratings.{{ $playerId }}"
+                                                    class="mt-1 w-full border-gray-300 rounded text-sm">
+                                                    <option value="">– Избери –</option>
+                                                    @for ($i = 1; $i <= 10; $i++)
+                                                        <option value="{{ $i }}">{{ $i }}</option>
+                                                    @endfor
+                                                </select>
+
+                                                @if ($average)
+                                                    <p x-show="selectedRating" x-transition class="text-sm mt-2"
+                                                        :class="{
+                                                            'text-green-600 font-semibold': {{ $average }} >= 7,
+                                                            'text-yellow-600': {{ $average }} >= 5 &&
+                                                                {{ $average }} < 7,
+                                                            'text-red-600': {{ $average }} < 5
+                                                        }">
+                                                        Средна оценка досега:
+                                                        <strong>{{ $average }}</strong>
+                                                    </p>
+                                                @endif
+                                            </div>
                                         @else
                                             <p class="text-sm text-gray-500 mt-1">
                                                 Вече си оценил:
-                                                <strong>{{ $existingReviews[$line->player->id] }}</strong>
+                                                <strong>{{ $existingReviews[$playerId] }}</strong>
                                             </p>
+
+                                            @if ($average)
+                                                <p class="text-sm text-gray-600">
+                                                    Средна оценка досега:
+                                                    <strong>{{ $average }}</strong>
+                                                </p>
+                                            @endif
                                         @endif
                                     @endif
                                 @endauth

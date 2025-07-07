@@ -7,20 +7,19 @@ use App\Models\PlayerReview;
 use Livewire\Component;
 use App\Models\Player;
 
-
 class Show extends Component
 {
     public FootballMatch $match;
     public array $ratings = [];
     public array $existingReviews = [];
+    public array $averageRatings = [];
+    public array $layoutData = [];
     public $coach;
 
-
-    public array $layoutData = [];
+    protected $listeners = ['player-reviewed' => 'refreshAverageRatings'];
 
     public function mount(FootballMatch $match)
     {
-
         $this->match = $match->load([
             'homeTeam',
             'awayTeam',
@@ -50,6 +49,16 @@ class Show extends Component
             ->where('match_id', $this->match->id)
             ->pluck('rating', 'player_id')
             ->toArray();
+
+        $this->loadAverageRatings();
+    }
+
+    public function refreshExistingReviews(): void
+    {
+        $this->existingReviews = PlayerReview::where('user_id', auth()->id())
+            ->where('match_id', $this->match->id)
+            ->pluck('rating', 'player_id')
+            ->toArray();
     }
 
 
@@ -64,7 +73,7 @@ class Show extends Component
                     ->where('match_id', $this->match->id)
                     ->exists();
 
-                if (! $alreadyRated) {
+                if (!$alreadyRated) {
                     PlayerReview::create([
                         'user_id'   => $userId,
                         'player_id' => $playerId,
@@ -78,15 +87,32 @@ class Show extends Component
         session()->flash('message', 'Благодарим за оценките!');
         $this->reset('ratings');
 
-        $this->dispatch('player-reviewed');
+        $this->refreshExistingReviews();
+
+        $this->dispatch('player-reviewed'); 
     }
 
 
+    public function refreshAverageRatings(): void
+    {
+        $this->loadAverageRatings();
+    }
+
+    private function loadAverageRatings(): void
+    {
+        $this->averageRatings = PlayerReview::where('match_id', $this->match->id)
+            ->selectRaw('player_id, ROUND(AVG(rating), 2) as average_rating')
+            ->groupBy('player_id')
+            ->pluck('average_rating', 'player_id')
+            ->toArray();
+    }
 
     public function render()
     {
         return view('livewire.pages.match.show', [
             'coach' => $this->coach,
+            'averageRatings' => $this->averageRatings,
+            'existingReviews' => $this->existingReviews,
         ])->layout('layouts.app', $this->layoutData);
     }
 }
