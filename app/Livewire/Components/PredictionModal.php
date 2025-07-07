@@ -41,12 +41,15 @@ class PredictionModal extends Component
         $this->validate();
 
         if (
-            is_null($this->homeScore)
-            && is_null($this->awayScore)
+            $this->homeScore === ''
+            || $this->awayScore === ''
+            || $this->homeScore === null
+            || $this->awayScore === null
         ) {
-            $this->addError('empty', 'Трябва да въведеш поне знак или резултат.');
+            $this->addError('empty', 'Трябва да въведеш резултат за двата отбора.');
             return;
         }
+
 
         Prediction::create([
             'user_id' => Auth::id(),
