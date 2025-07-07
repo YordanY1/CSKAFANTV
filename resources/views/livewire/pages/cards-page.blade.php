@@ -29,7 +29,7 @@
     <div class="mt-6 border-t pt-4 text-sm text-gray-600 max-w-md mx-auto">
         <div class="flex justify-between items-center">
             <div><span class="text-yellow-500">🟨</span> Жълт картон</div>
-            <div><span class="text-red-600">🟥</span> Директен червен картон</div>
+            <div><span class="text-red-600">🟥</span> Червен картон</div>
         </div>
     </div>
 </section>
