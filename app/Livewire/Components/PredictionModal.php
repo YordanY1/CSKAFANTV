@@ -40,16 +40,10 @@ class PredictionModal extends Component
     {
         $this->validate();
 
-        if (
-            $this->homeScore === ''
-            || $this->awayScore === ''
-            || $this->homeScore === null
-            || $this->awayScore === null
-        ) {
-            $this->addError('empty', 'Трябва да въведеш резултат за двата отбора.');
+        if (!is_numeric($this->homeScore) || !is_numeric($this->awayScore)) {
+            $this->addError('empty', 'Попълни резултат и за двата отбора.');
             return;
         }
-
 
         Prediction::create([
             'user_id' => Auth::id(),
@@ -60,6 +54,7 @@ class PredictionModal extends Component
 
         session()->flash('success', 'Прогнозата е записана успешно!');
     }
+
 
     public function render()
     {
