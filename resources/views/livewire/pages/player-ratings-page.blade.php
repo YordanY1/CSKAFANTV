@@ -9,7 +9,7 @@
                 <thead class="bg-accent text-cta uppercase tracking-wider">
                     <tr>
                         <th class="px-4 py-3">#</th>
-                        <th class="px-4 py-3">Играч</th>
+                        <th class="px-4 py-3">Име</th>
                         <th class="px-4 py-3">Средна оценка за сезона</th>
                     </tr>
                 </thead>

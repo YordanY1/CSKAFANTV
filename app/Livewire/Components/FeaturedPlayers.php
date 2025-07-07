@@ -12,7 +12,9 @@ class FeaturedPlayers extends Component
 {
     public function render()
     {
+
         $topPlayers = PlayerReview::select('player_id', DB::raw('AVG(rating) as avg_rating'))
+            ->whereHas('player', fn($q) => $q->where('is_coach', false))
             ->groupBy('player_id')
             ->orderByDesc('avg_rating')
             ->take(4)
@@ -23,7 +25,7 @@ class FeaturedPlayers extends Component
                     'name'     => $player->name,
                     'number'   => $player->number,
                     'position' => $player->position,
-                    'image' => asset('storage/' . $player->image_path),
+                    'image'    => asset('storage/' . $player->image_path),
                     'avg'      => round($item->avg_rating, 2),
                 ];
             });
@@ -36,6 +38,7 @@ class FeaturedPlayers extends Component
         if (Carbon::now()->greaterThan(Carbon::now()->startOfMonth())) {
             $playerOfMonth = PlayerReview::select('player_id', DB::raw('AVG(rating) as avg_rating'))
                 ->whereBetween('created_at', [$monthStart, $monthEnd])
+                ->whereHas('player', fn($q) => $q->where('is_coach', false))
                 ->groupBy('player_id')
                 ->havingRaw('COUNT(*) >= 3')
                 ->orderByDesc('avg_rating')
@@ -50,7 +53,7 @@ class FeaturedPlayers extends Component
                 'name'     => $player->name,
                 'number'   => $player->number,
                 'position' => $player->position,
-                'image' => asset('storage/' . $player->image_path),
+                'image'    => asset('storage/' . $player->image_path),
                 'avg'      => round($playerOfMonth->avg_rating, 2),
             ];
         }
