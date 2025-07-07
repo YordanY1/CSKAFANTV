@@ -20,8 +20,6 @@ use App\Livewire\Pages\PlayerRatingsPage;
 use App\Livewire\Pages\PredictionRankingsPage;
 
 
-Route::get('/phpinfo', fn () => phpinfo());
-
 
 Route::get('/', Home::class)->name('home');
 Route::get('/matches', UpcomingMatches::class)->name('matches');
