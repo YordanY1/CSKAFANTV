@@ -11,7 +11,6 @@
                         <th class="px-4 py-3">#</th>
                         <th class="px-4 py-3">Играч</th>
                         <th class="px-4 py-3">Средна оценка</th>
-                        <th class="px-4 py-3">Гласове</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -30,9 +29,6 @@
                             </td>
                             <td class="px-4 py-3 text-accent font-semibold">
                                 {{ $data['avg_rating'] }}
-                            </td>
-                            <td class="px-4 py-3 text-text">
-                                {{ $data['votes'] }}
                             </td>
                         </tr>
                     @endforeach
