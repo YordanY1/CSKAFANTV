@@ -38,7 +38,10 @@ class PlayerResource extends Resource
                     ->directory('players')
                     ->imageEditor()
                     ->imagePreviewHeight('150')
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                    ->maxSize(4096)
                     ->columnSpan('full'),
+
 
                 TextInput::make('name')
                     ->label('Име')
