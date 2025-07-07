@@ -6,8 +6,7 @@
             <tr>
                 <th class="px-4 py-3">Играч</th>
                 <th class="px-4 py-3 text-yellow-700">🟨 ЖК</th>
-                <th class="px-4 py-3 text-rose-800">🟥 2xЖК</th>
-                <th class="px-4 py-3 text-red-700">⬛ ЧК</th>
+                <th class="px-4 py-3 text-red-700">🟥 ЧК</th>
             </tr>
         </thead>
         <tbody>
@@ -18,9 +17,6 @@
                     </td>
                     <td class="px-4 py-3 font-bold text-yellow-600">
                         {{ $card->yellow_cards }}
-                    </td>
-                    <td class="px-4 py-3 font-bold text-rose-800">
-                        {{ $card->second_yellow_reds }}
                     </td>
                     <td class="px-4 py-3 font-bold text-red-600">
                         {{ $card->red_cards }}
@@ -33,8 +29,7 @@
     <div class="mt-6 border-t pt-4 text-sm text-gray-600 max-w-md mx-auto">
         <div class="flex justify-between items-center">
             <div><span class="text-yellow-500">🟨</span> Жълт картон</div>
-            <div><span class="text-rose-800">🟥</span> Втори жълт → червен</div>
-            <div><span class="text-red-600">⬛</span> Директен червен картон</div>
+            <div><span class="text-red-600">🟥</span> Директен червен картон</div>
         </div>
     </div>
 </section>
