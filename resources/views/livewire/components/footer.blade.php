@@ -47,10 +47,11 @@
                     class="hover:text-pink-500 transition" title="Instagram">
                     <i class="fab fa-instagram"></i>
                 </a>
-                <a href="https://www.youtube.com/@CSKAFANTV48" target="_blank" rel="noopener noreferrer"
-                    class="hover:text-red-600 transition" title="YouTube">
-                    <i class="fab fa-youtube"></i>
+                <a href="https://www.youtube.com/@CSKAFANTV48" target="_blank" title="Абонирай се в YouTube!"
+                    class="animate-pulse ring-2 ring-red-500 rounded-full p-1 hover:scale-110 transition duration-300 shadow-lg">
+                    <i class="fab fa-youtube text-white"></i>
                 </a>
+
                 <a href="https://discord.com/invite/GY29Xccj42" target="_blank" rel="noopener noreferrer"
                     class="hover:text-indigo-400 transition" title="Discord">
                     <i class="fab fa-discord"></i>
