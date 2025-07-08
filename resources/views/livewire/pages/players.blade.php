@@ -10,8 +10,7 @@
                         <div class="relative">
                             <img src="{{ $coach->image_path ? asset('storage/' . $coach->image_path) : asset('images/default-player.png') }}"
                                 alt="{{ $coach->name }}"
-                                class="w-full h-[300px] object-contain p-4 transition-transform duration-300 group-hover:scale-105" />
-
+                                class="w-full h-[300px] object-cover transition-transform duration-300 group-hover:scale-105" />
                             <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition duration-300">
                             </div>
 
