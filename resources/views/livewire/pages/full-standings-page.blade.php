@@ -24,13 +24,16 @@
                     @if (str_contains(strtolower($team->team?->name), strtolower($search)))
                         <tr class="hover:bg-gray-100 transition">
                             <td class="px-4 py-3 font-semibold">{{ $team->manual_rank ?? $i + 1 }}</td>
-                            <td class="px-4 py-3 font-bold text-primary flex items-center gap-2">
+                            <td
+                                class="px-4 py-3 font-bold flex items-center gap-2
+    {{ Str::contains(strtolower($team->team?->name), 'ЦСКА') ? 'text-red-600' : 'text-black' }}">
                                 @if ($team->team?->logo)
                                     <img src="{{ asset('storage/' . $team->team->logo) }}" alt="{{ $team->team->name }}"
                                         class="w-6 h-6 rounded-full object-cover border border-gray-300" />
                                 @endif
                                 {{ $team->team->name ?? '—' }}
                             </td>
+
                             <td class="px-4 py-3">{{ $team->played }}</td>
                             <td class="px-4 py-3">{{ $team->wins }}</td>
                             <td class="px-4 py-3">{{ $team->draws }}</td>
@@ -62,8 +65,9 @@
                         <img src="{{ asset('storage/' . $standing->team->logo) }}" alt="{{ $standing->team->name }}"
                             class="w-10 h-10 rounded-full object-cover ring-2 ring-accent" />
                     @endif
-                    <div>
-                        <div class="font-bold text-primary text-base">{{ $standing->team?->name ?? '—' }}</div>
+                    <div
+                        class="font-bold text-base {{ Str::contains(strtolower($standing->team?->name), 'ЦСКА') ? 'text-red-600' : 'text-black' }}">
+                        {{ $standing->team?->name ?? '—' }}
                     </div>
                 </div>
 
