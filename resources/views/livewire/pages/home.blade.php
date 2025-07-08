@@ -4,11 +4,11 @@
     <section class="relative bg-primary text-cta py-24 px-6 text-center overflow-hidden shadow-md">
 
         <img src="{{ asset('images/logo/logo-2.png') }}"
-            class="hidden md:block absolute left-[calc(40%-500px)] top-1/2 transform -translate-y-1/2 w-90 opacity-50 pointer-events-none"
+            class="hidden md:block absolute left-[calc(50%-600px)] top-1/2 transform -translate-y-1/2 w-[320px] opacity-40 pointer-events-none"
             alt="Logo Left" />
 
         <img src="{{ asset('images/logo/logo-2.png') }}"
-            class="hidden md:block absolute left-[calc(52%+300px)] top-1/2 transform -translate-y-1/2 w-90 opacity-50 pointer-events-none"
+            class="hidden md:block absolute right-[calc(50%-600px)] top-1/2 transform -translate-y-1/2 w-[320px] opacity-40 pointer-events-none"
             alt="Logo Right" />
 
         <img src="{{ asset('images/logo/logo-2.png') }}"
