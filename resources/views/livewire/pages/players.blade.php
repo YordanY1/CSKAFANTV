@@ -17,7 +17,7 @@
 
                             <div class="absolute bottom-0 w-full p-4 text-white">
                                 <h3 class="text-lg font-semibold">{{ $coach->name }}</h3>
-                                <p class="text-sm italic">Треньор</p>
+                                <p class="text-sm text-cta italic">{{ $coach->position }}</p>
                             </div>
                         </div>
                     </div>
