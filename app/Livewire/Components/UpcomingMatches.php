@@ -10,6 +10,16 @@ class UpcomingMatches extends Component
 {
     public string $filter = 'upcoming';
 
+    protected $listeners = ['prediction-saved' => 'onPredictionSaved'];
+
+    public array $predictedMatches = [];
+
+    public function onPredictionSaved(int $matchId): void
+    {
+        $this->predictedMatches[] = $matchId;
+    }
+
+
     public function mount()
     {
         $now = now();

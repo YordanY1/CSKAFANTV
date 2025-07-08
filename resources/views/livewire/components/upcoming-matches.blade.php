@@ -99,15 +99,16 @@
                                     Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
                                 </a>
                             @endif
-
                             @auth
                                 @php
-                                    $hasPrediction = \App\Models\Prediction::where('user_id', auth()->id())
-                                        ->where('football_match_id', $match->id)
-                                        ->exists();
+                                    $isAlreadyPredicted =
+                                        in_array($match->id, $this->predictedMatches) ||
+                                        \App\Models\Prediction::where('user_id', auth()->id())
+                                            ->where('football_match_id', $match->id)
+                                            ->exists();
                                 @endphp
 
-                                @if (!$match->is_finished && !$hasPrediction && $match->match_datetime->isFuture())
+                                @if (!$match->is_finished && !$isAlreadyPredicted && $match->match_datetime->isFuture())
                                     <button x-data
                                         @click="$dispatch('open-prediction-modal', { matchId: {{ $match->id }} })"
                                         class="bg-primary text-white px-3 py-1.5 rounded text-sm cursor-pointer">

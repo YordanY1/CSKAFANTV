@@ -11,6 +11,16 @@ class LatestMatches extends Component
 {
     public string $filter = 'upcoming';
 
+    protected $listeners = ['prediction-saved' => 'removePredictionOption'];
+
+
+    public array $predictedMatches = [];
+
+    public function removePredictionOption($matchId)
+    {
+        $this->predictedMatches[] = $matchId;
+    }
+
     public function mount()
     {
         $now = Carbon::now();

@@ -53,6 +53,7 @@ class PredictionModal extends Component
             'away_score_prediction' => (int)$this->awayScore,
         ]);
 
+        $this->dispatch('prediction-saved', matchId: $this->matchId);
         session()->flash('success', 'Прогнозата е записана успешно!');
     }
 
