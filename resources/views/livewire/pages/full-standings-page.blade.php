@@ -35,7 +35,11 @@
                             <td class="px-4 py-3">{{ $team->wins }}</td>
                             <td class="px-4 py-3">{{ $team->draws }}</td>
                             <td class="px-4 py-3">{{ $team->losses }}</td>
-                            <td class="px-4 py-3">{{ $team->goals_scored }}:{{ $team->goals_conceded }}</td>
+                            <td class="px-4 py-3">
+                                {{ $team->goals_scored }}:{{ $team->goals_conceded }}
+                                ({{ $team->goals_scored - $team->goals_conceded }})
+                            </td>
+
                             <td class="px-4 py-3 font-bold text-accent">{{ $team->calculated_points }}</td>
                         </tr>
                     @endif
@@ -68,8 +72,10 @@
                     <div><span class="font-semibold text-gray-500">П:</span> {{ $standing->wins }}</div>
                     <div><span class="font-semibold text-gray-500">Р:</span> {{ $standing->draws }}</div>
                     <div><span class="font-semibold text-gray-500">З:</span> {{ $standing->losses }}</div>
-                    <div class="col-span-2"><span class="font-semibold text-gray-500">ГР:</span>
+                    <div class="col-span-2">
+                        <span class="font-semibold text-gray-500">ГР:</span>
                         {{ $standing->goals_scored }}:{{ $standing->goals_conceded }}
+                        ({{ $standing->goals_scored - $standing->goals_conceded }})
                     </div>
 
                     <div class="col-span-2 text-right">
