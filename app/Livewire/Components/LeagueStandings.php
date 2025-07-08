@@ -9,7 +9,6 @@ class LeagueStandings extends Component
 {
     public function render()
     {
-
         $all = Standing::with('team')->get();
 
         $auto = $all->filter(fn($s) => $s->manual_rank === null);
@@ -30,7 +29,6 @@ class LeagueStandings extends Component
             return strcmp(strtolower($a->team?->name), strtolower($b->team?->name));
         })->values();
 
-
         $final = collect();
         $manuals = $all->filter(fn($s) => $s->manual_rank !== null);
 
@@ -47,7 +45,18 @@ class LeagueStandings extends Component
             $i++;
         }
 
-        $standings = $final->sortKeys()->take(5)->values();
+        $final = $final->sortKeys()->values();
+
+        $cskaIndex = $final->search(function ($team) {
+            return str_contains(strtolower($team->team?->name), 'ЦСКА');
+        });
+
+        if ($cskaIndex !== false) {
+            $start = max(0, $cskaIndex - 2);
+            $standings = $final->slice($start, 5)->values();
+        } else {
+            $standings = $final->take(5);
+        }
 
         return view('livewire.components.league-standings', [
             'standings' => $standings,
