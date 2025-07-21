@@ -10,6 +10,8 @@ use App\Models\Profile;
 use App\Models\Prediction;
 use App\Models\PlayerReview;
 use App\Models\SocialAccount;
+use Filament\Panel;
+use Filament\Models\Contracts\FilamentUser;
 
 class User extends Authenticatable
 {
@@ -76,5 +78,10 @@ class User extends Authenticatable
         return $this->avatar
             ? asset('storage/avatars/' . $this->avatar)
             : asset('images/logo/logo.jpg');
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->email === 'cskafantv@gmail.com';
     }
 }
