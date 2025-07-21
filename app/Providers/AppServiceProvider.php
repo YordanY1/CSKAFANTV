@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\Facades\View;
 use App\Models\FootballMatch;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Schema;
+
 
 
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Schema::defaultStringLength(191);
+        
         View::composer('*', function ($view) {
             $now = Carbon::now();
 
