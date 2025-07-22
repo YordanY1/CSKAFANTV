@@ -23,7 +23,7 @@ class ContactMessage extends Mailable
 
     public function build()
     {
-        return $this->subject('Ново съобщение от ' . $this->name)
+        return $this->subject('📨 Ново съобщение от ' . $this->name)
             ->replyTo($this->email)
             ->view('emails.contact');
     }

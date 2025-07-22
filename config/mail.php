@@ -115,6 +115,6 @@ return [
         'name' => env('MAIL_FROM_NAME', 'CSKA FAN TV'),
     ],
 
-    'admin_address' => env('MAIL_ADMIN_ADDRESS', 'admin@example.com'),
+    'admin_address' => env('MAIL_ADMIN_ADDRESS', 'nothingstar142@gmail.com'),
 
 ];
