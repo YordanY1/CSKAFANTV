@@ -18,6 +18,7 @@ use App\Livewire\Pages\CookiePolicy;
 use App\Livewire\Pages\FullStandingsPage;
 use App\Livewire\Pages\PlayerRatingsPage;
 use App\Livewire\Pages\PredictionRankingsPage;
+use App\Livewire\Pages\VideoCategory;
 
 
 
@@ -36,6 +37,8 @@ Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCa
 
 
 Route::get('/videos', Videos::class)->name('videos');
+Route::get('/videos/category/{slug}', VideoCategory::class)->name('videos.category');
+
 
 Route::get('/tactics', Tactics::class)->name('tactics');
 

@@ -61,20 +61,43 @@
 
                 <!-- Video Dropdown -->
                 <div class="relative group">
-                    <div
-                        class="flex items-center gap-1 py-2 px-3 rounded-md hover:text-accent transition duration-200 cursor-pointer">
+                    <div class="flex items-center gap-1 py-2 px-3 rounded-md hover:text-accent cursor-pointer">
                         Видео
-                        <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
                         </svg>
                     </div>
                     <div
-                        class="absolute left-0 mt-2 bg-white text-primary rounded-md shadow-lg z-50 py-2 w-40 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition duration-200">
-                        <a href="{{ route('videos') }}" wire:navigate
-                            class="block px-4 py-2 hover:bg-accent hover:text-white transition">Галерия</a>
+                        class="absolute left-0 mt-2 bg-white text-primary rounded-md shadow-lg z-50 py-2 w-56
+        invisible opacity-0 group-hover:visible group-hover:opacity-100 transition duration-200">
+
+                        @foreach ([
+        'Гласът на ФЕНА' => 'glasat-na-fena',
+        'Преди мача' => 'predi-macha',
+        'CSKA FAN TV TALK SHOW' => 'talk-show',
+        'Специални стриймове за членове' => 'specialni-streamove',
+        'Именити червени фенове гостуват' => 'imeniti-cerveni-fenove-gostuvat',
+        'Легендите говорят' => 'legendite-govoriat',
+        'Червена слава' => 'chervena-slava',
+        'Бъдещето на ЦСКА' => 'budeshteto-na-cska',
+        'Децата на ЦСКА' => 'decata-na-cska',
+        'Отговори от гости' => 'otgovori-ot-gosti',
+        'Предсезонна подготовка' => 'predsezonna-podgotovka',
+    ] as $label => $slug)
+                            <a href="{{ route('videos.category', ['slug' => $slug]) }}"
+                                class="block px-4 py-2 hover:bg-accent hover:text-white transition">
+                                {{ $label }}
+                            </a>
+                        @endforeach
+
+
+                        <div class="border-t border-gray-200 my-1"></div>
+                        <a href="{{ route('videos') }}"
+                            class="block px-4 py-2 hover:bg-accent hover:text-white transition">Всички видеа</a>
                     </div>
                 </div>
+
+
 
                 <a href="{{ route('contact') }}" wire:navigate
                     class="block py-2 px-3 rounded-md transition duration-200 {{ request()->routeIs('contact') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">

@@ -53,12 +53,79 @@ class FootballMatchResource extends Resource
                 ->maxLength(255)
                 ->nullable(),
 
-            Forms\Components\Textarea::make('youtube_embed_url')
-                ->label('YouTube Embed код')
-                ->rows(3)
-                ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>')
-                ->nullable()
+            Forms\Components\Fieldset::make('Видео секции')
+                ->schema([
+
+                    Forms\Components\Textarea::make('voice_of_the_fan_embed')
+                        ->label('🎤 Гласът на ФЕНА')
+                        ->rows(3)
+                        ->nullable()
+                        ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>'),
+
+                    Forms\Components\Textarea::make('before_match_embed')
+                        ->label('⏱️ Преди мача')
+                        ->rows(3)
+                        ->nullable()
+                        ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>'),
+
+                    Forms\Components\Textarea::make('talk_show_embed')
+                        ->label('🎙️ CSKA FAN TV TALK SHOW')
+                        ->rows(3)
+                        ->nullable()
+                        ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>'),
+
+                    Forms\Components\Textarea::make('member_stream_embed')
+                        ->label('🔒 Специални стриймове за членове')
+                        ->rows(3)
+                        ->nullable()
+                        ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>'),
+
+                    Forms\Components\Textarea::make('celebrity_fans_embed')
+                        ->label('⭐ Именити червени фенове гостуват')
+                        ->rows(3)
+                        ->nullable()
+                        ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>'),
+
+                    Forms\Components\Textarea::make('legends_speak_embed')
+                        ->label('🧓 Легендите говорят')
+                        ->rows(3)
+                        ->nullable()
+                        ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>'),
+
+                    Forms\Components\Textarea::make('red_glory_embed')
+                        ->label('🏆 Червена слава')
+                        ->rows(3)
+                        ->nullable()
+                        ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>'),
+
+                    Forms\Components\Textarea::make('cska_future_embed')
+                        ->label('🌱 Бъдещето на ЦСКА')
+                        ->rows(3)
+                        ->nullable()
+                        ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>'),
+
+                    Forms\Components\Textarea::make('cska_kids_embed')
+                        ->label('👶 Децата на ЦСКА')
+                        ->rows(3)
+                        ->nullable()
+                        ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>'),
+
+                    Forms\Components\Textarea::make('guest_answers_embed')
+                        ->label('📣 Отговори от гости')
+                        ->rows(3)
+                        ->nullable()
+                        ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>'),
+
+                    Forms\Components\Textarea::make('preseason_training_embed')
+                        ->label('🏋️ Предсезонна подготовка')
+                        ->rows(3)
+                        ->nullable()
+                        ->helperText('Постави целия embed код от YouTube, напр. <iframe ...></iframe>'),
+
+                ])
+                ->columns(2)
                 ->columnSpanFull(),
+
 
             Forms\Components\TextInput::make('youtube_url')
                 ->label('YouTube линк (на живо)')

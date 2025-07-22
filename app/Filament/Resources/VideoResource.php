@@ -32,6 +32,24 @@ class VideoResource extends Resource
                     ->rows(2)
                     ->placeholder('match,training,interview'),
 
+                Forms\Components\Select::make('category')
+                    ->label('Категория')
+                    ->options([
+                        'Гласът на ФЕНА' => 'Гласът на ФЕНА',
+                        'Преди мача' => 'Преди мача',
+                        'CSKA FAN TV TALK SHOW' => 'CSKA FAN TV TALK SHOW',
+                        'Специални стриймове за членове' => 'Специални стриймове за членове',
+                        'Именити червени фенове гостуват' => 'Именити червени фенове гостуват',
+                        'Легендите говорят' => 'Легендите говорят',
+                        'Червена слава' => 'Червена слава',
+                        'Бъдещето на ЦСКА' => 'Бъдещето на ЦСКА',
+                        'Децата на ЦСКА' => 'Децата на ЦСКА',
+                        'Отговори от гости' => 'Отговори от гости',
+                        'Предсезонна подготовка' => 'Предсезонна подготовка',
+                    ])
+                    ->searchable()
+                    ->required(),
+
                 Forms\Components\RichEditor::make('description')
                     ->label('Описание')
                     ->toolbarButtons([

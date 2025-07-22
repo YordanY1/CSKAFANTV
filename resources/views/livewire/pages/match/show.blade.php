@@ -217,16 +217,32 @@
         @endif
     @endauth
 
-    @if ($match->youtube_embed_url)
-        <div class="mt-16 px-4">
-            <div class="mt-16 sm:px-4 px-0">
+    @php
+        $extraVideos = [
+            '🎤 Гласът на ФЕНА' => $match->voice_of_the_fan_embed,
+            '⏱️ Преди мача' => $match->before_match_embed,
+            '🎙️ CSKA FAN TV TALK SHOW' => $match->talk_show_embed,
+            '🔒 Специални стриймове за членове' => $match->member_stream_embed,
+            '⭐ Именити червени фенове гостуват' => $match->celebrity_fans_embed,
+            '🧓 Легендите говорят' => $match->legends_speak_embed,
+            '🏆 Червена слава' => $match->red_glory_embed,
+            '🌱 Бъдещето на ЦСКА' => $match->cska_future_embed,
+            '👶 Децата на ЦСКА' => $match->cska_kids_embed,
+            '📣 Отговори от гости' => $match->guest_answers_embed,
+            '🏋️ Предсезонна подготовка' => $match->preseason_training_embed,
+        ];
+    @endphp
+
+    @foreach ($extraVideos as $title => $embed)
+        @if ($embed)
+            <div class="mt-12">
                 <div
-                    class="bg-white rounded-none sm:rounded-2xl shadow-none sm:shadow-xl border-none sm:border border-accent/30 p-0 sm:p-6 w-full max-w-full sm:max-w-4xl md:max-w-5xl lg:max-w-6xl mx-auto">
-                    <h3
-                        class="text-xl md:text-2xl font-bold text-primary mb-4 text-center flex items-center justify-center gap-2">
-                        <i class="fas fa-video text-red-500"></i>
-                        Видео за мача
-                    </h3>
+                    class="bg-white rounded-xl shadow-xl border border-accent/20 p-4 sm:p-6 w-full max-w-full sm:max-w-4xl md:max-w-5xl lg:max-w-6xl mx-auto">
+                    <h4
+                        class="text-lg md:text-xl font-semibold text-primary mb-4 text-center flex items-center justify-center gap-2">
+                        <i class="fas fa-play-circle text-red-500"></i>
+                        {{ $title }}
+                    </h4>
 
                     <div x-data x-init="$nextTick(() => {
                         const iframe = $el.querySelector('iframe');
@@ -244,13 +260,12 @@
                         }
                     })"
                         class="w-full overflow-hidden ring-0 sm:ring-1 ring-accent/20 shadow-none sm:shadow-lg">
-                        {!! $match->youtube_embed_url !!}
+                        {!! $embed !!}
                     </div>
-
                 </div>
             </div>
+        @endif
+    @endforeach
 
-        </div>
-    @endif
 
 </div>

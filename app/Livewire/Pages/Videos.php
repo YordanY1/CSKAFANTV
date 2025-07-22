@@ -9,6 +9,8 @@ class Videos extends Component
 {
     public string $search = '';
     public string $filterTag = '';
+    public string $filterCategory = '';
+
 
     public function render()
     {
@@ -18,6 +20,8 @@ class Videos extends Component
                 ->orWhere('description', 'like', "%{$this->search}%"))
             ->when($this->filterTag, fn($q) =>
             $q->where('tags', 'like', "%{$this->filterTag}%"))
+            ->when($this->filterCategory, fn($q) =>
+            $q->where('category', $this->filterCategory))
             ->latest()
             ->get();
 
@@ -27,7 +31,9 @@ class Videos extends Component
             ->map(fn($tag) => trim($tag))
             ->unique();
 
-        return view('livewire.pages.videos', compact('videos', 'allTags'))
+        $allCategories = Video::select('category')->distinct()->pluck('category');
+
+        return view('livewire.pages.videos', compact('videos', 'allTags', 'allCategories'))
             ->layout('layouts.app', [
                 'title' => 'Видеогалерия | CSKA FAN TV',
                 'description' => 'Гледайте най-добрите моменти от мачовете на ЦСКА – голове, интервюта, репортажи и вълнуващи кадри от стадиона.',
