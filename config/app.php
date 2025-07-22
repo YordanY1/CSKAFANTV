@@ -125,6 +125,8 @@ return [
 
     'providers' => [
         Illuminate\View\ViewServiceProvider::class,
+        Illuminate\Filesystem\FilesystemServiceProvider::class,
         App\Providers\FilamentServiceProvider::class,
     ],
+
 ];
