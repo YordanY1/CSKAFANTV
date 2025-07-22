@@ -65,8 +65,3 @@ Route::post('/logout', function (Request $request) {
     $request->session()->regenerateToken();
     return redirect('/');
 })->name('logout');
-
-Route::get('/force-login', function () {
-    Auth::login(User::first());
-    return redirect('/admin');
-});
