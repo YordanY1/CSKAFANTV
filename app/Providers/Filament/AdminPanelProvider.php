@@ -17,6 +17,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Facades\Filament;
+
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -54,5 +56,19 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+    }
+
+    public function boot(): void
+    {
+        Filament::serving(function () {
+            \Log::info('🧪 FILAMENT SERVING DEBUG', [
+                'auth_check' => auth()->check(),
+                'user_id' => optional(auth()->user())->id,
+                'user_email' => optional(auth()->user())->email,
+                'session_id' => session()->getId(),
+                'session_data' => session()->all(),
+                'cookies' => request()->cookies->all(),
+            ]);
+        });
     }
 }

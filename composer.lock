@@ -1077,7 +1077,7 @@
             "type": "library",
             "extra": {
                 "laravel": {
-                    "providers": [
+                "providers": [
                         "Filament\\FilamentServiceProvider"
                     ]
                 }
