@@ -210,60 +210,44 @@
 
         <!-- Dropdown Mobile -->
         <div x-data="{ openVideo: false }" class="w-full">
-
-            <div x-data="{ openVideo: false }" class="relative">
-                <!-- Toggle Button -->
-                <button @click="openVideo = !openVideo"
-                    class="w-full py-2 px-4 rounded-md flex items-center justify-between gap-2 text-primary hover:bg-accent/10 transition duration-200">
-                    Видео
-                    <svg :class="{ 'rotate-180': openVideo }"
-                        class="w-4 h-4 transform transition-transform duration-200" fill="none"
-                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-
-                <!-- Dropdown -->
-                <div x-show="openVideo" @click.away="openVideo = false" x-transition
-                    class="absolute z-50 mt-2 w-64 bg-white rounded-lg shadow-lg border text-primary overflow-hidden">
-
-                    <div class="py-2">
-                        @foreach ([
-        'Гласът на ФЕНА' => 'glasat-na-fena',
-        'Преди мача' => 'predi-macha',
-        'CSKA FAN TV TALK SHOW' => 'talk-show',
-        'Специални стриймове за членове' => 'specialni-streamove',
-        'Именити червени фенове гостуват' => 'celebrity-fenove',
-        'Легендите говорят' => 'legendite-govoryat',
-        'Червена слава' => 'chervena-slava',
-        'Бъдещето на ЦСКА' => 'budeshte-cska',
-        'Децата на ЦСКА' => 'decata-cska',
-        'Отговори от гости' => 'otgovori-ot-gosti',
-        'Предсезонна подготовка' => 'predsezonna-podgotovka',
-    ] as $label => $slug)
-                            <a href="{{ route('videos.category', ['slug' => $slug]) }}"
-                                class="block px-4 py-2 text-sm hover:bg-accent hover:text-white transition">
-                                {{ $label }}
-                            </a>
-                        @endforeach
-                    </div>
-
-                    <div class="border-t border-gray-200"></div>
-
-                    <a href="{{ route('videos') }}"
-                        class="block px-4 py-2 text-sm hover:bg-accent hover:text-white transition">
-                        Всички видеа
-                    </a>
-                </div>
-            </div>
+            <button @click="openVideo = !openVideo"
+                class="w-full py-2 px-3 rounded-md hover:text-accent transition duration-200 flex justify-center items-center gap-2">
+                Видео
+                <svg :class="{ 'rotate-180': openVideo }" class="w-4 h-4 transform transition-transform"
+                    fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
 
             <div x-show="openVideo" x-collapse class="space-y-2">
+                @php
+                    $categories = [
+                        'Гласът на ФЕНА' => 'glasat-na-fena',
+                        'Преди мача' => 'predi-macha',
+                        'CSKA FAN TV TALK SHOW' => 'talk-show',
+                        'Специални стриймове за членове' => 'specialni-streamove',
+                        'Именити червени фенове гостуват' => 'celebrity-fenove',
+                        'Легендите говорят' => 'legendite-govoryat',
+                        'Червена слава' => 'chervena-slava',
+                        'Бъдещето на ЦСКА' => 'budeshte-cska',
+                        'Децата на ЦСКА' => 'decata-cska',
+                        'Отговори от гости' => 'otgovori-ot-gosti',
+                        'Предсезонна подготовка' => 'predsezonna-podgotovka',
+                    ];
+                @endphp
+
+                @foreach ($categories as $label => $slug)
+                    <a href="{{ route('videos.category', ['slug' => $slug]) }}" wire:navigate
+                        class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">
+                        {{ $label }}
+                    </a>
+                @endforeach
+
+                <div class="border-t border-gray-200 my-1"></div>
                 <a href="{{ route('videos') }}" wire:navigate
-                    class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Галерия</a>
-                @if ($liveMatchYoutubeUrl)
-                    <a href="{{ $liveMatchYoutubeUrl }}" target="_blank"
-                        class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">🔴 LIVE</a>
-                @endif
+                    class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">
+                    Всички видеа
+                </a>
             </div>
         </div>
 
