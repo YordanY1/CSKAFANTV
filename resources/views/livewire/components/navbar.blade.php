@@ -271,14 +271,25 @@
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">Добре дошъл!</h2>
                     <p class="text-sm text-gray-500 mb-6">Влез в CSKA FAN TV с един клик</p>
 
-                    <a href="{{ route('auth.google.redirect') }}"
-                        class="inline-flex items-center justify-center w-full gap-2 py-3 px-6 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition shadow-sm">
-                        <i class="fab fa-google text-lg"></i>
-                        Вход с Google
-                    </a>
+                    <div class="space-y-4">
+                        <!-- Google -->
+                        <a href="{{ route('auth.google.redirect') }}"
+                            class="inline-flex items-center justify-center w-full gap-2 py-3 px-6 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition shadow-sm">
+                            <i class="fab fa-google text-lg"></i>
+                            Вход с Google
+                        </a>
+
+                        <!-- Facebook -->
+                        <a href="{{ route('auth.facebook.redirect') }}"
+                            class="inline-flex items-center justify-center w-full gap-2 py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition shadow-sm">
+                            <i class="fab fa-facebook text-lg"></i>
+                            Вход с Facebook
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 
 </nav>

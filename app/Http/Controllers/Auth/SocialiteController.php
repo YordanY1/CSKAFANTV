@@ -25,6 +25,16 @@ class SocialiteController extends Controller
         return Socialite::driver($provider)->redirect();
     }
 
+    public function redirectToFacebook()
+    {
+        return $this->redirectToProvider('facebook');
+    }
+
+    public function handleFacebookCallback()
+    {
+        return $this->handleProviderCallback('facebook');
+    }
+
 
     public function handleProviderCallback(string $provider)
     {
