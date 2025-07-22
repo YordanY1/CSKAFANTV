@@ -52,6 +52,11 @@ Route::get('/player-ratings', PlayerRatingsPage::class)->name('player.ratings');
 Route::get('/predictions/rankings', PredictionRankingsPage::class)->name('predictions.rankings');
 
 
+Route::get('/debug-fb', function () {
+    return dd(config('services.facebook'));
+});
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', UserProfile::class)->name('profile');
