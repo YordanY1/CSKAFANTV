@@ -80,8 +80,4 @@ class User extends Authenticatable
             : asset('images/logo/logo.jpg');
     }
 
-    public function canAccessPanel(Panel $panel): bool
-    {
-        return $this->email === 'cskafantv@gmail.com';
-    }
 }

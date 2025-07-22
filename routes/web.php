@@ -31,8 +31,8 @@ Route::get('/match/{match:slug}', Show::class)->name('match.show');
 Route::get('/auth/google/redirect', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google.redirect');
 Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
 
-Route::get('/auth/facebook/redirect', [SocialiteController::class, 'redirectToFacebook'])->name('auth.facebook.redirect');
-Route::get('/auth/facebook/callback', [SocialiteController::class, 'handleFacebookCallback']);
+// Route::get('/auth/facebook/redirect', [SocialiteController::class, 'redirectToFacebook'])->name('auth.facebook.redirect');
+// Route::get('/auth/facebook/callback', [SocialiteController::class, 'handleFacebookCallback']);
 
 
 Route::get('/videos', Videos::class)->name('videos');
@@ -50,13 +50,6 @@ Route::get('/standings', FullStandingsPage::class)->name('standings');
 
 Route::get('/player-ratings', PlayerRatingsPage::class)->name('player.ratings');
 Route::get('/predictions/rankings', PredictionRankingsPage::class)->name('predictions.rankings');
-
-
-Route::get('/debug-fb', function () {
-    return dd(config('services.facebook'));
-});
-
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', UserProfile::class)->name('profile');
