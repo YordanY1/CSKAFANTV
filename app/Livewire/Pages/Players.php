@@ -26,9 +26,31 @@ class Players extends Component
 
     public function render()
     {
+        $positionOrder = [
+            'Вратар',
+            'Десен бек',
+            'Централен защитник',
+            'Ляв бек',
+            'Опорен халф',
+            'Атакуващ халф',
+            'Ляво крило',
+            'Дясно крило',
+            'Централен нападател',
+        ];
+
+        $players = Player::where('is_coach', false)
+            ->with('team')
+            ->get()
+            ->sortBy(function ($player) use ($positionOrder) {
+                $index = array_search($player->position, $positionOrder);
+                return $index !== false ? $index : count($positionOrder);
+            });
+
+        $coaches = Player::where('is_coach', true)->with('team')->get();
+
         return view('livewire.pages.players', [
-            'players' => Player::where('is_coach', false)->with('team')->get(),
-            'coaches' => Player::where('is_coach', true)->with('team')->get(),
+            'players' => $players,
+            'coaches' => $coaches,
         ])->layout('layouts.app', $this->layoutData);
     }
 }
