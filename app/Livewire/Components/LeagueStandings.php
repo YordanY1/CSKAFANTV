@@ -46,17 +46,8 @@ class LeagueStandings extends Component
         }
 
         $final = $final->sortKeys()->values();
-
-        $cskaIndex = $final->search(function ($team) {
-            return str_contains(strtolower($team->team?->name), 'ЦСКА');
-        });
-
-        if ($cskaIndex !== false) {
-            $start = max(0, $cskaIndex - 2);
-            $standings = $final->slice($start, 5)->values();
-        } else {
-            $standings = $final->take(5);
-        }
+        
+        $standings = $final->take(5);
 
         return view('livewire.components.league-standings', [
             'standings' => $standings,
