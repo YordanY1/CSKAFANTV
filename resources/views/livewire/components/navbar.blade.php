@@ -279,6 +279,10 @@
                             Вход с Google
                         </a>
 
+                        <div class="text-gray-400 text-sm text-center">или</div>
+                        <livewire:auth.register />
+
+
                         <!-- Facebook -->
                         {{-- <a href="{{ route('auth.facebook.redirect') }}"
                             class="inline-flex items-center justify-center w-full gap-2 py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition shadow-sm">
