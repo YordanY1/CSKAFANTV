@@ -50,6 +50,10 @@ class VideoResource extends Resource
                     ->searchable()
                     ->required(),
 
+                Forms\Components\Hidden::make('category_slug')
+                    ->dehydrated()
+                    ->default(fn(Forms\Get $get) => \Str::slug($get('category'))),
+
                 Forms\Components\RichEditor::make('description')
                     ->label('Описание')
                     ->toolbarButtons([

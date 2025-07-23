@@ -71,25 +71,12 @@
                         class="absolute left-0 mt-2 bg-white text-primary rounded-md shadow-lg z-50 py-2 w-56
         invisible opacity-0 group-hover:visible group-hover:opacity-100 transition duration-200">
 
-                        @foreach ([
-        'Гласът на ФЕНА' => 'glasat-na-fena',
-        'Преди мача' => 'predi-macha',
-        'CSKA FAN TV TALK SHOW' => 'talk-show',
-        'Специални стриймове за членове' => 'specialni-streamove',
-        'Именити червени фенове гостуват' => 'imeniti-cerveni-fenove-gostuvat',
-        'Легендите говорят' => 'legendite-govoriat',
-        'Червена слава' => 'chervena-slava',
-        'Бъдещето на ЦСКА' => 'budeshteto-na-cska',
-        'Децата на ЦСКА' => 'decata-na-cska',
-        'Отговори от гости' => 'otgovori-ot-gosti',
-        'Предсезонна подготовка' => 'predsezonna-podgotovka',
-    ] as $label => $slug)
-                            <a href="{{ route('videos.category', ['slug' => $slug]) }}"
+                        @foreach ($videoCategories as $category)
+                            <a href="{{ route('videos.category', ['slug' => $category['category_slug']]) }}"
                                 class="block px-4 py-2 hover:bg-accent hover:text-white transition">
-                                {{ $label }}
+                                {{ $category['category'] }}
                             </a>
                         @endforeach
-
 
                         <div class="border-t border-gray-200 my-1"></div>
                         <a href="{{ route('videos') }}"
@@ -221,25 +208,18 @@
 
             <div x-show="openVideo" x-collapse class="space-y-2">
                 @php
-                    $categories = [
-                        'Гласът на ФЕНА' => 'glasat-na-fena',
-                        'Преди мача' => 'predi-macha',
-                        'CSKA FAN TV TALK SHOW' => 'talk-show',
-                        'Специални стриймове за членове' => 'specialni-streamove',
-                        'Именити червени фенове гостуват' => 'celebrity-fenove',
-                        'Легендите говорят' => 'legendite-govoryat',
-                        'Червена слава' => 'chervena-slava',
-                        'Бъдещето на ЦСКА' => 'budeshte-cska',
-                        'Децата на ЦСКА' => 'decata-cska',
-                        'Отговори от гости' => 'otgovori-ot-gosti',
-                        'Предсезонна подготовка' => 'predsezonna-podgotovka',
-                    ];
+                    $categories = \App\Models\Video::query()
+                        ->select('category', 'category_slug')
+                        ->groupBy('category', 'category_slug')
+                        ->havingRaw('COUNT(*) > 0')
+                        ->orderBy('category')
+                        ->get();
                 @endphp
 
-                @foreach ($categories as $label => $slug)
-                    <a href="{{ route('videos.category', ['slug' => $slug]) }}" wire:navigate
+                @foreach ($categories as $category)
+                    <a href="{{ route('videos.category', ['slug' => $category->category_slug]) }}" wire:navigate
                         class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">
-                        {{ $label }}
+                        {{ $category->category }}
                     </a>
                 @endforeach
 
@@ -250,6 +230,7 @@
                 </a>
             </div>
         </div>
+
 
         <a href="{{ route('contact') }}" wire:navigate
             class="block py-2 px-3 rounded-md transition duration-200

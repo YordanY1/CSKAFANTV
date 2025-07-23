@@ -6,10 +6,14 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Carbon;
 use App\Models\FootballMatch;
+use App\Models\Video;
+
 
 class Navbar extends Component
 {
     public ?string $liveMatchYoutubeUrl = null;
+
+    public array $videoCategories = [];
 
     public function mount()
     {
@@ -26,6 +30,14 @@ class Navbar extends Component
                     ->first()
             )->youtube_url;
         });
+
+        $this->videoCategories = Video::query()
+            ->select('category', 'category_slug')
+            ->groupBy('category', 'category_slug')
+            ->havingRaw('COUNT(*) > 0')
+            ->orderBy('category')
+            ->get()
+            ->toArray();
     }
 
     public function render()

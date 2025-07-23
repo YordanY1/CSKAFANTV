@@ -9,7 +9,16 @@
                 </a>
                 <div class="p-4">
                     <h3 class="font-bold text-lg text-primary">{{ $video->title }}</h3>
-                    <p class="text-sm text-gray-600 mt-2">{{ $video->description }}</p>
+                    <div x-data="{ expanded: false }" class="text-sm text-gray-600 mt-2">
+                        <div x-show="!expanded" x-html="`{!! \Str::limit($video->description, 150, '...') !!}`"></div>
+                        <div x-show="expanded" x-html="`{!! $video->description !!}`"></div>
+
+                        <button @click="expanded = !expanded"
+                            class="mt-3 inline-block text-sm font-semibold text-red-700 hover:text-red-800 transition cursor-pointer">
+                            <span x-text="expanded ? 'Покажи по-малко' : 'Прочети още'"></span>
+                        </button>
+                    </div>
+
                 </div>
             </div>
         @empty
