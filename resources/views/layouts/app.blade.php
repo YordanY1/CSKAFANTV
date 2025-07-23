@@ -60,39 +60,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
 
 
-    @if (request()->routeIs('home'))
-        <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "CSKA FAN TV",
-  "url": "{{ url('/') }}",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "{{ url('/') }}/search?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-</script>
-
-        <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "CSKA FAN TV",
-  "url": "{{ url('/') }}",
-  "logo": "{{ asset('images/og-cska.png') }}",
-  "sameAs": [
-    "https://www.facebook.com/cskafantv",
-    "https://www.instagram.com/cskafantv",
-    "https://www.youtube.com/@cskafantv"
-  ]
-}
-</script>
-    @endif
-
-
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @livewireStyles
