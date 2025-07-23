@@ -17,7 +17,7 @@ class CookiePolicy extends Component
             'canonical' => url('/cookie-policy'),
             'og_title' => 'Политика за бисквитки | CSKA FAN TV',
             'og_description' => 'Научи как използваме бисквитки и как те влияят на изживяването ти в платформата на червените фенове.',
-            'og_image' => asset('images/og-cska.jpg'),
+            'og_image' => asset('images/og-cska.png'),
             'og_url' => url('/cookie-policy'),
             'og_type' => 'article',
         ];

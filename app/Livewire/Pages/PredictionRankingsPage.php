@@ -19,7 +19,7 @@ class PredictionRankingsPage extends Component
             'canonical' => url('/prediction-rankings'),
             'og_title' => 'Футболни прогнози – Класиране и резултати | CSKA FAN TV',
             'og_description' => 'Класация на потребителите по успешни футболни прогнози. Води ли твоята прогноза? Разбери сега!',
-            'og_image' => asset('images/og-cska.jpg'),
+            'og_image' => asset('images/og-cska.png'),
             'og_url' => url('/prediction-rankings'),
             'og_type' => 'website',
         ];

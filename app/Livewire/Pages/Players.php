@@ -18,7 +18,7 @@ class Players extends Component
             'canonical' => url('/players'),
             'og_title' => 'Състав на ЦСКА – Всички играчи | CSKA FAN TV',
             'og_description' => 'Официалният списък на футболистите на ЦСКА с номера, позиции и отборна принадлежност.',
-            'og_image' => asset('images/og-cska.jpg'),
+            'og_image' => asset('images/og-cska.png'),
             'og_url' => url('/players'),
             'og_type' => 'website',
         ];

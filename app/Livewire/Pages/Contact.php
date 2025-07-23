@@ -21,7 +21,7 @@ class Contact extends Component
             'canonical' => url('/contact'),
             'og_title' => 'Контакт с нас | CSKA FAN TV',
             'og_description' => 'Имаш въпрос или предложение? Свържи се с нас чрез контактната форма на CSKA FAN TV.',
-            'og_image' => asset('images/og-cska.jpg'),
+            'og_image' => asset('images/og-cska.png'),
             'og_url' => url('/contact'),
             'og_type' => 'website',
         ];

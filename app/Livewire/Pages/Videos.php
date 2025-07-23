@@ -41,7 +41,7 @@ class Videos extends Component
                 'canonical' => url('/videos'),
                 'og_title' => 'Видео Архив на ЦСКА | CSKA FAN TV',
                 'og_description' => 'Най-интересните видео моменти за червените фенове – от головете до интервютата с любимите играчи.',
-                'og_image' => asset('images/og-cska.jpg'),
+                'og_image' => asset('images/og-cska.png'),
                 'og_url' => url('/videos'),
                 'og_type' => 'website',
             ]);

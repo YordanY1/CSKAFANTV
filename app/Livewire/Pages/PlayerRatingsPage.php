@@ -20,7 +20,7 @@ class PlayerRatingsPage extends Component
             'canonical' => url('/player-ratings'),
             'og_title' => 'Играч на мача – Фен гласуване | CSKA FAN TV',
             'og_description' => 'Класация на най-добрите играчи на ЦСКА според феновете. Средни рейтинги, брой гласове и най-подкрепяни звезди.',
-            'og_image' => asset('images/og-cska.jpg'),
+            'og_image' => asset('images/og-cska.png'),
             'og_url' => url('/player-ratings'),
             'og_type' => 'website',
         ];

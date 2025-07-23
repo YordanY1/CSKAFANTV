@@ -18,7 +18,7 @@ class CardsPage extends Component
             'canonical' => url('/cards'),
             'og_title' => 'Най-много картони – Играчите на ЦСКА | CSKA FAN TV',
             'og_description' => 'Виж класация по картони – кои футболисти имат най-много нарушения и санкции. Информация от феновете за феновете.',
-            'og_image' => asset('images/og-cska.jpg'),
+            'og_image' => asset('images/og-cska.png'),
             'og_url' => url('/cards'),
             'og_type' => 'website',
         ];

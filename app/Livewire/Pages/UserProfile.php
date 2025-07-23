@@ -17,7 +17,7 @@ class UserProfile extends Component
             'canonical' => url('/user-profile'),
             'og_title' => 'Потребителски Профил | CSKA FAN TV',
             'og_description' => 'Достъп до личната ти информация, предпочитания и участие в кампании на CSKA FAN TV.',
-            'og_image' => asset('images/og-cska.jpg'),
+            'og_image' => asset('images/og-cska.png'),
             'og_url' => url('/user-profile'),
             'og_type' => 'profile',
         ];

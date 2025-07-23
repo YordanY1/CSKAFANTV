@@ -17,7 +17,7 @@ class Tactics extends Component
             'canonical' => url('/tactics'),
             'og_title' => 'Тактическа Дъска за Футболни Анализи | CSKA FAN TV',
             'og_description' => 'Интерактивна дъска за футболни фенове на ЦСКА – планирай тактики, анализирай мачове и създавай игрови ситуации.',
-            'og_image' => asset('images/og-cska.jpg'),
+            'og_image' => asset('images/og-cska.png'),
             'og_url' => url('/tactics'),
             'og_type' => 'website',
         ];

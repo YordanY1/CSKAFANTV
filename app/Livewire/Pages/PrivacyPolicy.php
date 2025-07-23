@@ -17,7 +17,7 @@ class PrivacyPolicy extends Component
             'canonical' => url('/privacy-policy'),
             'og_title' => 'Политика за поверителност | CSKA FAN TV',
             'og_description' => 'Прочети как съхраняваме, използваме и защитаваме личната информация в платформата на CSKA FAN TV.',
-            'og_image' => asset('images/og-cska.jpg'),
+            'og_image' => asset('images/og-cska.png'),
             'og_url' => url('/privacy-policy'),
             'og_type' => 'article',
         ];

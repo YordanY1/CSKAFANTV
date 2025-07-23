@@ -40,7 +40,7 @@ class Show extends Component
             'canonical' => url()->current(),
             'og_title' => "$home срещу $away – $date | CSKA FAN TV",
             'og_description' => "Фенски анализ на двубоя $home срещу $away. Оцени футболистите и виж какво мислят другите фенове на ЦСКА.",
-            'og_image' => asset('images/og-cska.jpg'),
+            'og_image' => asset('images/og-cska.png'),
             'og_url' => url()->current(),
             'og_type' => 'article',
         ];
@@ -89,7 +89,7 @@ class Show extends Component
 
         $this->refreshExistingReviews();
 
-        $this->dispatch('player-reviewed'); 
+        $this->dispatch('player-reviewed');
     }
 
 

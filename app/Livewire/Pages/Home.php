@@ -17,7 +17,7 @@ class Home extends Component
             'canonical' => url('/'),
             'og_title' => 'CSKA FAN TV – Официалният фен подкаст на червените',
             'og_description' => 'Интервюта с легенди, анализи, томболи и още – всичко за ЦСКА на едно място!',
-            'og_image' => asset('images/og-cska.jpg'),
+            'og_image' => asset('images/og-cska.png'),
             'og_url' => url('/'),
             'og_type' => 'website',
         ];

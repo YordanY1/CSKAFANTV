@@ -25,7 +25,7 @@ class FullStandingsPage extends Component
             'canonical' => url('/standings'),
             'og_title' => 'Класиране на отборите | CSKA FAN TV',
             'og_description' => 'Актуална таблица с класирането на всички отбори. Проследи битката за върха и анализирай формата на любимия си тим.',
-            'og_image' => asset('images/og-cska.jpg'),
+            'og_image' => asset('images/og-cska.png'),
             'og_url' => url('/standings'),
             'og_type' => 'website',
         ];
