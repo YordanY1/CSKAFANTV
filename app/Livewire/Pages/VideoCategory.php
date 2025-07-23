@@ -7,22 +7,21 @@ use Livewire\Component;
 
 class VideoCategory extends Component
 {
-    public ?string $category = null;
-
+    public ?string $categorySlug = null;
 
     public function mount(string $slug)
     {
-        $this->category = Video::where('category_slug', $slug)->value('category');
+        $this->categorySlug = $slug;
     }
 
     public function render()
     {
-        $videos = Video::where('category', $this->category)->latest()->get();
+        $videos = Video::where('category_slug', $this->categorySlug)->latest()->get();
 
         return view('livewire.pages.video-category', [
             'videos' => $videos,
         ])->layout('layouts.app', [
-            'title' => "Категория: $this->category",
+            'title' => "Категория: " . ucfirst(str_replace('-', ' ', $this->categorySlug)),
         ]);
     }
 }
