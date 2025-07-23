@@ -60,15 +60,5 @@ class AdminPanelProvider extends PanelProvider
 
     public function boot(): void
     {
-        Filament::serving(function () {
-            \Log::info('🧪 FILAMENT SERVING DEBUG', [
-                'auth_check' => auth()->check(),
-                'user_id' => optional(auth()->user())->id,
-                'user_email' => optional(auth()->user())->email,
-                'session_id' => session()->getId(),
-                'session_data' => session()->all(),
-                'cookies' => request()->cookies->all(),
-            ]);
-        });
     }
 }
