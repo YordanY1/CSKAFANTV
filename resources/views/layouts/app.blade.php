@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="author" content="CSKA FAN TV">
-    
+
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YE5TV8L4BF"></script>
@@ -59,7 +59,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
 
-    @if (request()->is('/'))
+    {{-- @if (request()->is('/'))
         <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -87,7 +87,7 @@
     "https://www.youtube.com/@cskafantv",
   ]
 }
-</script>
+</script> --}}
     @endif
 
 
