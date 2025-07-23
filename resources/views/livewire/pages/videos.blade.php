@@ -39,7 +39,7 @@
                     </a>
                     <div class="p-4">
                         <h3 class="font-bold text-lg text-primary">{{ $video->title }}</h3>
-                        <p class="text-sm text-gray-600 mt-2">{{ $video->description }}</p>
+                        <div class="text-sm text-gray-600 mt-2">{!! $video->description !!}</div>
                     </div>
                 </div>
             @empty
