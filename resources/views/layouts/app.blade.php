@@ -59,7 +59,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
 
-    {{-- @if (request()->is('/'))
+
+    @if (request()->routeIs('home'))
         <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -84,11 +85,12 @@
   "sameAs": [
     "https://www.facebook.com/cskafantv",
     "https://www.instagram.com/cskafantv",
-    "https://www.youtube.com/@cskafantv",
+    "https://www.youtube.com/@cskafantv"
   ]
 }
-</script> --}}
-    {{-- @endif --}}
+</script>
+    @endif
+
 
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
