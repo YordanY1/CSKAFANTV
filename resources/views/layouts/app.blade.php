@@ -28,7 +28,7 @@
     <meta property="og:title" content="{{ $og_title ?? ($title ?? 'CSKA FAN TV – Всичко за ЦСКА') }}" />
     <meta property="og:description"
         content="{{ $og_description ?? ($description ?? 'Подкаст за ЦСКА, интервюта с футболисти и коментари от червени фенове.') }}" />
-    <meta property="og:image" content="{{ $og_image ?? asset('images/og-cska.jpg') }}" />
+    <meta property="og:image" content="{{ $og_image ?? url('images/og-cska.jpg') }}" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ $og_url ?? url()->current() }}" />
     <meta property="og:site_name" content="CSKA FAN TV" />
@@ -38,7 +38,7 @@
     <meta name="twitter:title" content="{{ $og_title ?? 'CSKA FAN TV – Подкаст и интервюта за ЦСКА' }}" />
     <meta name="twitter:description"
         content="{{ $og_description ?? 'Гледай подкасти и интервюта за любимия ти отбор – ЦСКА София. Само за верните фенове!' }}" />
-    <meta name="twitter:image" content="{{ $og_image ?? asset('images/og-cska.jpg') }}" />
+    <meta name="twitter:image" content="{{ $og_image ?? url('images/og-cska.jpg') }}" />
 
     <!-- Favicons -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon-16x16.png') }}">
