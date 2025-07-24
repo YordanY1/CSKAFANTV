@@ -14,17 +14,18 @@
             <div :class="{ 'hidden': !open }" class="md:block space-y-2">
                 <button wire:click="$set('filterCategory', '')"
                     class="block w-full text-left px-4 py-2 rounded
-                        {{ $filterCategory === '' ? 'bg-primary text-white' : 'bg-white text-primary border border-primary hover:bg-primary hover:text-white' }}">
+        {{ $filterCategory === '' ? 'bg-primary text-white' : 'bg-white text-primary border border-primary hover:bg-primary hover:text-white' }}">
                     Всички
                 </button>
 
                 @foreach ($allCategories as $cat)
                     <button wire:click="$set('filterCategory', '{{ $cat }}')"
                         class="block w-full text-left px-4 py-2 rounded
-                            {{ $filterCategory === $cat ? 'bg-primary text-white' : 'bg-white text-primary border border-primary hover:bg-primary hover:text-white' }}">
+            {{ $filterCategory === $cat ? 'bg-primary text-white' : 'bg-white text-primary border border-primary hover:bg-primary hover:text-white' }}">
                         {{ $cat }}
                     </button>
                 @endforeach
+
             </div>
         </div>
 

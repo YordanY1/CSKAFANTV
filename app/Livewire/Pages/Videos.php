@@ -11,6 +11,13 @@ class Videos extends Component
     public string $filterTag = '';
     public string $filterCategory = '';
 
+    public $queryString = [
+        'search' => ['except' => ''],
+        'filterTag' => ['except' => ''],
+        'filterCategory' => ['except' => ''],
+    ];
+
+
 
     public function render()
     {
@@ -20,7 +27,7 @@ class Videos extends Component
                 ->orWhere('description', 'like', "%{$this->search}%"))
             ->when($this->filterTag, fn($q) =>
             $q->where('tags', 'like', "%{$this->filterTag}%"))
-            ->when($this->filterCategory, fn($q) =>
+            ->when(!empty($this->filterCategory), fn($q) =>
             $q->where('category', $this->filterCategory))
             ->latest()
             ->get();
