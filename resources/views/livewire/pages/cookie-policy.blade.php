@@ -30,7 +30,7 @@
         <p>Запазваме си правото да променяме тази политика. Промени ще бъдат публикувани на тази страница.</p>
 
         <h2 class="text-2xl font-semibold text-red-500">6. Контакт</h2>
-        <p>Ако имате въпроси, свързани с бисквитките, свържете се с нас на <a href="mailto:email@example.com"
-                class="text-blue-500 underline">email@example.com</a>.</p>
+        <p>Ако имате въпроси, свързани с бисквитките, свържете се с нас на <a href="mailto:cskafantv@gmail.com"
+                class="text-blue-500 underline">cskafantv@gmail.com</a>.</p>
     </div>
 </div>

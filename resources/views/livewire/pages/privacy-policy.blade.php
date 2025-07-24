@@ -25,7 +25,7 @@
         </ul>
 
         <h2 class="text-2xl font-semibold text-red-500">5. Контакт</h2>
-        <p>Свържете се с нас на <a href="mailto:email@example.com" class="text-blue-500 underline">email@example.com</a>
+        <p>Свържете се с нас на <a href="mailto:cskafantv@gmail.com" class="text-blue-500 underline">cskafantv@gmail.com</a>
         </p>
     </div>
 </div>
