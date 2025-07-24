@@ -41,7 +41,7 @@
                         <h3 class="font-bold text-lg text-primary">{{ $video->title }}</h3>
 
                         <div x-data="{ expanded: false }" class="text-sm text-gray-600 mt-2">
-                            <div x-show="!expanded" x-html="`{!! \Str::limit($video->description, 150, '...') !!}`"></div>
+                            <div x-show="!expanded" x-html="`{!! \Str::limit($video->description, 100, '...') !!}`"></div>
                             <div x-show="expanded" x-html="`{!! $video->description !!}`"></div>
 
                             <button @click="expanded = !expanded"
