@@ -25,7 +25,7 @@ class Videos extends Component
                 ->orWhere('description', 'like', "%{$this->search}%"))
             ->when($this->filterTag, fn($q) =>
             $q->where('tags', 'like', "%{$this->filterTag}%"))
-            ->when(trim($this->filterCategory) !== '', fn($q) =>
+            ->when(!empty($this->filterCategory), fn($q) =>
             $q->where('category', $this->filterCategory))
             ->latest()
             ->get();
