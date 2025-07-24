@@ -17,8 +17,6 @@ class Videos extends Component
         'filterCategory' => ['except' => ''],
     ];
 
-
-
     public function render()
     {
         $videos = Video::query()
@@ -27,7 +25,7 @@ class Videos extends Component
                 ->orWhere('description', 'like', "%{$this->search}%"))
             ->when($this->filterTag, fn($q) =>
             $q->where('tags', 'like', "%{$this->filterTag}%"))
-            ->when(!empty($this->filterCategory), fn($q) =>
+            ->when(trim($this->filterCategory) !== '', fn($q) =>
             $q->where('category', $this->filterCategory))
             ->latest()
             ->get();
