@@ -20,7 +20,7 @@
                             ?
                             'bg-blue-100 text-blue-800 border-blue-300 ring-2 ring-blue-200' :
                             'bg-white text-gray-700'"
-                        class="border px-3 py-2 rounded text-sm hover:bg-blue-50 transition">
+                        class="border px-3 py-2 rounded text-sm hover:bg-blue-50 transition cursor-pointer">
                         ✏️ Чертай
                     </button>
 
@@ -29,7 +29,7 @@
                             ?
                             'bg-green-100 text-green-800 border-green-300 ring-2 ring-green-200' :
                             'bg-white text-gray-700'"
-                        class="border px-3 py-2 rounded text-sm hover:bg-green-50 transition">
+                        class="border px-3 py-2 rounded text-sm hover:bg-green-50 transition cursor-pointer">
                         ➡️ Стрелка
                     </button>
 
@@ -38,12 +38,12 @@
                             ?
                             'bg-red-100 text-red-800 border-red-300 ring-2 ring-red-200' :
                             'bg-white text-gray-700'"
-                        class="border px-3 py-2 rounded text-sm hover:bg-red-50 transition">
+                        class="border px-3 py-2 rounded text-sm hover:bg-red-50 transition cursor-pointer">
                         🧽 Гума
                     </button>
 
                     <button @click="clearBoard"
-                        class="ml-auto text-sm text-white bg-red-600 border border-red-800 px-4 py-2 rounded hover:bg-red-700 transition">
+                        class="ml-auto text-sm text-white bg-red-600 border border-red-800 px-4 py-2 rounded hover:bg-red-700 transition cursor-pointer">
                         🧹 Изчисти дъската
                     </button>
 
@@ -53,17 +53,17 @@
                             ?
                             'bg-orange-100 text-orange-800 border-orange-300 ring-2 ring-orange-200' :
                             'bg-white text-gray-700'"
-                        class="border px-3 py-2 rounded text-sm hover:bg-orange-50 transition">
+                        class="border px-3 py-2 rounded text-sm hover:bg-orange-50 transition cursor-pointer">
                         ⚽ Добави топка
                     </button>
 
                     <button @click="toggleFullscreen"
-                        class="border px-3 py-2 rounded text-sm bg-white text-gray-700 hover:bg-gray-50 transition">
+                        class="border px-3 py-2 rounded text-sm bg-white text-gray-700 hover:bg-gray-50 transition cursor-pointer">
                         <span x-text="isFullscreen ? '❌ Изход от цял екран' : '🔳 Голям екран'"></span>
                     </button>
 
                     <button @click="downloadBoard"
-                        class="border px-3 py-2 rounded text-sm bg-white text-gray-700 hover:bg-gray-50 transition">
+                        class="border px-3 py-2 rounded text-sm bg-white text-gray-700 hover:bg-gray-50 transition cursor-pointer">
                         💾 Свали състава
                     </button>
 

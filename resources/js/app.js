@@ -428,10 +428,18 @@ window.tacticBoard = function () {
 
                 this.layer.add(logo);
                 this.layer.add(label);
+
+                const deleteButtons = this.layer.find(
+                    (node) => node instanceof Konva.Text && node.text() === "❌"
+                );
+                deleteButtons.forEach((btn) => btn.hide());
+
                 this.layer.draw();
 
                 setTimeout(() => {
                     const dataURL = this.stage.toDataURL({ pixelRatio: 2 });
+
+                    deleteButtons.forEach((btn) => btn.show());
 
                     logo.destroy();
                     label.destroy();

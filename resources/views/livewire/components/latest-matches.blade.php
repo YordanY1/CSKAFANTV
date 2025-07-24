@@ -8,17 +8,17 @@
 
         <div class="flex justify-center mb-8 flex-wrap gap-2 sm:gap-4">
             <button wire:click="setFilter('live')"
-                class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition
+                class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition cursor-pointer
         {{ $filter === 'live' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
                 На живо
             </button>
             <button wire:click="setFilter('upcoming')"
-                class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition
+                class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition cursor-pointer
         {{ $filter === 'upcoming' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
                 Предстоящи
             </button>
             <button wire:click="setFilter('completed')"
-                class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition
+                class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition cursor-pointer
         {{ $filter === 'completed' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
                 Приключени
             </button>
