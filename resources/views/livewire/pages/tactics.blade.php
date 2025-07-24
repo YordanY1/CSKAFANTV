@@ -7,13 +7,13 @@
             <div class="max-w-4xl mx-auto w-full space-y-4">
 
                 <div class="flex flex-wrap gap-2">
-                    {{-- <button @click="setTool(null)"
+                    <button @click="setTool(null)"
                         :class="tool === null ?
                             'bg-yellow-100 text-yellow-800 border-yellow-300 ring-2 ring-yellow-200' :
                             'bg-white text-gray-700'"
                         class="border px-3 py-2 rounded text-sm hover:bg-yellow-50 transition">
                         🎯 Избиране на играчи
-                    </button> --}}
+                    </button>
 
                     <button @click="setTool('draw')"
                         :class="tool === 'draw'
@@ -71,9 +71,8 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Избери играч:</label>
-                    <select x-model="selectedPlayerId" @change="onPlayerSelected"
-                        class="border border-gray-300 rounded-lg p-2 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition w-full max-w-sm"
-                        :disabled="tool !== null">
+                    <select x-model="selectedPlayerId" @change="onPlayerSelected" :disabled="tool !== null"
+                        class="border border-gray-300 rounded-lg p-2 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition w-full max-w-sm">
                         <option :value="null" x-show="true">-- Избери играч --</option>
                         <template x-for="player in players" :key="player.id">
                             <option :value="player.id"
@@ -89,8 +88,7 @@
                     class="absolute top-2 left-2 w-20 h-20 opacity-90 z-10 rounded-full ring-2 ring-white">
                 <div
                     class="absolute top-2 right-2 flex items-center gap-2 z-10 bg-white/80 px-2 py-1 rounded-full shadow">
-                    <img src="/images/logo/logo.jpg" alt="CSKA FAN TV"
-                        class="w-20 h-20 object-contain rounded-full" />
+                    <img src="/images/logo/logo.jpg" alt="CSKA FAN TV" class="w-20 h-20 object-contain rounded-full" />
                 </div>
                 <div id="tactic-stage" class="border-2 border-gray-300 rounded shadow-lg bg-white relative z-0"
                     style="width: 1104px; height: 596px;">

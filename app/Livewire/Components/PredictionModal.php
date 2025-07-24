@@ -14,6 +14,8 @@ class PredictionModal extends Component
     public $homeScore = null;
     public $awayScore = null;
     public $match;
+    public $isReadonly = false;
+
 
 
     protected function rules()
@@ -34,6 +36,20 @@ class PredictionModal extends Component
         $this->matchId = $matchId;
         $this->match = FootballMatch::with(['homeTeam', 'awayTeam'])->findOrFail($matchId);
         $this->isOpen = true;
+
+        $prediction = Prediction::where('user_id', auth()->id())
+            ->where('football_match_id', $matchId)
+            ->first();
+
+        if ($prediction) {
+            $this->homeScore = $prediction->home_score_prediction;
+            $this->awayScore = $prediction->away_score_prediction;
+            $this->isReadonly = true;
+        } else {
+            $this->homeScore = null;
+            $this->awayScore = null;
+            $this->isReadonly = false;
+        }
     }
 
     public function save()

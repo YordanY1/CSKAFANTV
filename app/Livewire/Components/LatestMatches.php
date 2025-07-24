@@ -6,6 +6,7 @@ namespace App\Livewire\Components;
 use App\Models\FootballMatch;
 use Illuminate\Support\Carbon;
 use Livewire\Component;
+use App\Models\Prediction;
 
 class LatestMatches extends Component
 {
@@ -86,8 +87,16 @@ class LatestMatches extends Component
             ->orderBy('match_datetime', $this->filter === 'completed' ? 'desc' : 'asc')
             ->get();
 
+        $predictions = auth()->check()
+            ? Prediction::where('user_id', auth()->id())
+            ->whereIn('football_match_id', $matches->pluck('id'))
+            ->get()
+            ->keyBy('football_match_id')
+            : collect();
+
         return view('livewire.components.latest-matches', [
             'matches' => $matches,
+            'predictions' => $predictions,
         ]);
     }
 }

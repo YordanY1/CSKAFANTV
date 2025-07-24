@@ -110,21 +110,26 @@
 
                             @auth
                                 @php
-                                    $isAlreadyPredicted =
-                                        in_array($match->id, $this->predictedMatches) ||
-                                        \App\Models\Prediction::where('user_id', auth()->id())
-                                            ->where('football_match_id', $match->id)
-                                            ->exists();
+                                    $prediction = $predictions->get($match->id);
                                 @endphp
 
-                                @if (!$match->is_finished && !$isAlreadyPredicted && $match->match_datetime->isFuture())
-                                    <button x-data
-                                        @click="$dispatch('open-prediction-modal', { matchId: {{ $match->id }} })"
-                                        class="bg-primary text-white px-3 py-1.5 rounded text-sm cursor-pointer">
-                                        Прогнозирай
-                                    </button>
+                                @if (!$match->is_finished && $match->match_datetime->isFuture())
+                                    @if ($prediction)
+                                        <button x-data
+                                            @click="$dispatch('open-prediction-modal', { matchId: {{ $match->id }} })"
+                                            class="bg-primary text-white px-3 py-1.5 rounded text-sm cursor-pointer"> Моята
+                                            прогноза
+                                        </button>
+                                    @else
+                                        <button x-data
+                                            @click="$dispatch('open-prediction-modal', { matchId: {{ $match->id }} })"
+                                            class="bg-primary text-white px-3 py-1.5 rounded text-sm cursor-pointer">
+                                            Прогнозирай
+                                        </button>
+                                    @endif
                                 @endif
                             @endauth
+
                         </div>
 
                     </div>

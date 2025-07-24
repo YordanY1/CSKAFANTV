@@ -12,6 +12,11 @@
 
                 <h2 class="text-3xl font-extrabold text-center text-primary uppercase tracking-wide">Прогноза за мач</h2>
 
+                <button type="button" wire:click="$set('isOpen', false)"
+                    class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold focus:outline-none cursor-pointer"
+                    title="Затвори модала">
+                    &times;
+                </button>
                 <form wire:submit.prevent="save" class="space-y-6">
                     <div class="flex items-center justify-between gap-6">
                         @if ($match?->homeTeam)
@@ -22,7 +27,7 @@
                             </div>
                         @endif
 
-                        <select wire:model="homeScore"
+                        <select wire:model="homeScore" @if ($isReadonly) disabled @endif
                             class="w-20 rounded-xl border border-gray-300 bg-white px-2 py-2 text-center text-base font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-accent">
                             <option value="" disabled>–</option>
                             @for ($i = 0; $i <= 20; $i++)
@@ -41,7 +46,7 @@
                             </div>
                         @endif
 
-                        <select wire:model="awayScore"
+                        <select wire:model="awayScore" @if ($isReadonly) disabled @endif
                             class="w-20 rounded-xl border border-gray-300 bg-white px-2 py-2 text-center text-base font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-accent">
                             <option value="" disabled>–</option>
                             @for ($i = 0; $i <= 20; $i++)
@@ -55,16 +60,18 @@
                         <p class="text-red-500 text-sm mt-1 text-center">{{ $message }}</p>
                     @enderror
 
-                    <div class="flex justify-end gap-4 pt-4">
-                        <button type="button" wire:click="$set('isOpen', false)"
-                            class="px-5 py-2.5 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                            ❌ Отказ
-                        </button>
-                        <button type="submit"
-                            class="px-6 py-2.5 text-sm bg-primary text-white rounded-lg hover:bg-accent transition shadow-md font-semibold">
-                            💾 Запази прогноза
-                        </button>
-                    </div>
+                    @if (!$isReadonly)
+                        <div class="flex justify-end gap-4 pt-4">
+                            <button type="button" wire:click="$set('isOpen', false)"
+                                class="px-5 py-2.5 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition cursor-pointer">
+                                ❌ Отказ
+                            </button>
+                            <button type="submit"
+                                class="px-6 py-2.5 text-sm bg-primary text-white rounded-lg hover:bg-accent transition shadow-md font-semibold cursor-pointer">
+                                💾 Запази прогноза
+                            </button>
+                        </div>
+                    @endif
                 </form>
 
                 <div x-show="showSuccess" x-transition

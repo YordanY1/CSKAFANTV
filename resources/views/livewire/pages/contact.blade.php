@@ -1,5 +1,4 @@
-<div class="max-w-3xl mx-auto px-4 py-12 font-primary">
-
+<div id="contact-form" class="max-w-3xl mx-auto px-4 py-12 font-primary">
     <div class="flex justify-center mb-6">
         <img src="{{ asset('images/logo/logo.jpg') }}" alt="CSKA FAN TV logo" class="h-40">
     </div>
@@ -14,8 +13,16 @@
         </div>
     @endif
 
+    @if (session()->has('error'))
+        <div class="mb-6 p-4 bg-red-100 text-red-800 rounded shadow text-center font-medium">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <form wire:submit.prevent="submit"
         class="space-y-6 bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl border border-red-200 backdrop-blur-md">
+
+        <input type="hidden" id="recaptcha_response" name="g-recaptcha-response">
 
         <div>
             <label class="block font-semibold text-gray-700 mb-1">Име</label>
@@ -42,6 +49,12 @@
             @error('message')
                 <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror
+        </div>
+
+        <div class="text-center">
+            <div class="g-recaptcha inline-block" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"
+                data-callback="onRecaptchaSuccess" data-error-callback="onRecaptchaError">
+            </div>
         </div>
 
         <div class="text-center">

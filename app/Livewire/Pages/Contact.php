@@ -3,6 +3,7 @@
 namespace App\Livewire\Pages;
 
 use App\Mail\ContactMessage;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
@@ -11,6 +12,9 @@ class Contact extends Component
     public $name, $email, $message;
 
     public array $layoutData = [];
+
+    public $recaptchaToken;
+
 
     public function mount()
     {
@@ -36,24 +40,31 @@ class Contact extends Component
         ];
     }
 
-    public function submit(): void
+    public function submit()
     {
         $this->validate();
-        $this->sendContactEmail();
-        $this->resetForm();
+
+        $captchaToken = $this->recaptchaToken;
+
+        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => env('RECAPTCHA_SECRET_KEY'),
+            'response' => $captchaToken,
+            'remoteip' => request()->ip(),
+        ]);
+
+        if (!($response->json('success') ?? false)) {
+            session()->flash('error', 'Неуспешна проверка на reCAPTCHA. Опитай отново.');
+            return;
+        }
+
+        Mail::to(config('mail.admin_address'))
+            ->send(new ContactMessage($this->name, $this->email, $this->message));
+
+        $this->reset(['name', 'email', 'message', 'recaptchaToken']);
         session()->flash('success', 'Съобщението беше изпратено успешно!');
     }
 
-    protected function sendContactEmail(): void
-    {
-        Mail::to(config('mail.admin_address'))
-            ->send(new ContactMessage($this->name, $this->email, $this->message));
-    }
 
-    protected function resetForm(): void
-    {
-        $this->reset(['name', 'email', 'message']);
-    }
 
     public function render()
     {

@@ -454,10 +454,10 @@ window.tacticBoard = function () {
         },
 
         onPlayerSelected(event) {
+            if (this.tool !== null) return;
+
             const playerId = event.target.value;
             const player = this.players.find((p) => p.id == playerId);
-
-            this.tool = null;
 
             if (player) {
                 const x = this.stage.width() / 2;
