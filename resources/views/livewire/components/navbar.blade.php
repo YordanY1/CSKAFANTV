@@ -1,4 +1,4 @@
-<nav x-data="{ open: false, openRegister: false }" class="bg-primary text-cta shadow-md">
+<nav x-data="{ open: false, openRegister: false, showLoginDropdown: false }" class="bg-primary text-cta shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center py-2">
             <!-- Logo -->
@@ -92,6 +92,11 @@
                 </a>
 
                 @guest
+                    <button @click="showLoginDropdown = true"
+                        class="text-sm font-medium text-white bg-accent hover:bg-primary px-4 py-2 rounded transition cursor-pointer ">
+                        Вход
+                    </button>
+
                     <button @click="openRegister = true"
                         class="text-sm font-medium text-white bg-accent hover:bg-primary px-4 py-2 rounded transition cursor-pointer">
                         Регистрация
@@ -239,11 +244,18 @@
         </a>
 
         @guest
+            <button @click="showLoginDropdown = true"
+                class="text-sm font-medium text-white bg-primary hover:bg-accent px-4 py-2 rounded transition cursor-pointer">
+                Вход
+            </button>
+
             <button @click="openRegister = true"
                 class="text-sm font-medium text-white bg-accent hover:bg-primary px-4 py-2 rounded transition cursor-pointer">
                 Регистрация
             </button>
         @endguest
+
+
 
         @auth
             <a href="{{ route('profile') }}" wire:navigate
@@ -308,19 +320,54 @@
 
                         <div class="text-gray-400 text-sm text-center">или</div>
                         <livewire:auth.register />
-
-
-                        <!-- Facebook -->
-                        {{-- <a href="{{ route('auth.facebook.redirect') }}"
-                            class="inline-flex items-center justify-center w-full gap-2 py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition shadow-sm">
-                            <i class="fab fa-facebook text-lg"></i>
-                            Вход с Facebook
-                        </a> --}}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Login Modal -->
+    <div x-cloak>
+        <div x-show="showLoginDropdown" x-transition
+            class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center px-4">
+            <div @click.away="showLoginDropdown = false"
+                class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative">
+
+                <button @click="showLoginDropdown = false"
+                    class="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <div class="text-center">
+                    <img src="{{ asset('images/logo/logo.jpg') }}" alt="Лого"
+                        class="w-20 h-20 mx-auto rounded-full mb-4">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Добре дошъл обратно!</h2>
+                    <p class="text-sm text-gray-500 mb-6">Влез в акаунта си с един клик</p>
+
+                    <div class="space-y-4">
+                        <!-- Google Login -->
+                        <a href="{{ route('auth.google.redirect') }}"
+                            class="inline-flex items-center justify-center w-full gap-2 py-3 px-6 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition shadow-sm cursor-pointer">
+                            <i class="fab fa-google text-lg"></i>
+                            Вход с Google
+                        </a>
+
+                        <div class="text-gray-400 text-sm text-center">или</div>
+
+                        <!-- Livewire Login Form -->
+                        <livewire:auth.login />
+
+                        <div class="text-center text-sm mt-4">
+                            <span class="text-gray-600">Нямаш акаунт?</span>
+                            <button @click="showLoginDropdown = false; openRegister = true"
+                                class="text-red-600 hover:underline ml-1 cursor-pointer font-medium">
+                                Регистрирай се
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </nav>

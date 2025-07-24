@@ -36,7 +36,7 @@
         </div>
 
         <button type="submit"
-            class="w-full bg-accent hover:bg-accent-2 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow hover:shadow-md">
+            class="w-full bg-accent hover:bg-accent-2 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow hover:shadow-md cursor-pointer">
             Регистрация
         </button>
     </form>
