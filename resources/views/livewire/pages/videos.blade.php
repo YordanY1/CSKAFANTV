@@ -10,27 +10,26 @@
                 <span x-show="open">Затвори филтрите</span>
             </button>
 
-            <!-- Filter Buttons -->
             <div :class="{ 'hidden': !open }" class="md:block space-y-2">
-                <button wire:click="$set('filterCategory', '')"
+                <button wire:click="$set('filterCategorySlug', '')"
                     class="block w-full text-left px-4 py-2 rounded
-        {{ $filterCategory === '' ? 'bg-primary text-white' : 'bg-white text-primary border border-primary hover:bg-primary hover:text-white' }}">
+        {{ $filterCategorySlug === '' ? 'bg-primary text-white' : 'bg-white text-primary border border-primary hover:bg-primary hover:text-white' }}">
                     Всички
                 </button>
 
                 @foreach ($allCategories as $cat)
-                    <button wire:click="$set('filterCategory', '{{ $cat }}')"
+                    <button wire:click="$set('filterCategorySlug', '{{ $cat->category_slug }}')"
                         class="block w-full text-left px-4 py-2 rounded
-            {{ $filterCategory === $cat ? 'bg-primary text-white' : 'bg-white text-primary border border-primary hover:bg-primary hover:text-white' }}">
-                        {{ $cat }}
+            {{ $filterCategorySlug === $cat->category_slug ? 'bg-primary text-white' : 'bg-white text-primary border border-primary hover:bg-primary hover:text-white' }}">
+                        {{ $cat->category }}
                     </button>
                 @endforeach
-
             </div>
         </div>
 
         <!-- Video Grid -->
-        <div class="md:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="md:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            wire:key="videos-{{ md5($filterCategorySlug) }}">
             @forelse ($videos as $video)
                 <div class="rounded-lg shadow hover:shadow-lg transition bg-white overflow-hidden">
                     <a href="https://www.youtube.com/watch?v={{ $video->youtube_id }}" target="_blank">

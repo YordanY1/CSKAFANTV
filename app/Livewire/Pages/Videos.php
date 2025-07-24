@@ -7,38 +7,34 @@ use Livewire\Component;
 
 class Videos extends Component
 {
-    public string $search = '';
-    public string $filterTag = '';
-    public string $filterCategory = '';
+    public string $filterCategorySlug = '';
 
     public $queryString = [
-        'search' => ['except' => ''],
-        'filterTag' => ['except' => ''],
-        'filterCategory' => ['except' => ''],
+        'filterCategorySlug' => ['except' => ''],
     ];
 
     public function render()
     {
+
         $videos = Video::query()
-            ->when($this->search, fn($q) =>
-            $q->where('title', 'like', "%{$this->search}%")
-                ->orWhere('description', 'like', "%{$this->search}%"))
-            ->when($this->filterTag, fn($q) =>
-            $q->where('tags', 'like', "%{$this->filterTag}%"))
-            ->when(!empty($this->filterCategory), fn($q) =>
-            $q->where('category', $this->filterCategory))
+            ->when($this->filterCategorySlug !== '', function ($query) {
+                $query->where('category_slug', $this->filterCategorySlug);
+            })
             ->latest()
             ->get();
 
-        $allTags = Video::pluck('tags')
-            ->filter()
-            ->flatMap(fn($tags) => explode(',', $tags))
-            ->map(fn($tag) => trim($tag))
-            ->unique();
+        // logger('ВИДЕА ВЪРНАТИ ЗА КАТЕГОРИЯТА:', [
+        //     'filterCategorySlug' => $this->filterCategorySlug,
+        //     'video_ids' => $videos->pluck('id'),
+        //     'category_slugs' => $videos->pluck('category_slug')->unique(),
+        // ]);
 
-        $allCategories = Video::select('category')->distinct()->pluck('category');
+        $allCategories = Video::select('category', 'category_slug')
+            ->get()
+            ->unique('category_slug')
+            ->values();
 
-        return view('livewire.pages.videos', compact('videos', 'allTags', 'allCategories'))
+        return view('livewire.pages.videos', compact('videos', 'allCategories'))
             ->layout('layouts.app', [
                 'title' => 'Видеогалерия | CSKA FAN TV',
                 'description' => 'Гледайте най-добрите моменти от мачовете на ЦСКА – голове, интервюта, репортажи и вълнуващи кадри от стадиона.',
