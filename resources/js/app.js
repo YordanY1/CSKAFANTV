@@ -62,10 +62,31 @@ window.tacticBoard = function () {
             fetch("/api/players")
                 .then((res) => res.json())
                 .then((players) => {
-                    this.players = players;
+                    const positionOrder = [
+                        "Вратар",
+                        "Десен бек",
+                        "Централен защитник",
+                        "Ляв бек",
+                        "Опорен халф",
+                        "Атакуващ халф",
+                        "Ляво крило",
+                        "Дясно крило",
+                        "Централен нападател",
+                    ];
+
+                    this.players = players
+                        .filter((p) => !p.is_coach)
+                        .sort((a, b) => {
+                            const ai = positionOrder.indexOf(a.position);
+                            const bi = positionOrder.indexOf(b.position);
+                            return (
+                                (ai === -1 ? Infinity : ai) -
+                                (bi === -1 ? Infinity : bi)
+                            );
+                        });
+
                     this.selectedPlayerId = null;
                 });
-
             document.addEventListener("fullscreenchange", () => {
                 this.isFullscreen = !!document.fullscreenElement;
                 setTimeout(() => this.resizeStage(), 300);
