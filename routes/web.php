@@ -19,7 +19,7 @@ use App\Livewire\Pages\FullStandingsPage;
 use App\Livewire\Pages\PlayerRatingsPage;
 use App\Livewire\Pages\PredictionRankingsPage;
 use App\Livewire\Pages\VideoCategory;
-use App\Models\User;
+use App\Http\Controllers\ObsMatchController;
 
 
 
@@ -65,3 +65,5 @@ Route::post('/logout', function (Request $request) {
     $request->session()->regenerateToken();
     return redirect('/');
 })->name('logout');
+
+Route::get('/match/{slug}/obs', [ObsMatchController::class, 'show'])->name('obs.match');
