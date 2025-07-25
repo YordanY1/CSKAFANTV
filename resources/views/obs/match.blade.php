@@ -42,8 +42,6 @@
             max-width: 100%;
         }
 
-
-
         .team {
             display: flex;
             align-items: center;
@@ -58,15 +56,6 @@
             width: auto;
         }
 
-        .timer-inline {
-            font-size: 32px;
-            font-weight: bold;
-            color: var(--color-accent-2);
-            margin-left: 20px;
-            white-space: nowrap;
-        }
-
-
         .score {
             display: flex;
             align-items: center;
@@ -77,34 +66,12 @@
             color: var(--color-cta);
         }
 
-
-        .timer {
+        .timer-inline {
             font-size: 32px;
-            margin-top: 12px;
+            font-weight: bold;
             color: var(--color-accent-2);
-            text-align: center;
-        }
-
-        .controls {
-            margin-top: 16px;
-            display: flex;
-            gap: 12px;
-        }
-
-        .controls button {
-            background-color: var(--color-accent);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 20px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        @media screen and (max-height: 300px) {
-            .controls {
-                display: none;
-            }
+            margin-left: 20px;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -134,15 +101,8 @@
         <div class="timer-inline" id="timer">00:00</div>
     </div>
 
-
-    <div class="controls">
-        <button onclick="startTimer()">Старт</button>
-        <button onclick="pauseTimer()">Пауза</button>
-        <button onclick="resetTimer()">Рестарт</button>
-    </div>
-
     <script>
-        let startTime = null;
+        let startTime = new Date().getTime();
         let elapsedBeforePause = 0;
         let timerInterval = null;
 
@@ -157,38 +117,8 @@
             document.getElementById('timer').innerText = formatted;
         }
 
-        function startTimer() {
-            if (!startTime) {
-                startTime = new Date().getTime();
-            } else {
-                startTime = new Date().getTime() - elapsedBeforePause;
-            }
-
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(updateTimerDisplay, 1000);
-        }
-
-        function pauseTimer() {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-            if (startTime) {
-                elapsedBeforePause += new Date().getTime() - startTime;
-                startTime = null;
-            }
-        }
-
-        function resetTimer() {
-            if (timerInterval) clearInterval(timerInterval);
-            startTime = null;
-            elapsedBeforePause = 0;
-            timerInterval = null;
-            document.getElementById('timer').innerText = "00:00";
-        }
-
-        // Авто старт (ако искаш OBS да започва таймера автоматично)
-        // startTimer();
+        updateTimerDisplay();
+        timerInterval = setInterval(updateTimerDisplay, 1000);
     </script>
 </body>
 
