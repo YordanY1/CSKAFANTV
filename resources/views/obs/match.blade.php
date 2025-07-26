@@ -195,13 +195,40 @@
                     document.getElementById('score').innerText = `${data.home_score} : ${data.away_score}`;
                     startTimestamp = data.started_at ? data.started_at * 1000 : null;
                     stoppedTimestamp = data.stopped_at ? data.stopped_at * 1000 : null;
-                    if (callback && !stoppedTimestamp) callback();
+
+                    console.log("Fetched match data:", {
+                        home: data.home_score,
+                        away: data.away_score,
+                        startTimestamp,
+                        stoppedTimestamp,
+                        now: Date.now()
+                    });
+
+                    if (callback && !stoppedTimestamp) {
+                        callback();
+                    } else if (startTimestamp && !stoppedTimestamp && !interval) {
+                        interval = setInterval(updateTimerDisplay, 1000);
+                    } else if (stoppedTimestamp && interval) {
+                        clearInterval(interval);
+                        interval = null;
+                    }
+
+                    updateTimerDisplay();
+                })
+                .catch(err => {
+                    console.error('❌ Fetch error:', err);
                 });
         }
 
+
         window.onload = () => {
             timerEl = document.getElementById('timer');
+
             fetchMatchData();
+
+            setInterval(() => {
+                fetchMatchData();
+            }, 3000);
         };
     </script>
 </body>
