@@ -71,7 +71,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Избери играч:</label>
-                    <select x-model="selectedPlayerId" @change="onPlayerSelected" :disabled="tool !== null"
+                    {{-- <select x-model="selectedPlayerId" @change="onPlayerSelected" :disabled="tool !== null"
                         class="border border-gray-300 rounded-lg p-2 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition w-full max-w-sm">
                         <option :value="null" x-show="true">-- Избери играч --</option>
                         <template x-for="player in players" :key="player.id">
@@ -79,7 +79,16 @@
                                 x-text="player.name + (player.position ? ' (' + player.position + ')' : '') + (player.number ? ' #' + player.number : '')">
                             </option>
                         </template>
+                    </select> --}}
+                    <select x-model="selectedPlayerId" @change="onPlayerSelected" :disabled="tool !== null" ...>
+                        <option value="">-- Избери играч --</option>
+                        <template x-for="player in sortedPlayers" :key="player.id">
+                            <option :value="player.id"
+                                x-text="player.name + (player.position ? ' (' + player.position + ')' : '') + (player.number ? ' #' + player.number : '')">
+                            </option>
+                        </template>
                     </select>
+
                 </div>
             </div>
 

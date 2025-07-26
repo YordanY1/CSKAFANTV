@@ -62,6 +62,7 @@ window.tacticBoard = function () {
             fetch("/api/players")
                 .then((res) => res.json())
                 .then((players) => {
+                    console.log("[Fetched Players]", players);
                     this.players = players;
                     this.selectedPlayerId = null;
                 });
@@ -357,6 +358,29 @@ window.tacticBoard = function () {
                 this.ballGroup = group;
                 this.layer.draw();
             };
+        },
+
+        get sortedPlayers() {
+            const positionOrder = [
+                "Вратар",
+                "Десен бек",
+                "Централен защитник",
+                "Ляв бек",
+                "Опорен халф",
+                "Атакуващ халф",
+                "Ляво крило",
+                "Дясно крило",
+                "Централен нападател",
+            ];
+
+            return this.players
+                .filter((p) => !p.is_coach && p.position)
+                .slice()
+                .sort((a, b) => {
+                    const ai = positionOrder.indexOf(a.position?.trim());
+                    const bi = positionOrder.indexOf(b.position?.trim());
+                    return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+                });
         },
 
         resizeStage() {
