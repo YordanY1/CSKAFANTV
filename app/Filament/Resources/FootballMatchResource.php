@@ -44,8 +44,8 @@ class FootballMatchResource extends Resource
                 ->displayFormat('d.m.Y H:i')
                 ->format('Y-m-d H:i')
                 ->timezone('Europe/Sofia')
-                ->required(),
-
+                ->required()
+                ->visible(fn(?FootballMatch $record) => is_null($record)),
 
 
             Forms\Components\TextInput::make('stadium')

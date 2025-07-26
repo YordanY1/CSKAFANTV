@@ -3,74 +3,56 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>OBS Scoreboard</title>
+    <title>OBS Ultra Compact Scoreboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         :root {
-            --color-primary: #b91c1c;
-            --color-card: #fef2f2;
-            --color-text: #1e1e1e;
-            --color-accent: #ef4444;
-            --color-accent-2: #f87171;
-            --color-cta: #ffffff;
-        }
-
-        * {
-            box-sizing: border-box;
+            --red: #ef4444;
+            --white: #ffffff;
+            --light-red: #f87171;
         }
 
         body {
             margin: 0;
             background: transparent;
             font-family: 'Arial Black', sans-serif;
-            font-size: 36px;
-            color: var(--color-cta);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-size: 20px;
+            color: var(--white);
         }
 
         .scoreboard {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 40px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 30px 40px;
-            border-radius: 18px;
-            width: auto;
-            max-width: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 4px 8px;
+            border-radius: 8px;
+            gap: 8px;
         }
 
         .team {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 6px;
             font-weight: bold;
-            color: var(--color-accent);
+            color: var(--red);
             white-space: nowrap;
         }
 
         .team-logo {
-            height: 48px;
+            height: 22px;
             width: auto;
         }
 
         .score {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 120px;
-            font-size: 72px;
+            font-size: 26px;
             font-weight: bold;
-            color: var(--color-cta);
+            color: var(--white);
         }
 
         .timer-inline {
-            font-size: 32px;
+            font-size: 18px;
             font-weight: bold;
-            color: var(--color-accent-2);
-            margin-left: 20px;
+            color: var(--light-red);
             white-space: nowrap;
         }
     </style>
@@ -80,45 +62,71 @@
     <div class="scoreboard">
         <div class="team">
             @if ($match->homeTeam?->logo)
-                <img src="{{ asset('storage/' . $match->homeTeam->logo) }}" alt="{{ $match->homeTeam->name }}"
-                    class="team-logo">
+                <img src="{{ asset('storage/' . $match->homeTeam->logo) }}" alt="logo" class="team-logo">
             @endif
-            <span>{{ $match->homeTeam->name ?? '—' }}</span>
+            <span>{{ $match->homeTeam->name }}</span>
         </div>
 
-        <div class="score">
+        <div class="score" id="score">
             {{ $match->home_score }} : {{ $match->away_score }}
         </div>
 
         <div class="team">
-            <span>{{ $match->awayTeam->name ?? '—' }}</span>
+            <span>{{ $match->awayTeam->name }}</span>
             @if ($match->awayTeam?->logo)
-                <img src="{{ asset('storage/' . $match->awayTeam->logo) }}" alt="{{ $match->awayTeam->name }}"
-                    class="team-logo">
+                <img src="{{ asset('storage/' . $match->awayTeam->logo) }}" alt="logo" class="team-logo">
             @endif
         </div>
 
         <div class="timer-inline" id="timer">00:00</div>
     </div>
 
+    <audio id="goal-audio" src="{{ asset('sounds/goal.mp3') }}" preload="auto"></audio>
+
     <script>
         let startTime = new Date().getTime();
         let elapsedBeforePause = 0;
         let timerInterval = null;
 
+        let lastScore = {
+            home: {{ $match->home_score ?? 0 }},
+            away: {{ $match->away_score ?? 0 }}
+        };
+
         function updateTimerDisplay() {
             const now = new Date().getTime();
             const diff = now - startTime + elapsedBeforePause;
-
             const minutes = Math.floor(diff / 60000);
             const seconds = Math.floor((diff % 60000) / 1000);
             const formatted = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
-
             document.getElementById('timer').innerText = formatted;
+        }
+
+        function fetchScore() {
+            fetch("{{ route('obs.match', ['slug' => $match->slug, 'token' => request('token')]) }}/json")
+                .then(res => res.json())
+                .then(data => {
+                    const newHome = data.home_score;
+                    const newAway = data.away_score;
+
+                    if (newHome !== lastScore.home || newAway !== lastScore.away) {
+                        document.getElementById('score').innerText = `${newHome} : ${newAway}`;
+
+                        if ((newHome > lastScore.home || newAway > lastScore.away)) {
+                            document.getElementById('goal-audio').play();
+                        }
+
+                        lastScore = {
+                            home: newHome,
+                            away: newAway
+                        };
+                    }
+                });
         }
 
         updateTimerDisplay();
         timerInterval = setInterval(updateTimerDisplay, 1000);
+        setInterval(fetchScore, 5000);
     </script>
 </body>
 
