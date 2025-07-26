@@ -9,6 +9,21 @@ class PlayerController extends Controller
 {
     public function index()
     {
-        return Player::all();
+        return Player::query()
+            ->whereNot('position', 'like', '%треньор%')
+            ->orderByRaw("
+            FIELD(position,
+                'Вратар',
+                'Десен бек',
+                'Централен защитник',
+                'Ляв бек',
+                'Опорен халф',
+                'Атакуващ халф',
+                'Ляво крило',
+                'Дясно крило',
+                'Централен нападател'
+            )
+        ")
+            ->get();
     }
 }
