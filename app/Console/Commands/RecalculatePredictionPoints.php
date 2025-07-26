@@ -3,82 +3,56 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\FootballMatch;
 use App\Models\Prediction;
-use App\Models\PredictionResult;
-use App\Models\User;
+use App\Models\FootballMatch;
+use Illuminate\Support\Facades\DB;
 
-class RecalculatePredictionPoints extends Command
+class PreviewPredictionPoints extends Command
 {
-    protected $signature = 'predictions:recalculate';
-    protected $description = 'Изчислява отново точките за всички прогнози и обновява класацията';
+    protected $signature = 'predictions:preview-points';
+    protected $description = 'Преглежда точките за прогнози без да ги записва, според новото правило (2т точен + 1т знак)';
 
     public function handle()
     {
-        $matches = FootballMatch::where('is_finished', true)
-            ->whereNotNull('home_score')
-            ->whereNotNull('away_score')
+        $predictions = DB::table('predictions as p')
+            ->join('football_matches as fm', 'p.football_match_id', '=', 'fm.id')
+            ->join('users as u', 'p.user_id', '=', 'u.id')
+            ->where('fm.is_finished', true)
+            ->select('u.name', 'fm.home_score', 'fm.away_score', 'p.home_score_prediction', 'p.away_score_prediction')
             ->get();
 
-        $updated = 0;
+        $this->info("Прогнози и пресметнати точки:");
+        $this->line(str_pad('Потребител', 25) . str_pad('Реален', 10) . str_pad('Прогноза', 10) . 'Точки');
 
-        foreach ($matches as $match) {
-            $matchSign = match (true) {
-                $match->home_score > $match->away_score => '1',
-                $match->home_score < $match->away_score => '2',
-                default => 'X',
-            };
+        foreach ($predictions as $p) {
+            $points = 0;
 
-            $predictions = Prediction::where('football_match_id', $match->id)->get();
+            $matchSign = $this->getSign($p->home_score, $p->away_score);
+            $predictedSign = $this->getSign($p->home_score_prediction, $p->away_score_prediction);
 
-            foreach ($predictions as $prediction) {
-                $points = 0;
-
-                if (!is_null($prediction->home_score_prediction) && !is_null($prediction->away_score_prediction)) {
-                    $exact = $prediction->home_score_prediction === $match->home_score
-                        && $prediction->away_score_prediction === $match->away_score;
-
-                    $predictedSign = match (true) {
-                        $prediction->home_score_prediction > $prediction->away_score_prediction => '1',
-                        $prediction->home_score_prediction < $prediction->away_score_prediction => '2',
-                        default => 'X',
-                    };
-
-                    // Добавяме 1 т. за познат знак
-                    if ($predictedSign === $matchSign) {
-                        $points += 1;
-                    }
-
-                    // Добавяме 2 т. за точен резултат
-                    if ($exact) {
-                        $points += 2;
-                    }
-                }
-
-                PredictionResult::updateOrCreate(
-                    ['prediction_id' => $prediction->id],
-                    [
-                        'is_correct' => $points >= 2, // считаме за вярна ако е точен резултат
-                        'points_awarded' => $points,
-                    ]
-                );
-
-                $updated++;
+            if ($matchSign === $predictedSign) {
+                $points += 1;
             }
+
+            if ($p->home_score === $p->home_score_prediction && $p->away_score === $p->away_score_prediction) {
+                $points += 2;
+            }
+
+            $this->line(
+                str_pad($p->name, 25) .
+                    str_pad("{$p->home_score}:{$p->away_score}", 10) .
+                    str_pad("{$p->home_score_prediction}:{$p->away_score_prediction}", 10) .
+                    "{$points}"
+            );
         }
+    }
 
-        // Обновяване на total points при потребителите
-        User::all()->each(function ($user) {
-            $totalPoints = PredictionResult::whereIn('prediction_id', function ($query) use ($user) {
-                $query->select('id')
-                    ->from('predictions')
-                    ->where('user_id', $user->id);
-            })->sum('points_awarded');
-
-            $user->points = $totalPoints;
-            $user->save();
-        });
-
-        $this->info("Обновени са {$updated} прогнози и всички потребители.");
+    private function getSign(int $home, int $away): string
+    {
+        return match (true) {
+            $home > $away => '1',
+            $home < $away => '2',
+            default => 'X',
+        };
     }
 }
