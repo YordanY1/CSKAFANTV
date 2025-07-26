@@ -62,13 +62,6 @@
             white-space: nowrap;
         }
 
-        .extra-time {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--light-red);
-            margin-top: 4px;
-        }
-
         .controls {
             margin-top: 14px;
             display: flex;
@@ -125,35 +118,23 @@
         <div class="timer-inline" id="timer">00:00</div>
     </div>
 
-    {{-- <div class="extra-time" id="extra-time-indicator"></div> --}}
-
     @unless ($isOBS)
         <div class="controls">
             <button onclick="startTimer()">Старт</button>
             <button onclick="pauseTimer()">Пауза</button>
-            {{-- <button onclick="addExtraTime(1)">+1 мин</button> --}}
         </div>
     @endunless
 
     <script>
         let elapsedTime = 0;
-        let extraMinutes = 0;
         let timerInterval = null;
         let isPaused = true;
-
-        let timerEl, extraIndicator;
+        let timerEl;
 
         function updateTimerDisplay() {
-            const totalTime = elapsedTime + extraMinutes * 60000;
-            const minutes = Math.floor(totalTime / 60000);
-            const seconds = Math.floor((totalTime % 60000) / 1000);
+            const minutes = Math.floor(elapsedTime / 60000);
+            const seconds = Math.floor((elapsedTime % 60000) / 1000);
             timerEl.innerText = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
-
-            if (extraMinutes > 0) {
-                extraIndicator.innerText = `ДОБАВЕНО ВРЕМЕ: ${extraMinutes}'`;
-            } else {
-                extraIndicator.innerText = '';
-            }
         }
 
         function startTimer() {
@@ -171,11 +152,6 @@
             clearInterval(timerInterval);
             isPaused = true;
         }
-
-        // function addExtraTime(mins) {
-        //     extraMinutes += mins;
-        //     updateTimerDisplay();
-        // }
 
         function fetchScore() {
             fetch("{{ route('obs.match.json', ['slug' => $match->slug]) }}", {
@@ -203,14 +179,10 @@
 
         window.onload = () => {
             timerEl = document.getElementById('timer');
-            extraIndicator = document.getElementById('extra-time-indicator');
 
             const urlParams = new URLSearchParams(window.location.search);
             const startMinutes = parseInt(urlParams.get('set') || '0');
-            const extraParam = parseInt(urlParams.get('extra') || '0');
-
             elapsedTime = !isNaN(startMinutes) ? startMinutes * 60000 : 0;
-            extraMinutes = !isNaN(extraParam) ? extraParam : 0;
 
             updateTimerDisplay();
 
