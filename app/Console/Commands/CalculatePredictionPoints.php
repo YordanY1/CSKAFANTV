@@ -34,13 +34,21 @@ class CalculatePredictionPoints extends Command
                 $hasPrediction = !is_null($prediction->home_score_prediction) && !is_null($prediction->away_score_prediction);
 
                 if ($hasPrediction) {
-                    $exact = $prediction->home_score_prediction === $match->home_score
-                        && $prediction->away_score_prediction === $match->away_score;
+                    $predictionSign = match (true) {
+                        $prediction->home_score_prediction > $prediction->away_score_prediction => '1',
+                        $prediction->home_score_prediction < $prediction->away_score_prediction => '2',
+                        default => 'X',
+                    };
 
-                    if ($exact) {
-                        $points = 3;
-                    } else {
-                        $points = 1;
+                    if ($predictionSign === $matchSign) {
+                        $points += 1;
+                    }
+
+                    if (
+                        $prediction->home_score_prediction === $match->home_score &&
+                        $prediction->away_score_prediction === $match->away_score
+                    ) {
+                        $points += 2;
                     }
                 }
 
@@ -54,6 +62,6 @@ class CalculatePredictionPoints extends Command
             }
         }
 
-        $this->info('Точките за прогнозите са изчислени.');
+        $this->info('Точките за прогнозите са изчислени по новата логика (2т + 1т).');
     }
 }

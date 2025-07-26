@@ -34,7 +34,7 @@ class PredictionRankingsPage extends Component
                 'users.id as user_id',
                 'users.name',
                 DB::raw('SUM(prediction_results.points_awarded) as total_points'),
-                DB::raw('COUNT(prediction_results.id) as attempts')
+                DB::raw('COUNT(DISTINCT predictions.football_match_id) as attempts')
             )
             ->groupBy('users.id', 'users.name')
             ->orderByDesc('total_points')
