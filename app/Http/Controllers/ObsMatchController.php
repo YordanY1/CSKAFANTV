@@ -51,11 +51,6 @@ class ObsMatchController extends Controller
         $match->stopped_at = null;
         $match->save();
 
-        \Log::info('🎯 Започна мачът', [
-            'slug' => $slug,
-            'started_at' => $match->started_at,
-        ]);
-
         return response()->json(['started_at' => $match->started_at]);
     }
 
