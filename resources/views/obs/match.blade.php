@@ -186,11 +186,6 @@
 
             updateTimerDisplay();
 
-            const userAgent = navigator.userAgent || '';
-            if (userAgent.includes('OBS')) {
-                startTimer();
-            }
-
             setInterval(fetchScore, 5000);
         };
     </script>
