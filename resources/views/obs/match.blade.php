@@ -122,35 +122,49 @@
         <div class="controls">
             <button onclick="startTimer()">Старт</button>
             <button onclick="pauseTimer()">Пауза</button>
+            <button onclick="resetTimer()">Рестарт</button>
         </div>
     @endunless
 
     <script>
-        let elapsedTime = 0;
-        let timerInterval = null;
-        let isPaused = true;
         let timerEl;
+        let interval = null;
+        let isPaused = true;
+        let startTimestamp = null;
 
         function updateTimerDisplay() {
-            const minutes = Math.floor(elapsedTime / 60000);
-            const seconds = Math.floor((elapsedTime % 60000) / 1000);
+            if (!startTimestamp || isPaused) return;
+
+            const elapsed = Date.now() - startTimestamp;
+            const minutes = Math.floor(elapsed / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
             timerEl.innerText = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
         }
 
         function startTimer() {
-            if (isPaused) {
-                const start = Date.now() - elapsedTime;
-                timerInterval = setInterval(() => {
-                    elapsedTime = Date.now() - start;
-                    updateTimerDisplay();
-                }, 1000);
-                isPaused = false;
+            if (!startTimestamp) {
+                startTimestamp = Date.now();
+                localStorage.setItem('matchTimerStart', startTimestamp);
+            }
+
+            isPaused = false;
+
+            if (!interval) {
+                interval = setInterval(updateTimerDisplay, 1000);
             }
         }
 
         function pauseTimer() {
-            clearInterval(timerInterval);
             isPaused = true;
+        }
+
+        function resetTimer() {
+            localStorage.removeItem('matchTimerStart');
+            startTimestamp = null;
+            isPaused = true;
+            clearInterval(interval);
+            interval = null;
+            timerEl.innerText = "00:00";
         }
 
         function fetchScore() {
@@ -180,11 +194,13 @@
         window.onload = () => {
             timerEl = document.getElementById('timer');
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const startMinutes = parseInt(urlParams.get('set') || '0');
-            elapsedTime = !isNaN(startMinutes) ? startMinutes * 60000 : 0;
-
-            updateTimerDisplay();
+            const storedStart = localStorage.getItem('matchTimerStart');
+            if (storedStart) {
+                startTimestamp = parseInt(storedStart);
+                isPaused = false;
+                updateTimerDisplay();
+                interval = setInterval(updateTimerDisplay, 1000);
+            }
 
             setInterval(fetchScore, 5000);
         };
