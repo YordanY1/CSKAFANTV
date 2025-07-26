@@ -60,13 +60,8 @@ window.tacticBoard = function () {
             };
 
             fetch("/api/players")
-                .then((res) => {
-                    console.log("[Fetch Status]", res.status, res.statusText);
-                    return res.json();
-                })
+                .then((res) => res.json())
                 .then((players) => {
-                    console.log("[Players Fetched]", players);
-
                     const positionOrder = [
                         "Вратар",
                         "Десен бек",
@@ -91,11 +86,7 @@ window.tacticBoard = function () {
                         });
 
                     this.selectedPlayerId = null;
-                })
-                .catch((error) => {
-                    console.error("[Fetch Error]", error);
                 });
-
             document.addEventListener("fullscreenchange", () => {
                 this.isFullscreen = !!document.fullscreenElement;
                 setTimeout(() => this.resizeStage(), 300);
