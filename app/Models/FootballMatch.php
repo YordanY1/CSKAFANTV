@@ -17,6 +17,8 @@ class FootballMatch extends Model
     protected $casts = [
         'match_datetime' => 'datetime',
         'is_finished' => 'boolean',
+        'started_at' => 'datetime',
+        'stopped_at' => 'datetime',
     ];
 
     public function homeTeam(): BelongsTo

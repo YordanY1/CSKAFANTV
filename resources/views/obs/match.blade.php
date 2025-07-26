@@ -2,6 +2,7 @@
 <html lang="bg">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <title>OBS Ultra Compact Scoreboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -122,87 +123,85 @@
         <div class="controls">
             <button onclick="startTimer()">Старт</button>
             <button onclick="pauseTimer()">Пауза</button>
-            <button onclick="resetTimer()">Рестарт</button>
+            <button onclick="resumeTimer()">Продължи</button>
         </div>
     @endunless
 
     <script>
         let timerEl;
         let interval = null;
-        let isPaused = true;
         let startTimestamp = null;
+        let stoppedTimestamp = null;
+
+        const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         function updateTimerDisplay() {
-            if (!startTimestamp || isPaused) return;
+            if (!startTimestamp) return;
 
-            const elapsed = Date.now() - startTimestamp;
+            const now = Date.now();
+            const effectiveNow = stoppedTimestamp ?? now;
+            const elapsed = effectiveNow - startTimestamp;
+
             const minutes = Math.floor(elapsed / 60000);
             const seconds = Math.floor((elapsed % 60000) / 1000);
             timerEl.innerText = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
         }
 
+        function sendRequest(routeName, callback = null) {
+            fetch(routeName, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrf,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => res.ok ? res.json() : Promise.reject(res))
+                .then(() => {
+                    fetchMatchData(callback);
+                })
+                .catch(err => {
+                    console.error('❌ ГРЕШКА при заявка:', err);
+                });
+        }
+
         function startTimer() {
-            if (!startTimestamp) {
-                startTimestamp = Date.now();
-                localStorage.setItem('matchTimerStart', startTimestamp);
-            }
-
-            isPaused = false;
-
-            if (!interval) {
+            clearInterval(interval);
+            interval = null;
+            sendRequest("{{ route('obs.match.start', ['slug' => $match->slug]) }}", () => {
                 interval = setInterval(updateTimerDisplay, 1000);
-            }
+            });
         }
 
         function pauseTimer() {
-            isPaused = true;
-        }
-
-        function resetTimer() {
-            localStorage.removeItem('matchTimerStart');
-            startTimestamp = null;
-            isPaused = true;
             clearInterval(interval);
             interval = null;
-            timerEl.innerText = "00:00";
+            sendRequest("{{ route('obs.match.stop', ['slug' => $match->slug]) }}");
         }
 
-        function fetchScore() {
+        function resumeTimer() {
+            clearInterval(interval);
+            interval = null;
+            sendRequest("{{ route('obs.match.resume', ['slug' => $match->slug]) }}", () => {
+                interval = setInterval(updateTimerDisplay, 1000);
+            });
+        }
+
+        function fetchMatchData(callback = null) {
             fetch("{{ route('obs.match.json', ['slug' => $match->slug]) }}", {
                     cache: 'no-store'
                 })
                 .then(res => res.json())
                 .then(data => {
-                    const newHome = data.home_score;
-                    const newAway = data.away_score;
-
-                    if (newHome !== lastScore.home || newAway !== lastScore.away) {
-                        document.getElementById('score').innerText = `${newHome} : ${newAway}`;
-                        lastScore = {
-                            home: newHome,
-                            away: newAway
-                        };
-                    }
+                    document.getElementById('score').innerText = `${data.home_score} : ${data.away_score}`;
+                    startTimestamp = data.started_at ? data.started_at * 1000 : null;
+                    stoppedTimestamp = data.stopped_at ? data.stopped_at * 1000 : null;
+                    if (callback && !stoppedTimestamp) callback();
                 });
         }
 
-        let lastScore = {
-            home: {{ $match->home_score ?? 0 }},
-            away: {{ $match->away_score ?? 0 }}
-        };
-
         window.onload = () => {
             timerEl = document.getElementById('timer');
-
-            const storedStart = localStorage.getItem('matchTimerStart');
-            if (storedStart) {
-                startTimestamp = parseInt(storedStart);
-                isPaused = false;
-                updateTimerDisplay();
-                interval = setInterval(updateTimerDisplay, 1000);
-            }
-
-            setInterval(fetchScore, 5000);
+            fetchMatchData();
         };
     </script>
 </body>
