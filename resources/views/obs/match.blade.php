@@ -18,6 +18,12 @@
             font-family: 'Arial Black', sans-serif;
             font-size: 20px;
             color: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 16px;
         }
 
         .scoreboard {
@@ -55,8 +61,46 @@
             color: var(--light-red);
             white-space: nowrap;
         }
+
+        .extra-time {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--light-red);
+            margin-top: 4px;
+        }
+
+        .controls {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .controls button {
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            background-color: #ef4444;
+            border: none;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .controls button:hover {
+            background-color: #dc2626;
+        }
+
+        .controls button:active {
+            background-color: #b91c1c;
+        }
     </style>
 </head>
+
+@php
+    $isOBS = str_contains(request()->header('User-Agent'), 'OBS');
+@endphp
 
 <body>
     <div class="scoreboard">
@@ -81,29 +125,62 @@
         <div class="timer-inline" id="timer">00:00</div>
     </div>
 
-    <audio id="goal-audio" src="{{ asset('sounds/goal.mp3') }}" preload="auto"></audio>
+    {{-- <div class="extra-time" id="extra-time-indicator"></div> --}}
+
+    @unless ($isOBS)
+        <div class="controls">
+            <button onclick="startTimer()">Старт</button>
+            <button onclick="pauseTimer()">Пауза</button>
+            {{-- <button onclick="addExtraTime(1)">+1 мин</button> --}}
+        </div>
+    @endunless
 
     <script>
-        let startTime = new Date().getTime();
-        let elapsedBeforePause = 0;
+        let elapsedTime = 0;
+        let extraMinutes = 0;
         let timerInterval = null;
+        let isPaused = true;
 
-        let lastScore = {
-            home: {{ $match->home_score ?? 0 }},
-            away: {{ $match->away_score ?? 0 }}
-        };
+        let timerEl, extraIndicator;
 
         function updateTimerDisplay() {
-            const now = new Date().getTime();
-            const diff = now - startTime + elapsedBeforePause;
-            const minutes = Math.floor(diff / 60000);
-            const seconds = Math.floor((diff % 60000) / 1000);
-            const formatted = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
-            document.getElementById('timer').innerText = formatted;
+            const totalTime = elapsedTime + extraMinutes * 60000;
+            const minutes = Math.floor(totalTime / 60000);
+            const seconds = Math.floor((totalTime % 60000) / 1000);
+            timerEl.innerText = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+
+            if (extraMinutes > 0) {
+                extraIndicator.innerText = `ДОБАВЕНО ВРЕМЕ: ${extraMinutes}'`;
+            } else {
+                extraIndicator.innerText = '';
+            }
         }
 
+        function startTimer() {
+            if (isPaused) {
+                const start = Date.now() - elapsedTime;
+                timerInterval = setInterval(() => {
+                    elapsedTime = Date.now() - start;
+                    updateTimerDisplay();
+                }, 1000);
+                isPaused = false;
+            }
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isPaused = true;
+        }
+
+        // function addExtraTime(mins) {
+        //     extraMinutes += mins;
+        //     updateTimerDisplay();
+        // }
+
         function fetchScore() {
-            fetch("{{ route('obs.match', ['slug' => $match->slug, 'token' => request('token')]) }}/json")
+            fetch("{{ route('obs.match.json', ['slug' => $match->slug]) }}", {
+                    cache: 'no-store'
+                })
                 .then(res => res.json())
                 .then(data => {
                     const newHome = data.home_score;
@@ -111,11 +188,6 @@
 
                     if (newHome !== lastScore.home || newAway !== lastScore.away) {
                         document.getElementById('score').innerText = `${newHome} : ${newAway}`;
-
-                        if ((newHome > lastScore.home || newAway > lastScore.away)) {
-                            document.getElementById('goal-audio').play();
-                        }
-
                         lastScore = {
                             home: newHome,
                             away: newAway
@@ -124,9 +196,31 @@
                 });
         }
 
-        updateTimerDisplay();
-        timerInterval = setInterval(updateTimerDisplay, 1000);
-        setInterval(fetchScore, 5000);
+        let lastScore = {
+            home: {{ $match->home_score ?? 0 }},
+            away: {{ $match->away_score ?? 0 }}
+        };
+
+        window.onload = () => {
+            timerEl = document.getElementById('timer');
+            extraIndicator = document.getElementById('extra-time-indicator');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const startMinutes = parseInt(urlParams.get('set') || '0');
+            const extraParam = parseInt(urlParams.get('extra') || '0');
+
+            elapsedTime = !isNaN(startMinutes) ? startMinutes * 60000 : 0;
+            extraMinutes = !isNaN(extraParam) ? extraParam : 0;
+
+            updateTimerDisplay();
+
+            const userAgent = navigator.userAgent || '';
+            if (userAgent.includes('OBS')) {
+                startTimer();
+            }
+
+            setInterval(fetchScore, 5000);
+        };
     </script>
 </body>
 

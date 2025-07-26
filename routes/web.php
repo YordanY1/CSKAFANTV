@@ -67,3 +67,4 @@ Route::post('/logout', function (Request $request) {
 })->name('logout');
 
 Route::get('/match/{slug}/obs', [ObsMatchController::class, 'show'])->name('obs.match');
+Route::get('/match/{slug}/obs/json', [ObsMatchController::class, 'json'])->name('obs.match.json');

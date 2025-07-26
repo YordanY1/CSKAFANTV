@@ -20,4 +20,16 @@ class ObsMatchController extends Controller
 
         return view('obs.match', compact('match'));
     }
+
+    public function json($slug)
+    {
+        $match = FootballMatch::select('home_score', 'away_score')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        return response()->json([
+            'home_score' => $match->home_score,
+            'away_score' => $match->away_score,
+        ]);
+    }
 }
