@@ -17,38 +17,31 @@
 
         <div class="flex flex-col items-center gap-6">
 
-            {{-- Scoreboard --}}
             <div
-                class="inline-flex items-center justify-center gap-8 bg-black/95 px-10 py-4 rounded-3xl border border-white/10 shadow-[0_0_12px_rgba(255,255,255,0.1)] backdrop-blur-md">
-
+                class="inline-flex items-center justify-center gap-4 bg-black/90 px-4 py-2 rounded-xl border border-white/10 shadow backdrop-blur-md">
 
                 {{-- Home team --}}
-                <div class="flex items-center gap-3 font-extrabold text-red-500 text-3xl uppercase tracking-widest">
-                    @if ($match->homeTeam?->logo)
-                        <img src="{{ asset('storage/' . $match->homeTeam->logo) }}" alt="logo" class="h-[70px] w-auto">
-                    @endif
+                <div class="flex items-center gap-2 font-bold text-red-500 text-xl uppercase tracking-wide">
+                    <img src="{{ asset('storage/' . $match->homeTeam->logo) }}" class="h-6 w-auto" alt="logo">
                     <span>{{ $match->homeTeam->name }}</span>
                 </div>
 
                 {{-- Score --}}
-                <div class="text-white text-6xl font-black px-8 tracking-wide" id="score">
+                <div class="text-white text-4xl font-black px-4" id="score">
                     {{ $match->obs_home_score ?? 0 }} : {{ $match->obs_away_score ?? 0 }}
                 </div>
 
                 {{-- Away team --}}
-                <div class="flex items-center gap-3 font-extrabold text-red-500 text-3xl uppercase tracking-widest">
+                <div class="flex items-center gap-2 font-bold text-red-500 text-xl uppercase tracking-wide">
                     <span>{{ $match->awayTeam->name }}</span>
-                    @if ($match->awayTeam?->logo)
-                        <img src="{{ asset('storage/' . $match->awayTeam->logo) }}" alt="logo" class="h-[70px] w-auto">
-                    @endif
+                    <img src="{{ asset('storage/' . $match->awayTeam->logo) }}" class="h-6 w-auto" alt="logo">
                 </div>
 
                 {{-- Timer --}}
-                <div class="ml-8 text-white text-6xl font-black bg-white/20 px-6 py-2 rounded-2xl shadow-lg tracking-widest"
+                <div class="ml-4 text-white text-4xl font-black bg-white/20 px-4 py-1 rounded-lg tracking-wide shadow"
                     id="timer">
                     00:00
                 </div>
-
             </div>
 
 
