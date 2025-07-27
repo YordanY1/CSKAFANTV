@@ -21,7 +21,7 @@
                 class="inline-flex items-center justify-center gap-4 bg-black/90 px-4 py-2 rounded-xl border border-white/10 shadow backdrop-blur-md">
 
                 {{-- Home team --}}
-                <div class="flex items-center gap-2 font-bold text-red-500 text-[1.78rem] uppercase tracking-wide">
+                <div class="flex items-center gap-2 font-bold text-red-500 text-[1.35rem] uppercase tracking-wide">
                     <img src="{{ asset('storage/' . $match->homeTeam->logo) }}" class="h-10 w-auto" alt="logo">
                     <span>{{ $match->homeTeam->name }}</span>
                 </div>
@@ -32,7 +32,7 @@
                 </div>
 
                 {{-- Away team --}}
-                <div class="flex items-center gap-2 font-bold text-red-500 text-[1.78rem] uppercase tracking-wide">
+                <div class="flex items-center gap-2 font-bold text-red-500 text-[1.35rem] uppercase tracking-wide">
                     <span>{{ $match->awayTeam->name }}</span>
                     <img src="{{ asset('storage/' . $match->awayTeam->logo) }}" class="h-10 w-auto" alt="logo">
                 </div>
