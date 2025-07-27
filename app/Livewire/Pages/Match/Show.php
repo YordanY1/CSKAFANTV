@@ -27,7 +27,6 @@ class Show extends Component
             'lineup.replacesPlayer',
         ]);
 
-        // 👉 Сортиране на lineup по позиция
         $positionOrder = [
             'Вратар',
             'Десен бек',
