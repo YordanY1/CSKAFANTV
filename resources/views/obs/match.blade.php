@@ -235,7 +235,6 @@
                             const newHome = data.home_score;
                             const newAway = data.away_score;
 
-                            // ⚽ Покажи само ако ЦСКА вкара
                             const homeScored = newHome > this.lastHome;
                             const awayScored = newAway > this.lastAway;
 
