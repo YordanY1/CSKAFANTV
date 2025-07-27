@@ -235,18 +235,17 @@
                             const newHome = data.home_score;
                             const newAway = data.away_score;
 
-                            // Проверка за гол
-                            if (newHome > this.lastHome || newAway > this.lastAway) {
-                                this.isCskaGoal = false;
+                            // ⚽ Покажи само ако ЦСКА вкара
+                            const homeScored = newHome > this.lastHome;
+                            const awayScored = newAway > this.lastAway;
 
-                                if (newHome > this.lastHome && this.homeTeam.toLowerCase().includes('цска')) {
-                                    this.isCskaGoal = true;
-                                }
+                            const homeIsCSKA = this.homeTeam.trim().toUpperCase() === 'ЦСКА';
+                            const awayIsCSKA = this.awayTeam.trim().toUpperCase() === 'ЦСКА';
 
-                                if (newAway > this.lastAway && this.awayTeam.toLowerCase().includes('цска')) {
-                                    this.isCskaGoal = true;
-                                }
+                            this.isCskaGoal = false;
 
+                            if ((homeScored && homeIsCSKA) || (awayScored && awayIsCSKA)) {
+                                this.isCskaGoal = true;
                                 this.show = true;
                                 setTimeout(() => this.show = false, 3000);
                             }
@@ -272,6 +271,7 @@
                 }
             };
         }
+
 
 
         window.onload = () => {
