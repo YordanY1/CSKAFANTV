@@ -75,10 +75,12 @@ class ObsMatchController extends Controller
         $match = FootballMatch::where('slug', $slug)->firstOrFail();
         $match->started_at = null;
         $match->stopped_at = null;
+        $match->adjust_seconds = 0;
         $match->save();
 
         return response()->json(['reset' => true]);
     }
+
 
     public function updateScore($slug)
     {

@@ -62,6 +62,12 @@
                         </button>
                     @endforeach
 
+                    <button onclick="resetTimer()"
+                        class="px-4 py-1.5 text-sm font-bold text-white bg-gray-600 hover:bg-gray-700 active:bg-gray-800 rounded-lg shadow">
+                        🔁 Нулирай
+                    </button>
+
+
                     <label class="flex items-center gap-2 text-white text-sm font-semibold">
                         Домакин:
                         <select onchange="updateScore('home', this.value)"
@@ -155,6 +161,28 @@
                 interval = setInterval(updateTimerDisplay, 1000);
             });
         }
+
+        function resetTimer() {
+            clearInterval(interval);
+            interval = null;
+
+            fetch("{{ route('obs.match.reset', ['slug' => $match->slug]) }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrf,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => res.ok ? res.json() : Promise.reject(res))
+                .then(() => {
+                    startTimer();
+                })
+                .catch(err => {
+                    console.error('🔁 Reset error:', err);
+                });
+        }
+
+
 
         function updateScore(team, value) {
             fetch("{{ route('obs.match.score', ['slug' => $match->slug]) }}", {
