@@ -22,10 +22,12 @@
 
 
                 {{-- Home team --}}
-                <div
-                    class="flex items-center gap-2 text-red-500 font-extrabold text-[1.90rem] uppercase tracking-wide shadow-[0_0_3px_white] shadow-[0_0_6px_white]">
+                <div class="flex items-center gap-2">
                     <img src="{{ asset('storage/' . $match->homeTeam->logo) }}" class="h-10 w-auto" alt="logo">
-                    <span>{{ $match->homeTeam->name }}</span>
+                    <span
+                        class="text-red-500 font-extrabold text-[1.90rem] uppercase tracking-wide drop-shadow-[0_0_1.5px_white] drop-shadow-[0_0_3px_white] drop-shadow-[0_0_6px_white]">
+                        {{ $match->homeTeam->name }}
+                    </span>
                 </div>
 
                 {{-- Score --}}
@@ -35,9 +37,11 @@
                 </div>
 
                 {{-- Away team --}}
-                <div
-                    class="flex items-center gap-2 text-red-500 font-extrabold text-[1.90rem] uppercase tracking-wide shadow-[0_0_3px_white] shadow-[0_0_6px_white]">
-                    <span>{{ $match->awayTeam->name }}</span>
+                <div class="flex items-center gap-2">
+                    <span
+                        class="text-red-500 font-extrabold text-[1.90rem] uppercase tracking-wide drop-shadow-[0_0_1.5px_white] drop-shadow-[0_0_3px_white] drop-shadow-[0_0_6px_white]">
+                        {{ $match->awayTeam->name }}
+                    </span>
                     <img src="{{ asset('storage/' . $match->awayTeam->logo) }}" class="h-10 w-auto" alt="logo">
                 </div>
 
