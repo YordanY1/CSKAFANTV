@@ -18,24 +18,29 @@
         <div class="flex flex-col items-center gap-6">
 
             <div
-                class="inline-flex items-center justify-center gap-4 bg-black/90 px-4 py-2 rounded-xl border border-white/10 shadow backdrop-blur-md">
+                class="inline-flex items-center justify-center gap-4 bg-black px-4 py-2 rounded-xl border border-white/10 shadow backdrop-blur-md">
+
 
                 {{-- Home team --}}
-                <div class="flex items-center gap-2 font-bold text-red-500 text-[1.35rem] uppercase tracking-wide">
+                <div
+                    class="flex items-center gap-2 text-red-500 font-extrabold text-[1.90rem] uppercase tracking-wide shadow-[0_0_3px_white] shadow-[0_0_6px_white]">
                     <img src="{{ asset('storage/' . $match->homeTeam->logo) }}" class="h-10 w-auto" alt="logo">
                     <span>{{ $match->homeTeam->name }}</span>
                 </div>
 
                 {{-- Score --}}
-                <div class="text-white text-4xl font-black px-4" id="score">
+                <div class="text-white text-4xl font-black px-4 shadow-[0_0_4px_black] shadow-[0_0_6px_black]"
+                    id="score">
                     {{ $match->obs_home_score ?? 0 }} : {{ $match->obs_away_score ?? 0 }}
                 </div>
 
                 {{-- Away team --}}
-                <div class="flex items-center gap-2 font-bold text-red-500 text-[1.35rem] uppercase tracking-wide">
+                <div
+                    class="flex items-center gap-2 text-red-500 font-extrabold text-[1.90rem] uppercase tracking-wide shadow-[0_0_3px_white] shadow-[0_0_6px_white]">
                     <span>{{ $match->awayTeam->name }}</span>
                     <img src="{{ asset('storage/' . $match->awayTeam->logo) }}" class="h-10 w-auto" alt="logo">
                 </div>
+
 
 
                 {{-- Timer --}}
