@@ -5,18 +5,14 @@
         class="w-screen h-screen flex items-center justify-center bg-transparent px-4 relative">
 
         {{-- Goal banner --}}
-        <div x-show="show"
-            :class="{
-                'bg-red-600 text-white border-4 border-white shadow-2xl': isCskaGoal,
-                'hidden': !isCskaGoal
-            }"
-            x-transition:enter="transform transition ease-out duration-500" x-transition:enter-start="scale-75 opacity-0"
-            x-transition:enter-end="scale-100 opacity-100" x-transition:leave="transform transition ease-in duration-300"
-            x-transition:leave-start="scale-100 opacity-100" x-transition:leave-end="scale-75 opacity-0"
-            class="absolute top-10 text-3xl font-extrabold px-6 py-3 rounded-xl tracking-wide z-50">
+        <div x-show="show" x-transition:enter="transform transition ease-out duration-500"
+            x-transition:enter-start="scale-75 opacity-0" x-transition:enter-end="scale-100 opacity-100"
+            x-transition:leave="transform transition ease-in duration-300" x-transition:leave-start="scale-100 opacity-100"
+            x-transition:leave-end="scale-75 opacity-0"
+            :class="isCskaGoal ? 'bg-white text-red-600' : 'bg-yellow-400 text-black'"
+            class="absolute top-10 text-3xl font-extrabold px-6 py-3 rounded-xl shadow-xl tracking-wide z-50">
             ⚽ ГОООЛ!
         </div>
-
 
 
         <div class="flex flex-col items-center gap-6">
@@ -239,16 +235,18 @@
                             const newHome = data.home_score;
                             const newAway = data.away_score;
 
-                            const homeScored = newHome > this.lastHome;
-                            const awayScored = newAway > this.lastAway;
 
-                            const homeIsCSKA = this.homeTeam.trim().toUpperCase() === 'ЦСКА';
-                            const awayIsCSKA = this.awayTeam.trim().toUpperCase() === 'ЦСКА';
+                            if (newHome > this.lastHome || newAway > this.lastAway) {
+                                this.isCskaGoal = false;
 
-                            this.isCskaGoal = false;
+                                if (newHome > this.lastHome && this.homeTeam.toLowerCase().includes('цска')) {
+                                    this.isCskaGoal = true;
+                                }
 
-                            if ((homeScored && homeIsCSKA) || (awayScored && awayIsCSKA)) {
-                                this.isCskaGoal = true;
+                                if (newAway > this.lastAway && this.awayTeam.toLowerCase().includes('цска')) {
+                                    this.isCskaGoal = true;
+                                }
+
                                 this.show = true;
                                 setTimeout(() => this.show = false, 3000);
                             }
@@ -274,7 +272,6 @@
                 }
             };
         }
-
 
 
         window.onload = () => {
