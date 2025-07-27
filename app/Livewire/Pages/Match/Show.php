@@ -27,6 +27,28 @@ class Show extends Component
             'lineup.replacesPlayer',
         ]);
 
+        // 👉 Сортиране на lineup по позиция
+        $positionOrder = [
+            'Вратар',
+            'Десен бек',
+            'Централен защитник',
+            'Ляв бек',
+            'Опорен халф',
+            'Атакуващ халф',
+            'Ляво крило',
+            'Дясно крило',
+            'Централен нападател',
+        ];
+
+        $this->match->lineup = $this->match->lineup->sortBy(function ($line) use ($positionOrder) {
+            if ($line->is_starter && $line->player && $line->player->position) {
+                $index = array_search($line->player->position, $positionOrder);
+                return $index !== false ? $index : 998;
+            }
+
+            return 999;
+        })->values();
+
         $this->coach = Player::where('is_coach', true)->first();
 
         $home = $this->match->homeTeam->name;
@@ -52,6 +74,7 @@ class Show extends Component
 
         $this->loadAverageRatings();
     }
+
 
     public function refreshExistingReviews(): void
     {
