@@ -1,137 +1,101 @@
-<!DOCTYPE html>
-<html lang="bg">
+@extends('layouts.obs')
 
-<head>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta charset="UTF-8">
-    <title>OBS Ultra Compact Scoreboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        :root {
-            --red: #ef4444;
-            --white: #ffffff;
-            --light-red: #f87171;
-        }
+@section('content')
+    <div x-data="goalBanner()" x-init="init()"
+        class="w-screen h-screen flex items-center justify-center bg-transparent px-4 relative">
 
-        body {
-            margin: 0;
-            background: transparent;
-            font-family: 'Arial Black', sans-serif;
-            font-size: 20px;
-            color: var(--white);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 16px;
-        }
-
-        .scoreboard {
-            display: inline-flex;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 4px 8px;
-            border-radius: 8px;
-            gap: 8px;
-        }
-
-        .team {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: bold;
-            color: var(--red);
-            white-space: nowrap;
-        }
-
-        .team-logo {
-            height: 22px;
-            width: auto;
-        }
-
-        .score {
-            font-size: 26px;
-            font-weight: bold;
-            color: var(--white);
-        }
-
-        .timer-inline {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--light-red);
-            white-space: nowrap;
-        }
-
-        .controls {
-            margin-top: 14px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .controls button {
-            padding: 6px 14px;
-            font-size: 14px;
-            font-weight: bold;
-            color: white;
-            background-color: #ef4444;
-            border: none;
-            border-radius: 6px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .controls button:hover {
-            background-color: #dc2626;
-        }
-
-        .controls button:active {
-            background-color: #b91c1c;
-        }
-    </style>
-</head>
-
-@php
-    $isOBS = str_contains(request()->header('User-Agent'), 'OBS');
-@endphp
-
-<body>
-    <div class="scoreboard">
-        <div class="team">
-            @if ($match->homeTeam?->logo)
-                <img src="{{ asset('storage/' . $match->homeTeam->logo) }}" alt="logo" class="team-logo">
-            @endif
-            <span>{{ $match->homeTeam->name }}</span>
+        {{-- Goal banner --}}
+        <div x-show="show" x-transition:enter="transform transition ease-out duration-500"
+            x-transition:enter-start="scale-75 opacity-0" x-transition:enter-end="scale-100 opacity-100"
+            x-transition:leave="transform transition ease-in duration-300" x-transition:leave-start="scale-100 opacity-100"
+            x-transition:leave-end="scale-75 opacity-0"
+            :class="isCskaGoal ? 'bg-white text-red-600' : 'bg-yellow-400 text-black'"
+            class="absolute top-10 text-3xl font-extrabold px-6 py-3 rounded-xl shadow-xl tracking-wide z-50">
+            ⚽ ГОООЛ!
         </div>
 
-        <div class="score" id="score">
-            {{ $match->home_score }} : {{ $match->away_score }}
-        </div>
 
-        <div class="team">
-            <span>{{ $match->awayTeam->name }}</span>
-            @if ($match->awayTeam?->logo)
-                <img src="{{ asset('storage/' . $match->awayTeam->logo) }}" alt="logo" class="team-logo">
-            @endif
-        </div>
+        <div class="flex flex-col items-center gap-6">
 
-        <div class="timer-inline" id="timer">00:00</div>
+            {{-- ✅ Scoreboard --}}
+            <div
+                class="inline-flex items-center gap-4 bg-black/90 px-6 py-3 rounded-2xl shadow-xl border border-white/10 backdrop-blur-md">
+                {{-- Home team --}}
+                <div class="flex items-center gap-2 font-bold text-red-500 text-xl">
+                    @if ($match->homeTeam?->logo)
+                        <img src="{{ asset('storage/' . $match->homeTeam->logo) }}" alt="logo" class="h-[28px] w-auto">
+                    @endif
+                    <span class="uppercase tracking-wide">{{ $match->homeTeam->name }}</span>
+                </div>
+
+                {{-- Score --}}
+                <div class="text-white text-[32px] font-extrabold px-4">
+                    <span id="score">{{ $match->obs_home_score ?? 0 }} : {{ $match->obs_away_score ?? 0 }}</span>
+                </div>
+
+                {{-- Away team --}}
+                <div class="flex items-center gap-2 font-bold text-red-500 text-xl">
+                    <span class="uppercase tracking-wide">{{ $match->awayTeam->name }}</span>
+                    @if ($match->awayTeam?->logo)
+                        <img src="{{ asset('storage/' . $match->awayTeam->logo) }}" alt="logo" class="h-[28px] w-auto">
+                    @endif
+                </div>
+
+                {{-- Timer --}}
+                <div class="ml-6 text-[20px] font-extrabold text-red-300 bg-white/10 px-3 py-1 rounded-lg tracking-wide shadow-inner"
+                    id="timer">
+                    00:00
+                </div>
+            </div>
+
+            {{-- ✅ Controls (само извън OBS) --}}
+            @unless ($isOBS)
+                <div class="mt-4 flex flex-wrap justify-center gap-3">
+                    @foreach ([['label' => 'Старт', 'action' => 'startTimer()'], ['label' => 'Пауза', 'action' => 'pauseTimer()'], ['label' => 'Продължи', 'action' => 'resumeTimer()'], ['label' => '⬅ -10 сек', 'action' => 'adjustTime(-10)']] as $btn)
+                        <button onclick="{{ $btn['action'] }}"
+                            class="px-4 py-1.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-lg shadow">
+                            {{ $btn['label'] }}
+                        </button>
+                    @endforeach
+
+                    <label class="flex items-center gap-2 text-white text-sm font-semibold">
+                        Домакин:
+                        <select onchange="updateScore('home', this.value)"
+                            class="text-sm p-1.5 rounded border border-gray-300 bg-white text-black">
+                            @for ($i = 0; $i <= 20; $i++)
+                                <option value="{{ $i }}" {{ $match->obs_home_score == $i ? 'selected' : '' }}>
+                                    {{ $i }}
+                                </option>
+                            @endfor
+                        </select>
+                    </label>
+
+                    <label class="flex items-center gap-2 text-white text-sm font-semibold">
+                        Гост:
+                        <select onchange="updateScore('away', this.value)"
+                            class="text-sm p-1.5 rounded border border-gray-300 bg-white text-black">
+                            @for ($i = 0; $i <= 20; $i++)
+                                <option value="{{ $i }}" {{ $match->obs_away_score == $i ? 'selected' : '' }}>
+                                    {{ $i }}
+                                </option>
+                            @endfor
+                        </select>
+                    </label>
+                </div>
+            @endunless
+        </div>
     </div>
+@endsection
 
-    @unless ($isOBS)
-        <div class="controls">
-            <button onclick="startTimer()">Старт</button>
-            <button onclick="pauseTimer()">Пауза</button>
-            <button onclick="resumeTimer()">Продължи</button>
-        </div>
-    @endunless
 
+
+@push('scripts')
     <script>
         let timerEl;
         let interval = null;
         let startTimestamp = null;
         let stoppedTimestamp = null;
+        let adjustSeconds = 0;
 
         const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -140,7 +104,9 @@
 
             const now = Date.now();
             const effectiveNow = stoppedTimestamp ?? now;
-            const elapsed = effectiveNow - startTimestamp;
+            let elapsed = effectiveNow - startTimestamp;
+
+            elapsed += adjustSeconds * 1000;
 
             const minutes = Math.floor(elapsed / 60000);
             const seconds = Math.floor((elapsed % 60000) / 1000);
@@ -186,6 +152,40 @@
             });
         }
 
+        function updateScore(team, value) {
+            fetch("{{ route('obs.match.score', ['slug' => $match->slug]) }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrf,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        team,
+                        value
+                    })
+                })
+                .then(res => res.ok ? res.json() : Promise.reject(res))
+                .then(() => fetchMatchData())
+                .catch(err => {
+                    console.error('❌ Score update error:', err);
+                });
+        }
+
+        function adjustTime(seconds) {
+            fetch("{{ route('obs.match.adjust', ['slug' => $match->slug]) }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrf,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        seconds
+                    })
+                })
+                .then(() => fetchMatchData(updateTimerDisplay))
+                .catch(err => console.error('⛔ Adjust error:', err));
+        }
+
         function fetchMatchData(callback = null) {
             fetch("{{ route('obs.match.json', ['slug' => $match->slug]) }}", {
                     cache: 'no-store'
@@ -195,14 +195,7 @@
                     document.getElementById('score').innerText = `${data.home_score} : ${data.away_score}`;
                     startTimestamp = data.started_at ? data.started_at * 1000 : null;
                     stoppedTimestamp = data.stopped_at ? data.stopped_at * 1000 : null;
-
-                    console.log("Fetched match data:", {
-                        home: data.home_score,
-                        away: data.away_score,
-                        startTimestamp,
-                        stoppedTimestamp,
-                        now: Date.now()
-                    });
+                    adjustSeconds = data.adjust_seconds ?? 0;
 
                     if (callback && !stoppedTimestamp) {
                         callback();
@@ -220,17 +213,71 @@
                 });
         }
 
+        function goalBanner() {
+            return {
+                show: false,
+                isCskaGoal: false,
+                lastHome: {{ $match->obs_home_score ?? 0 }},
+                lastAway: {{ $match->obs_away_score ?? 0 }},
+                homeTeam: @json($match->homeTeam->name),
+                awayTeam: @json($match->awayTeam->name),
+
+                init() {
+                    setInterval(() => this.checkForGoal(), 3000);
+                },
+
+                checkForGoal() {
+                    fetch("{{ route('obs.match.json', ['slug' => $match->slug]) }}", {
+                            cache: 'no-store'
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            const newHome = data.home_score;
+                            const newAway = data.away_score;
+
+                            // Проверка за гол
+                            if (newHome > this.lastHome || newAway > this.lastAway) {
+                                this.isCskaGoal = false;
+
+                                if (newHome > this.lastHome && this.homeTeam.toLowerCase().includes('цска')) {
+                                    this.isCskaGoal = true;
+                                }
+
+                                if (newAway > this.lastAway && this.awayTeam.toLowerCase().includes('цска')) {
+                                    this.isCskaGoal = true;
+                                }
+
+                                this.show = true;
+                                setTimeout(() => this.show = false, 3000);
+                            }
+
+                            this.lastHome = newHome;
+                            this.lastAway = newAway;
+
+                            document.getElementById('score').innerText = `${newHome} : ${newAway}`;
+
+                            const timerEl = document.getElementById('timer');
+                            if (data.started_at) {
+                                const now = Date.now();
+                                const effectiveNow = data.stopped_at ? data.stopped_at * 1000 : now;
+                                let elapsed = effectiveNow - data.started_at * 1000;
+                                elapsed += (data.adjust_seconds ?? 0) * 1000;
+                                const minutes = Math.floor(elapsed / 60000);
+                                const seconds = Math.floor((elapsed % 60000) / 1000);
+                                timerEl.innerText = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2,
+                                    '0');
+                            }
+                        })
+                        .catch(err => console.error('⚠️ Fetch error:', err));
+                }
+            };
+        }
+
 
         window.onload = () => {
             timerEl = document.getElementById('timer');
-
             fetchMatchData();
-
-            setInterval(() => {
-                fetchMatchData();
-            }, 3000);
+            setInterval(fetchMatchData, 3000);
         };
     </script>
-</body>
-
-</html>
+@endpush

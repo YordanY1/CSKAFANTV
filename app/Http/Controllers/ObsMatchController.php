@@ -13,24 +13,23 @@ class ObsMatchController extends Controller
             ->firstOrFail();
 
         $expectedToken = hash_hmac('sha256', $match->slug, config('app.key'));
+        $isOBS = str_contains(request()->header('User-Agent'), 'OBS');
 
-        if (request('token') !== $expectedToken) {
-            abort(403, 'Нямаш достъп до OBS изгледа.');
-        }
-
-        return view('obs.match', compact('match'));
+        return view('obs.match', compact('match', 'isOBS'));
     }
+
 
     public function json($slug)
     {
         $match = FootballMatch::where('slug', $slug)->firstOrFail();
 
         return response()->json([
-            'home_score' => $match->home_score,
-            'away_score' => $match->away_score,
+            'home_score' => $match->obs_home_score ?? 0,
+            'away_score' => $match->obs_away_score ?? 0,
             'started_at' => optional($match->started_at)->timestamp,
             'stopped_at' => optional($match->stopped_at)->timestamp,
-        ]);
+            'adjust_seconds' => $match->adjust_seconds ?? 0,
+        ])->header('Cache-Control', 'no-store, no-cache, must-revalidate');
     }
 
 
@@ -79,5 +78,41 @@ class ObsMatchController extends Controller
         $match->save();
 
         return response()->json(['reset' => true]);
+    }
+
+    public function updateScore($slug)
+    {
+        $match = FootballMatch::where('slug', $slug)->firstOrFail();
+
+        $data = request()->validate([
+            'team' => ['required', 'in:home,away'],
+            'value' => ['required', 'integer', 'min:0', 'max:20']
+        ]);
+
+        if ($data['team'] === 'home') {
+            $match->obs_home_score = $data['value'];
+        } else {
+            $match->obs_away_score = $data['value'];
+        }
+
+        $match->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function adjust($slug)
+    {
+        $match = FootballMatch::where('slug', $slug)->firstOrFail();
+
+        $seconds = request()->validate([
+            'seconds' => 'required|integer',
+        ])['seconds'];
+
+        $match->adjust_seconds += $seconds;
+        $match->save();
+
+        return response()->json([
+            'adjust_seconds' => $match->adjust_seconds
+        ]);
     }
 }

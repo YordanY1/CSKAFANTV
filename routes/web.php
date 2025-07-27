@@ -69,8 +69,12 @@ Route::post('/logout', function (Request $request) {
 Route::prefix('match/{slug}')->group(function () {
     Route::get('/obs', [ObsMatchController::class, 'show'])->name('obs.match');
     Route::get('/json', [ObsMatchController::class, 'json'])->name('obs.match.json');
+
     Route::post('/start', [ObsMatchController::class, 'start'])->name('obs.match.start');
     Route::post('/stop', [ObsMatchController::class, 'stop'])->name('obs.match.stop');
     Route::post('/resume', [ObsMatchController::class, 'resume'])->name('obs.match.resume');
     Route::post('/reset', [ObsMatchController::class, 'reset'])->name('obs.match.reset');
+
+    Route::post('/score', [ObsMatchController::class, 'updateScore'])->name('obs.match.score');
+    Route::post('/adjust', [ObsMatchController::class, 'adjust'])->name('obs.match.adjust');
 });
