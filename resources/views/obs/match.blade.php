@@ -9,7 +9,7 @@
             x-transition:enter-start="scale-75 opacity-0" x-transition:enter-end="scale-100 opacity-100"
             x-transition:leave="transform transition ease-in duration-300" x-transition:leave-start="scale-100 opacity-100"
             x-transition:leave-end="scale-75 opacity-0"
-            :class="isЦСКАGoal ? 'bg-white text-red-600' : 'bg-yellow-400 text-black'"
+            :class="isCSKAGoal ? 'bg-white text-red-600' : 'bg-white text-red-600'"
             class="absolute top-10 text-3xl font-extrabold px-6 py-3 rounded-xl shadow-xl tracking-wide z-50">
             ⚽ ГОООЛ!
         </div>
