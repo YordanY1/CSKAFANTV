@@ -17,38 +17,42 @@
 
         <div class="flex flex-col items-center gap-6">
 
-            {{-- ✅ Scoreboard --}}
+            {{-- Scoreboard --}}
             <div
-                class="inline-flex items-center gap-4 bg-black/90 px-6 py-3 rounded-2xl shadow-xl border border-white/10 backdrop-blur-md">
+                class="inline-flex items-center justify-center gap-8 bg-black/95 px-10 py-4 rounded-3xl border border-white/10 shadow-[0_0_12px_rgba(255,255,255,0.1)] backdrop-blur-md">
+
+
                 {{-- Home team --}}
-                <div class="flex items-center gap-2 font-bold text-red-500 text-xl">
+                <div class="flex items-center gap-3 font-extrabold text-red-500 text-3xl uppercase tracking-widest">
                     @if ($match->homeTeam?->logo)
-                        <img src="{{ asset('storage/' . $match->homeTeam->logo) }}" alt="logo" class="h-[28px] w-auto">
+                        <img src="{{ asset('storage/' . $match->homeTeam->logo) }}" alt="logo" class="h-[70px] w-auto">
                     @endif
-                    <span class="uppercase tracking-wide">{{ $match->homeTeam->name }}</span>
+                    <span>{{ $match->homeTeam->name }}</span>
                 </div>
 
                 {{-- Score --}}
-                <div class="text-white text-[32px] font-extrabold px-4">
-                    <span id="score">{{ $match->obs_home_score ?? 0 }} : {{ $match->obs_away_score ?? 0 }}</span>
+                <div class="text-white text-6xl font-black px-8 tracking-wide" id="score">
+                    {{ $match->obs_home_score ?? 0 }} : {{ $match->obs_away_score ?? 0 }}
                 </div>
 
                 {{-- Away team --}}
-                <div class="flex items-center gap-2 font-bold text-red-500 text-xl">
-                    <span class="uppercase tracking-wide">{{ $match->awayTeam->name }}</span>
+                <div class="flex items-center gap-3 font-extrabold text-red-500 text-3xl uppercase tracking-widest">
+                    <span>{{ $match->awayTeam->name }}</span>
                     @if ($match->awayTeam?->logo)
-                        <img src="{{ asset('storage/' . $match->awayTeam->logo) }}" alt="logo" class="h-[28px] w-auto">
+                        <img src="{{ asset('storage/' . $match->awayTeam->logo) }}" alt="logo" class="h-[70px] w-auto">
                     @endif
                 </div>
 
                 {{-- Timer --}}
-                <div class="ml-6 text-[20px] font-extrabold text-red-300 bg-white/10 px-3 py-1 rounded-lg tracking-wide shadow-inner"
+                <div class="ml-8 text-white text-6xl font-black bg-white/20 px-6 py-2 rounded-2xl shadow-lg tracking-widest"
                     id="timer">
                     00:00
                 </div>
+
             </div>
 
-            {{-- ✅ Controls (само извън OBS) --}}
+
+            {{-- Controls --}}
             @unless ($isOBS)
                 <div class="mt-4 flex flex-wrap justify-center gap-3">
                     @foreach ([['label' => 'Старт', 'action' => 'startTimer()'], ['label' => 'Пауза', 'action' => 'pauseTimer()'], ['label' => 'Продължи', 'action' => 'resumeTimer()'], ['label' => '⬅ -10 сек', 'action' => 'adjustTime(-10)']] as $btn)
