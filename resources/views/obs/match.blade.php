@@ -62,6 +62,12 @@
                         </button>
                     @endforeach
 
+                    <button onclick="adjustTime(60)"
+                        class="px-4 py-1.5 text-sm font-bold text-white bg-green-600 hover:bg-green-700 active:bg-green-800 rounded-lg shadow">
+                        ➕ +1 минута
+                    </button>
+
+
                     <button onclick="resetTimer()"
                         class="px-4 py-1.5 text-sm font-bold text-white bg-gray-600 hover:bg-gray-700 active:bg-gray-800 rounded-lg shadow">
                         🔁 Нулирай
@@ -175,7 +181,11 @@
                 })
                 .then(res => res.ok ? res.json() : Promise.reject(res))
                 .then(() => {
-                    startTimer();
+                    startTimestamp = null;
+                    stoppedTimestamp = null;
+                    adjustSeconds = 0;
+
+                    timerEl.innerText = "00:00";
                 })
                 .catch(err => {
                     console.error('🔁 Reset error:', err);
