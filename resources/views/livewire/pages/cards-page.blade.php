@@ -11,19 +11,22 @@
         </thead>
         <tbody>
             @foreach ($cards as $card)
-                <tr class="border-t hover:bg-gray-50">
-                    <td class="px-4 py-3 font-medium text-gray-800">
-                        {{ $card->player->name }}
-                    </td>
-                    <td class="px-4 py-3 font-bold text-yellow-600">
-                        {{ $card->yellow_cards }}
-                    </td>
-                    <td class="px-4 py-3 font-bold text-red-600">
-                        {{ $card->red_cards }}
-                    </td>
-                </tr>
+                @if (!empty($card->player?->name))
+                    <tr class="border-t hover:bg-gray-50">
+                        <td class="px-4 py-3 font-medium text-gray-800">
+                            {{ $card->player->name }}
+                        </td>
+                        <td class="px-4 py-3 font-bold text-yellow-600">
+                            {{ $card->yellow_cards }}
+                        </td>
+                        <td class="px-4 py-3 font-bold text-red-600">
+                            {{ $card->red_cards }}
+                        </td>
+                    </tr>
+                @endif
             @endforeach
         </tbody>
+
     </table>
 
     <div class="mt-6 border-t pt-4 text-sm text-gray-600 max-w-md mx-auto">
