@@ -15,23 +15,29 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @foreach ($ratings as $index => $data)
-                        <tr class="hover:bg-card transition">
-                            <td class="px-4 py-3 font-semibold">
-                                {{ $index + 1 }}
-                            </td>
-                            <td class="px-4 py-3 font-bold text-primary flex items-center gap-2">
-                                @if ($data['player']?->image_path)
-                                    <img src="{{ asset('storage/' . $data['player']->image_path) }}"
-                                        alt="{{ $data['player']->name }}"
-                                        class="w-10 h-10 rounded-full object-cover border border-gray-300" />
-                                @endif
-                                {{ $data['player']->name }}
-                            </td>
-                            <td class="px-4 py-3 text-accent font-semibold">
-                                {{ $data['avg_rating'] }}
-                            </td>
-                        </tr>
+                        @php
+                            $player = $data['player'] ?? null;
+                        @endphp
+                        @if ($player)
+                            <tr class="hover:bg-card transition">
+                                <td class="px-4 py-3 font-semibold">
+                                    {{ $index + 1 }}
+                                </td>
+                                <td class="px-4 py-3 font-bold text-primary flex items-center gap-2">
+                                    @if (!empty($player->image_path))
+                                        <img src="{{ asset('storage/' . $player->image_path) }}"
+                                            alt="{{ $player->name }}"
+                                            class="w-10 h-10 rounded-full object-cover border border-gray-300" />
+                                    @endif
+                                    {{ $player->name }}
+                                </td>
+                                <td class="px-4 py-3 text-accent font-semibold">
+                                    {{ $data['avg_rating'] }}
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
+
                 </tbody>
             </table>
         </div>

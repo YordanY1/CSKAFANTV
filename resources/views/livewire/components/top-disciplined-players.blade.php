@@ -15,16 +15,19 @@
 
         <ul class="space-y-3 mb-6">
             @foreach ($mostCards as $card)
-                <li class="flex items-center justify-between">
-                    <span class="text-gray-800 font-medium">
-                        {{ $card->player?->name ?? 'Без име' }}
-                    </span>
-                    <span class="text-sm font-bold">
-                        <span class="text-yellow-500">🟨 {{ $card->yellow_cards }}</span> /
-                        <span class="text-red-600">🟥 {{ $card->red_cards }}</span>
-                    </span>
-                </li>
+                @if (!empty($card->player?->name))
+                    <li class="flex items-center justify-between">
+                        <span class="text-gray-800 font-medium">
+                            {{ $card->player->name }}
+                        </span>
+                        <span class="text-sm font-bold">
+                            <span class="text-yellow-500">🟨 {{ $card->yellow_cards }}</span> /
+                            <span class="text-red-600">🟥 {{ $card->red_cards }}</span>
+                        </span>
+                    </li>
+                @endif
             @endforeach
+
         </ul>
 
         <div class="text-xs text-gray-600 border-t pt-4 mt-6">
