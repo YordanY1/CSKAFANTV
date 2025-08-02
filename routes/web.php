@@ -20,6 +20,8 @@ use App\Livewire\Pages\PlayerRatingsPage;
 use App\Livewire\Pages\PredictionRankingsPage;
 use App\Livewire\Pages\VideoCategory;
 use App\Http\Controllers\ObsMatchController;
+use App\Livewire\Pages\HallOfFame;
+
 
 
 
@@ -54,6 +56,10 @@ Route::get('/standings', FullStandingsPage::class)->name('standings');
 
 Route::get('/player-ratings', PlayerRatingsPage::class)->name('player.ratings');
 Route::get('/predictions/rankings', PredictionRankingsPage::class)->name('predictions.rankings');
+
+Route::get('/hall-of-fame', HallOfFame::class)->name('hall.of.fame');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', UserProfile::class)->name('profile');

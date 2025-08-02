@@ -33,6 +33,11 @@
                             class="block px-4 py-2 hover:bg-accent hover:text-white transition">Картони</a>
                         <a href="{{ route('player.ratings') }}" wire:navigate
                             class="block px-4 py-2 hover:bg-accent hover:text-white transition">Оценки</a>
+                        <a href="{{ route('hall.of.fame') }}" wire:navigate
+                            class="block px-4 py-2 hover:bg-accent hover:text-white transition">
+                            Зала на славата
+                        </a>
+
                     </div>
                 </div>
 
@@ -176,6 +181,10 @@
                     class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Картони</a>
                 <a href="{{ route('player.ratings') }}" wire:navigate
                     class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Оценки</a>
+                <a href="{{ route('hall.of.fame') }}" wire:navigate
+                    class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">
+                    Зала на славата
+                </a>
             </div>
         </div>
 
