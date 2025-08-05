@@ -85,14 +85,21 @@
                         @php
                             $matchEndTime = $match->match_datetime->copy()->addMinutes($match->duration ?? 90);
                             $hoursSinceEnd = now()->diffInHours($matchEndTime, false);
-                            $showRatePlayers = $match->is_finished && $hoursSinceEnd >= -48;
                         @endphp
 
                         <div class="flex justify-center items-center gap-4 mt-4">
                             <a href="{{ route('match.show', $match) }}" wire:navigate
                                 class="text-primary font-semibold hover:underline">
-                                {{ $showRatePlayers ? 'ОЦЕНИ ИГРАЧИТЕ ⭐' : 'Детайли за мача' }}
+                                Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
                             </a>
+
+
+                            @if ($match->is_finished && $hoursSinceEnd >= -48)
+                                <a href="{{ route('match.show', $match) }}" wire:navigate
+                                    class="text-red-600 font-bold uppercase hover:underline">
+                                    ОЦЕНИ ИГРАЧИТЕ <i class="fas fa-star ml-1"></i>
+                                </a>
+                            @endif
 
                             @auth
                                 @php
@@ -108,6 +115,7 @@
                                 @endif
                             @endauth
                         </div>
+
                     </div>
                 </div>
             @empty
