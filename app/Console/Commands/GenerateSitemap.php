@@ -23,14 +23,16 @@ class GenerateSitemap extends Command
             ['url' => '/players', 'priority' => 0.9],
             ['url' => '/videos', 'priority' => 0.8],
             ['url' => '/tactics', 'priority' => 0.7],
+            ['url' => '/hall-of-fame', 'priority' => 0.7],
             ['url' => '/contact', 'priority' => 0.6],
             ['url' => '/cards', 'priority' => 0.6],
-            ['url' => '/privacy-policy', 'priority' => 0.3],
-            ['url' => '/cookie-policy', 'priority' => 0.3],
             ['url' => '/standings', 'priority' => 0.5],
             ['url' => '/player-ratings', 'priority' => 0.5],
             ['url' => '/predictions/rankings', 'priority' => 0.5],
+            ['url' => '/privacy-policy', 'priority' => 0.3],
+            ['url' => '/cookie-policy', 'priority' => 0.3],
         ];
+
 
         foreach ($staticRoutes as $route) {
             $sitemap->add(Url::create($route['url'])->setPriority($route['priority']));
