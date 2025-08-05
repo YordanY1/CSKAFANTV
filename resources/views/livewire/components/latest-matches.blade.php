@@ -94,45 +94,37 @@
                                     $match->duration ?? 90,
                                 );
                                 $hoursSinceEnd = now()->diffInHours($matchEndTime, false);
+                                $showRatePlayers = $match->is_finished && $hoursSinceEnd >= -48;
                             @endphp
 
-        
-                            @if ($match->is_finished && $hoursSinceEnd >= -48)
+                            <div class="flex justify-center items-center gap-4 mt-4">
                                 <a href="{{ route('match.show', $match) }}" wire:navigate
-                                    class="text-red-600 font-bold uppercase hover:underline">
-                                    ОЦЕНИ ИГРАЧИТЕ <i class="fas fa-star ml-1"></i>
+                                    class="text-primary font-semibold hover:underline">
+                                    {{ $showRatePlayers ? 'ОЦЕНИ ИГРАЧИТЕ ⭐' : 'Детайли за мача' }}
                                 </a>
-                            @endif
 
-                            {{-- Детайли за мача – винаги --}}
-                            <a href="{{ route('match.show', $match) }}" wire:navigate
-                                class="text-primary font-semibold hover:underline">
-                                Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
-                            </a>
+                                @auth
+                                    @php
+                                        $prediction = $predictions->get($match->id);
+                                    @endphp
+
+                                    @if (!$match->is_finished && $match->match_datetime->isFuture())
+                                        <button x-data
+                                            @click="$dispatch('open-prediction-modal', { matchId: {{ $match->id }} })"
+                                            class="bg-primary text-white px-3 py-1.5 rounded text-sm cursor-pointer">
+                                            {{ $prediction ? 'Моята прогноза' : 'Прогнозирай' }}
+                                        </button>
+                                    @endif
+                                @endauth
+                            </div>
 
 
-                            @auth
-                                @php
-                                    $prediction = $predictions->get($match->id);
-                                @endphp
-
-                                @if (!$match->is_finished && $match->match_datetime->isFuture())
-                                    <button x-data
-                                        @click="$dispatch('open-prediction-modal', { matchId: {{ $match->id }} })"
-                                        class="bg-primary text-white px-3 py-1.5 rounded text-sm cursor-pointer">
-                                        {{ $prediction ? 'Моята прогноза' : 'Прогнозирай' }}
-                                    </button>
-                                @endif
-                            @endauth
                         </div>
-
-
                     </div>
-                </div>
-            @empty
-                <p class="text-center col-span-3 text-gray-500">
-                    {{ $filter === 'upcoming' ? 'Няма предстоящи мачове.' : 'Няма приключени мачове.' }}
-                </p>
+                @empty
+                    <p class="text-center col-span-3 text-gray-500">
+                        {{ $filter === 'upcoming' ? 'Няма предстоящи мачове.' : 'Няма приключени мачове.' }}
+                    </p>
             @endforelse
         </div>
     </div>
