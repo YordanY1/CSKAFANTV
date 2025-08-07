@@ -223,7 +223,7 @@ window.tacticBoard = function () {
                         x: 0,
                         y: 75,
                         width: 70,
-                        text: player.name.split(" ").pop(),
+                        text: player.name.split(" ")[1] || player.name,
                         fontSize: 17,
                         fontFamily: "Calibri",
                         fill: "white",
