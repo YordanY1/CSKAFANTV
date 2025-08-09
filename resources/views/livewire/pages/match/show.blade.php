@@ -12,10 +12,18 @@
         @endif
     @endauth
 
+    {{-- COACH --}}
     @if ($coach)
         @php
             $coachId = $coach->id;
             $average = $averageRatings[$coachId] ?? null;
+            $avgClass = $average
+                ? ($average >= 7
+                    ? 'text-green-600 font-semibold'
+                    : ($average >= 5
+                        ? 'text-yellow-600'
+                        : 'text-red-600'))
+                : '';
         @endphp
 
         <div
@@ -31,6 +39,15 @@
             <p class="text-xl font-semibold text-gray-800">{{ $coach->name }}</p>
             <p class="text-sm text-gray-500 mt-1 italic">Старши треньор на ЦСКА</p>
 
+
+            @if ($average)
+                <p class="text-sm mt-3 {{ $avgClass }}">
+                    Средна оценка досега:
+                    <strong>{{ is_numeric($average) ? number_format($average, 1) : $average }}</strong>
+                </p>
+            @endif
+
+            {{-- Оценяване: само за логнати и след края --}}
             @auth
                 @if ($match->is_finished)
                     @if (!isset($existingReviews[$coachId]))
@@ -43,44 +60,44 @@
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
                             </select>
-
-                            @if ($average)
-                                <p x-show="selectedRating" x-transition class="text-sm mt-2"
-                                    :class="{
-                                        'text-green-600 font-semibold': {{ $average }} >= 7,
-                                        'text-yellow-600': {{ $average }} >= 5 && {{ $average }} < 7,
-                                        'text-red-600': {{ $average }} < 5
-                                    }">
-                                    Средна оценка досега:
-                                    <strong>{{ $average }}</strong>
-                                </p>
-                            @endif
                         </div>
                     @else
                         <p class="text-sm text-gray-500 mt-4">
                             Вече си оценил треньора:
                             <strong>{{ $existingReviews[$coachId] }}</strong>
                         </p>
-
-                        @if ($average)
-                            <p class="text-sm text-gray-600">
-                                Средна оценка досега:
-                                <strong>{{ $average }}</strong>
-                            </p>
-                        @endif
                     @endif
                 @endif
             @endauth
+
+            @guest
+                <p class="text-xs text-gray-500 mt-3">
+                    Само регистрираните фенове могат да дават оценки. 🎯
+                </p>
+            @endguest
+
         </div>
     @endif
 
     <div class="grid md:grid-cols-2 gap-10 mt-12">
-        {{-- Starters --}}
+        {{-- STARTERS --}}
         <div>
             <h2 class="text-2xl font-semibold text-text mb-5 border-b-2 border-accent pb-2">Стартов състав</h2>
             <ul class="space-y-4">
                 @foreach ($match->lineup->where('is_starter', true) as $line)
                     @if ($line->player)
+                        @php
+                            $playerId = $line->player->id;
+                            $average = $averageRatings[$playerId] ?? null;
+                            $avgClass = $average
+                                ? ($average >= 7
+                                    ? 'text-green-600 font-semibold'
+                                    : ($average >= 5
+                                        ? 'text-yellow-600'
+                                        : 'text-red-600'))
+                                : '';
+                        @endphp
+
                         <li
                             class="flex items-center gap-5 p-4 bg-white rounded-xl shadow-md border border-accent/30 hover:shadow-lg transition">
                             <img src="{{ asset('storage/' . ($line->player->image_path ?? 'images/default-player.jpg')) }}"
@@ -91,17 +108,21 @@
                                     #{{ $line->player->number ?? '–' }}
                                     {{ $line->player->name ?? 'Неизвестен' }}
                                 </div>
+
+
+                                @if ($average)
+                                    <p class="text-sm mt-2 {{ $avgClass }}">
+                                        Средна оценка досега:
+                                        <strong>{{ is_numeric($average) ? number_format($average, 1) : $average }}</strong>
+                                    </p>
+                                @endif
+
+
                                 @auth
                                     @if ($match->is_finished)
-                                        @php
-                                            $playerId = $line->player->id;
-                                            $average = $averageRatings[$playerId] ?? null;
-                                        @endphp
-
                                         @if (!isset($existingReviews[$playerId]))
                                             <div x-data="{ selectedRating: '' }">
                                                 <label class="text-sm text-accent-2 mt-1 block">Оцени играча:</label>
-
                                                 <select x-model="selectedRating"
                                                     wire:model.defer="ratings.{{ $playerId }}"
                                                     class="mt-1 w-full border-gray-300 rounded text-sm">
@@ -110,35 +131,25 @@
                                                         <option value="{{ $i }}">{{ $i }}</option>
                                                     @endfor
                                                 </select>
-
-                                                @if ($average)
-                                                    <p x-show="selectedRating" x-transition class="text-sm mt-2"
-                                                        :class="{
-                                                            'text-green-600 font-semibold': {{ $average }} >= 7,
-                                                            'text-yellow-600': {{ $average }} >= 5 &&
-                                                                {{ $average }} < 7,
-                                                            'text-red-600': {{ $average }} < 5
-                                                        }">
-                                                        Средна оценка досега:
-                                                        <strong>{{ $average }}</strong>
-                                                    </p>
-                                                @endif
                                             </div>
                                         @else
                                             <p class="text-sm text-gray-500 mt-1">
                                                 Вече си оценил:
                                                 <strong>{{ $existingReviews[$playerId] }}</strong>
                                             </p>
-
-                                            @if ($average)
-                                                <p class="text-sm text-gray-600">
-                                                    Средна оценка досега:
-                                                    <strong>{{ $average }}</strong>
-                                                </p>
-                                            @endif
                                         @endif
                                     @endif
                                 @endauth
+
+
+                                @guest
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        За да оцениш, <a href="{{ route('login', [], false) ?? url('/login') }}"
+                                            class="underline text-primary">влез</a>
+                                        или <a href="{{ route('register', [], false) ?? url('/register') }}"
+                                            class="underline text-primary">се регистрирай</a>.
+                                    </p>
+                                @endguest
                             </div>
                         </li>
                     @endif
@@ -146,12 +157,24 @@
             </ul>
         </div>
 
-        {{-- Substitutes --}}
+        {{-- SUBSTITUTES --}}
         <div>
             <h2 class="text-2xl font-semibold text-text mb-5 border-b-2 border-accent pb-2">Смени</h2>
             <ul class="space-y-4">
                 @foreach ($match->lineup->where('is_starter', false)->sortBy('minute_entered') as $line)
                     @if ($line->player)
+                        @php
+                            $playerId = $line->player->id;
+                            $average = $averageRatings[$playerId] ?? null;
+                            $avgClass = $average
+                                ? ($average >= 7
+                                    ? 'text-green-600 font-semibold'
+                                    : ($average >= 5
+                                        ? 'text-yellow-600'
+                                        : 'text-red-600'))
+                                : '';
+                        @endphp
+
                         <li
                             class="flex items-center gap-5 p-4 bg-white rounded-xl shadow-md border border-accent/20 hover:shadow-lg transition">
                             <img src="{{ $line->player->image_path ? asset('storage/' . $line->player->image_path) : asset('images/default-player.jpg') }}"
@@ -167,13 +190,16 @@
                                     <p class="text-xs text-gray-500">Смени: {{ $line->replacesPlayer->name }}</p>
                                 @endif
 
+
+                                @if ($average)
+                                    <p class="text-sm mt-2 {{ $avgClass }}">
+                                        Средна оценка досега:
+                                        <strong>{{ is_numeric($average) ? number_format($average, 1) : $average }}</strong>
+                                    </p>
+                                @endif
+
                                 @auth
                                     @if ($match->is_finished)
-                                        @php
-                                            $playerId = $line->player->id;
-                                            $average = $averageRatings[$playerId] ?? null;
-                                        @endphp
-
                                         @if (!isset($existingReviews[$playerId]))
                                             <div x-data="{ selectedRating: '' }" class="mt-1">
                                                 <label class="text-sm text-accent-2 block">Оцени играча:</label>
@@ -185,35 +211,25 @@
                                                         <option value="{{ $i }}">{{ $i }}</option>
                                                     @endfor
                                                 </select>
-
-                                                @if ($average)
-                                                    <p x-show="selectedRating" x-transition class="text-sm mt-2"
-                                                        :class="{
-                                                            'text-green-600 font-semibold': {{ $average }} >= 7,
-                                                            'text-yellow-600': {{ $average }} >= 5 &&
-                                                                {{ $average }} < 7,
-                                                            'text-red-600': {{ $average }} < 5
-                                                        }">
-                                                        Средна оценка досега:
-                                                        <strong>{{ $average }}</strong>
-                                                    </p>
-                                                @endif
                                             </div>
                                         @else
                                             <p class="text-sm text-gray-500 mt-1">
                                                 Вече си оценил:
                                                 <strong>{{ $existingReviews[$playerId] }}</strong>
                                             </p>
-
-                                            @if ($average)
-                                                <p class="text-sm text-gray-600">
-                                                    Средна оценка досега:
-                                                    <strong>{{ $average }}</strong>
-                                                </p>
-                                            @endif
                                         @endif
                                     @endif
                                 @endauth
+
+
+                                @guest
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        За да оцениш, <a href="{{ route('login', [], false) ?? url('/login') }}"
+                                            class="underline text-primary">влез</a>
+                                        или <a href="{{ route('register', [], false) ?? url('/register') }}"
+                                            class="underline text-primary">се регистрирай</a>.
+                                    </p>
+                                @endguest
                             </div>
                         </li>
                     @endif
