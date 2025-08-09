@@ -143,13 +143,11 @@
 
 
                                 @guest
-                                    <p class="text-xs text-gray-500 mt-1">
-                                        За да оцениш, <a href="{{ route('login', [], false) ?? url('/login') }}"
-                                            class="underline text-primary">влез</a>
-                                        или <a href="{{ route('register', [], false) ?? url('/register') }}"
-                                            class="underline text-primary">се регистрирай</a>.
+                                    <p class="text-xs text-gray-500 mt-3">
+                                        Само регистрираните фенове могат да дават оценки. 🎯
                                     </p>
                                 @endguest
+
                             </div>
                         </li>
                     @endif
@@ -223,13 +221,11 @@
 
 
                                 @guest
-                                    <p class="text-xs text-gray-500 mt-1">
-                                        За да оцениш, <a href="{{ route('login', [], false) ?? url('/login') }}"
-                                            class="underline text-primary">влез</a>
-                                        или <a href="{{ route('register', [], false) ?? url('/register') }}"
-                                            class="underline text-primary">се регистрирай</a>.
+                                    <p class="text-xs text-gray-500 mt-3">
+                                        Само регистрираните фенове могат да дават оценки. 🎯
                                     </p>
                                 @endguest
+
                             </div>
                         </li>
                     @endif
