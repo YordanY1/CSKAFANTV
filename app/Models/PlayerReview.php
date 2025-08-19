@@ -6,19 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\User;
 use App\Models\Player;
+use App\Models\FootballMatch;
 
 class PlayerReview extends Model
 {
     protected $guarded = ['id'];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function player()
+    protected $with = ['player'];
+
+    public function player(): BelongsTo
     {
-        return $this->belongsTo(Player::class);
+        return $this->belongsTo(Player::class)->withTrashed();
     }
 
     public function match(): BelongsTo

@@ -14,13 +14,15 @@ class MatchLineup extends Model
         return $this->belongsTo(FootballMatch::class);
     }
 
+    protected $with = ['player', 'replacesPlayer'];
+
     public function player(): BelongsTo
     {
-        return $this->belongsTo(Player::class);
+        return $this->belongsTo(Player::class)->withTrashed();
     }
 
     public function replacesPlayer(): BelongsTo
     {
-        return $this->belongsTo(Player::class, 'replaces_player_id');
+        return $this->belongsTo(Player::class, 'replaces_player_id')->withTrashed();
     }
 }
