@@ -20,7 +20,7 @@
                             {{ $card->yellow_cards }}
                         </td>
                         <td class="px-4 py-3 font-bold text-red-600">
-                            {{ $card->red_cards }}
+                            {{ $card->total_reds }}
                         </td>
                     </tr>
                 @endif

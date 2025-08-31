@@ -22,7 +22,7 @@
                         </span>
                         <span class="text-sm font-bold">
                             <span class="text-yellow-500">🟨 {{ $card->yellow_cards }}</span> /
-                            <span class="text-red-600">🟥 {{ $card->red_cards }}</span>
+                            <span class="text-red-600">🟥 {{ $card->total_reds }}</span>
                         </span>
                     </li>
                 @endif
