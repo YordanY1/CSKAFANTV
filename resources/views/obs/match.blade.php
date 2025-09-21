@@ -62,6 +62,12 @@
                         </button>
                     @endforeach
 
+                    <button onclick="adjustTime(-60)"
+                        class="px-4 py-1.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg shadow">
+                        ➖ -1 минута
+                    </button>
+
+
                     <button onclick="adjustTime(60)"
                         class="px-4 py-1.5 text-sm font-bold text-white bg-green-600 hover:bg-green-700 active:bg-green-800 rounded-lg shadow">
                         ➕ +1 минута
