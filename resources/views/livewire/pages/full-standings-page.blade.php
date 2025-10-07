@@ -1,19 +1,28 @@
 <section class="px-6 py-12 max-w-7xl mx-auto bg-card text-text">
     <h2 class="text-3xl text-primary font-extrabold uppercase mb-8 text-center">📊 Пълно класиране</h2>
 
+    <!-- League Selection -->
+    <div class="flex justify-center mb-8 gap-4">
+        <button wire:click="$set('league', 'first')"
+            class="px-4 py-2 rounded-lg font-semibold transition cursor-pointer
+                {{ $league === 'first' ? 'bg-primary text-white shadow-lg' : 'bg-gray-100 hover:bg-gray-200 text-gray-700' }}">
+            ⚽ Първа лига
+        </button>
+
+        <button wire:click="$set('league', 'second')"
+            class="px-4 py-2 rounded-lg font-semibold transition cursor-pointer
+                {{ $league === 'second' ? 'bg-primary text-white shadow-lg' : 'bg-gray-100 hover:bg-gray-200 text-gray-700' }}">
+            🏆 Втора лига
+        </button>
+    </div>
+
+    <!-- Desktop -->
     <div class="overflow-x-auto bg-white rounded-xl shadow-lg hidden sm:block">
         <table class="min-w-full text-sm text-left">
             <thead class="bg-accent text-cta uppercase tracking-wider">
                 <tr>
                     @foreach ([['rank', '#'], ['bg_name', 'Отбор'], ['matches', 'М'], ['won', 'П'], ['drawn', 'Р'], ['lost', 'З'], ['goal_diff', 'ГР'], ['points', 'Т'], ['form', 'Форма']] as [$column, $label])
-                        <th class="px-4 py-3 cursor-pointer" wire:click="sortBy('{{ $column }}')">
-                            {{ $label }}
-                            @if ($sortColumn === $column)
-                                <i class="fas fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ml-1"></i>
-                            @else
-                                <i class="fas fa-sort ml-1 text-gray-400"></i>
-                            @endif
-                        </th>
+                        <th class="px-4 py-3">{{ $label }}</th>
                     @endforeach
                 </tr>
             </thead>
@@ -21,7 +30,7 @@
                 @foreach ($standings as $i => $team)
                     <tr class="hover:bg-gray-100 transition">
                         <td class="px-4 py-3 font-semibold">{{ $team['rank'] ?? $i + 1 }}</td>
-                        
+
                         <td
                             class="px-4 py-3 font-bold flex items-center gap-2 {{ $team['is_cska'] ? 'text-red-600' : 'text-black' }}">
                             @if (!empty($team['logo']))
@@ -116,5 +125,4 @@
             </div>
         @endforeach
     </div>
-
 </section>
