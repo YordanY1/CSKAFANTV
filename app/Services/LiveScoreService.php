@@ -67,12 +67,8 @@ class LiveScoreService
             ->toArray();
     }
 
-    /**
-     * 🧠 Централизирана логика за превод и обогатяване на данни за отбор
-     */
     protected function mapTeamData(array $item, $localTeams): array
     {
-        // Локални преводи EN → BG
         $translations = [
             'Dunav Ruse'                   => 'Дунав Русе',
             'Fratria'                      => 'Фратрия',
@@ -97,15 +93,10 @@ class LiveScoreService
         $local = $externalId ? $localTeams->get($externalId) : null;
         $originalName = $item['team']['name'] ?? null;
 
-        if ($local && !empty($local->name)) {
-            $translated = $local->name;
-        } else {
-            $translated = $translations[$originalName] ?? $originalName;
-        }
+        $translated = $local->name ?? ($translations[$originalName] ?? $originalName);
 
-        if ($local && str_contains(mb_strtolower($local->name), 'цска')) {
-            $translated = $local->name;
-        }
+        $isCska = str_contains(mb_strtolower($originalName), 'cska')
+            || str_contains(mb_strtolower($translated), 'цска');
 
         if ($local && !empty($local->logo)) {
             $logo = $local->logo;
@@ -117,6 +108,16 @@ class LiveScoreService
             $logo = asset('images/vihren.png');
         }
 
+        if ($isCska) {
+            $cskaRecord = DB::table('teams')
+                ->where('name', 'like', '%ЦСКА%')
+                ->first();
+
+            if ($cskaRecord && !empty($cskaRecord->logo)) {
+                $logo = asset('storage/' . ltrim($cskaRecord->logo, '/'));
+                $translated = $cskaRecord->name;
+            }
+        }
 
         if ($logo && !str_starts_with($logo, 'http') && !str_starts_with($logo, asset(''))) {
             $logo = asset('storage/' . ltrim($logo, '/'));
@@ -140,7 +141,7 @@ class LiveScoreService
             'logo'           => $logo,
             'stadium'        => $local->stadium ?? ($item['team']['stadium'] ?? null),
             'manager'        => $local->manager ?? null,
-            'is_cska'        => str_contains(mb_strtolower($translated), 'цска'),
+            'is_cska'        => $isCska,
         ];
     }
 }

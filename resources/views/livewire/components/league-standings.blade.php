@@ -4,6 +4,21 @@
             Класиране
         </h2>
 
+        <!-- League Selection -->
+        <div class="flex justify-center mb-8 gap-4">
+            <button wire:click="$set('league', 'first')"
+                class="px-4 py-2 rounded-lg font-semibold transition cursor-pointer
+                    {{ $league === 'first' ? 'bg-primary text-white shadow-lg' : 'bg-gray-100 hover:bg-gray-200 text-gray-700' }}">
+                ⚽ Първа лига
+            </button>
+
+            <button wire:click="$set('league', 'second')"
+                class="px-4 py-2 rounded-lg font-semibold transition cursor-pointer
+                    {{ $league === 'second' ? 'bg-primary text-white shadow-lg' : 'bg-gray-100 hover:bg-gray-200 text-gray-700' }}">
+                🏆 Втора лига
+            </button>
+        </div>
+
         <div class="text-center mt-6 mb-5">
             <a href="{{ route('standings') }}" wire:navigate
                 class="inline-block bg-accent text-white font-semibold px-6 py-2 rounded-lg shadow hover:bg-primary transition duration-200">
@@ -11,7 +26,7 @@
             </a>
         </div>
 
-        <!-- Desktop -->
+        <!-- Desktop Table -->
         <div class="overflow-x-auto bg-white rounded-xl shadow-lg hidden sm:block">
             <table class="min-w-full text-sm text-left">
                 <thead class="bg-accent text-cta uppercase tracking-wider">
