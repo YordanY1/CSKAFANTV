@@ -17,9 +17,6 @@ class LiveScoreService
         $this->secret = config('services.livescore.secret');
     }
 
-    /**
-     * Първа лига
-     */
     public function getStandingsWithTeams(int $competitionId = 71): array
     {
         $response = Http::get("{$this->baseUrl}/competitions/table.json", [
@@ -48,9 +45,6 @@ class LiveScoreService
             ->toArray();
     }
 
-    /**
-     * Втора лига
-     */
     public function getSecondLeagueStandings(): array
     {
         $response = Http::get("{$this->baseUrl}/competitions/table.json", [
@@ -79,9 +73,6 @@ class LiveScoreService
             ->toArray();
     }
 
-    /**
-     * Унифицирана логика за мапване на отбори
-     */
     protected function mapTeamData(array $item, $localTeams): array
     {
         $translations = [
@@ -103,6 +94,7 @@ class LiveScoreService
             'Septemvri Sofia'             => 'Септември',
             'PFC Dobrudzha Dobrich'       => 'Добруджа',
             'Montana'                     => 'Монтана',
+            'Vihren Sandanski'            => 'Вихрен Сандански',
         ];
 
         $externalId = $item['team']['id'] ?? null;
@@ -111,13 +103,18 @@ class LiveScoreService
 
         $translated = $local->name ?? ($translations[$originalName] ?? $originalName);
 
-        if (in_array($originalName, ['CSKA 1948', 'Vitosha Bistritsa'])) {
+
+        if (in_array($originalName, ['CSKA 1948'])) {
             $translated = 'Бистрица';
         }
 
         $isCska = str_contains(mb_strtolower($translated), 'цска');
 
         $logo = $local->logo ?? ($item['team']['logo'] ?? null);
+
+        if (in_array($originalName, ['Vihren Sandanski', 'Vihren'])) {
+            $logo = asset('images/vihren.png');
+        }
 
         if ($logo && !str_starts_with($logo, 'http')) {
             $logo = asset('storage/' . ltrim($logo, '/'));
