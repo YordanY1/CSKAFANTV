@@ -31,28 +31,30 @@ class LiveScoreService
             return [];
         }
 
-        // Взимаме локалните отбори (тук приемам, че ще добавиш external_id поле в teams таблицата)
         $localTeams = DB::table('teams')
             ->select('id', 'name', 'logo', 'stadium', 'manager', 'external_id')
             ->get()
             ->keyBy('external_id');
 
-        $standings = collect(data_get($response, 'data.stages', []))
+        return collect(data_get($response, 'data.stages', []))
             ->flatMap(
-                fn($stage) => collect($stage['groups'] ?? [])
+                fn($stage) =>
+                collect($stage['groups'] ?? [])
                     ->flatMap(fn($group) => $group['standings'] ?? [])
             )
             ->map(function ($item) use ($localTeams) {
                 $externalId = $item['team']['id'] ?? null;
-
-                // търсим отбор по external_id
                 $local = $externalId ? $localTeams->get($externalId) : null;
 
                 $name = $item['team']['name'] ?? null;
-
-                // специално за ЦСКА
                 if ($name === 'PFC CSKA-Sofia') {
                     $name = 'ЦСКА';
+                }
+
+                $logo = $local->logo ?? ($item['team']['logo'] ?? null);
+
+                if ($logo && !str_starts_with($logo, 'http')) {
+                    $logo = asset('storage/' . ltrim($logo, '/'));
                 }
 
                 return [
@@ -69,7 +71,7 @@ class LiveScoreService
 
                     'team_id'        => $externalId,
                     'name'           => $local->name ?? $name,
-                    'logo'           => $local->logo ?? ($item['team']['logo'] ?? null),
+                    'logo'           => $logo,
                     'stadium'        => $local->stadium ?? ($item['team']['stadium'] ?? null),
                     'manager'        => $local->manager ?? null,
 
@@ -78,7 +80,5 @@ class LiveScoreService
                 ];
             })
             ->toArray();
-
-        return $standings;
     }
 }
