@@ -76,49 +76,59 @@ class LiveScoreService
     protected function mapTeamData(array $item, $localTeams): array
     {
         $translations = [
-            'PFC CSKA-Sofia'              => 'ЦСКА',
-            'CSKA Sofia II'               => 'ЦСКА II',
-            'CSKA 1948'                   => 'ЦСКА 1948',
-            'Vitosha Bistritsa'           => 'Бистрица',
-            'Levski Sofia'                => 'Левски',
-            'Lokomotiv Plovdiv'           => 'Локо Пд',
-            'Botev Plovdiv'               => 'Ботев Пд',
-            'OFC Botev Vratsa'            => 'Ботев Враца',
-            'Ludogorets Razgrad'          => 'Лудогорец',
-            'Cherno More Varna'           => 'Черно море',
-            'Beroe'                       => 'Берое',
-            'PFC Lokomotiv Sofia 1929'    => 'Локо Сф',
-            'PFC Spartak Varna'           => 'Спартак Вн',
-            'FK Arda Kurdzhali'           => 'Арда',
-            'Slavia Sofia'                => 'Славия',
-            'Septemvri Sofia'             => 'Септември',
-            'PFC Dobrudzha Dobrich'       => 'Добруджа',
-            'Montana'                     => 'Монтана',
+            'Dunav Ruse'                  => 'Дунав Русе',
+            'Fratria'                     => 'Фратрия',
+            'Yantra'                      => 'Янтра',
             'Vihren Sandanski'            => 'Вихрен Сандански',
+            'Pirin Blagoevgrad'           => 'Пирин Благоевград',
+            'Lokomotiv Gorna Oryahovitsa' => 'Локомотив Горна Оряховица',
+            'CSKA Sofia II'               => 'ЦСКА II',
+            'Minyor Pernik'               => 'Миньор Перник',
+            'Hebar Pazardzhik'            => 'Хебър Пазарджик',
+            'Chernomorets Burgas'         => 'Черноморец Бургас',
+            'Sevlievo'                    => 'Севлиево',
+            'Ludogorets II'               => 'Лудогорец II',
+            'Spartak Pleven'              => 'Спартак Плевен',
+            'Etar'                        => 'Етър',
+            'Marek'                       => 'Марек',
+            'Sportist Svoge'              => 'Спортист Своге',
+            'Belasitsa Petrich'           => 'Беласица Петрич',
         ];
 
         $externalId = $item['team']['id'] ?? null;
         $local = $externalId ? $localTeams->get($externalId) : null;
         $originalName = $item['team']['name'] ?? null;
 
+
         $translated = $local->name ?? ($translations[$originalName] ?? $originalName);
 
 
-        if (in_array($originalName, ['CSKA 1948'])) {
-            $translated = 'Бистрица';
-        }
+        if (in_array($originalName, ['CSKA Sofia II', 'CSKA 2', 'CSKA II'])) {
+            $translated = 'ЦСКА II';
 
-        $isCska = str_contains(mb_strtolower($translated), 'цска');
 
-        $logo = $local->logo ?? ($item['team']['logo'] ?? null);
+            $cskaRecord = DB::table('teams')
+                ->where('name', 'like', '%ЦСКА%')
+                ->first();
 
-        if (in_array($originalName, ['Vihren Sandanski', 'Vihren'])) {
+            if ($cskaRecord && !empty($cskaRecord->logo)) {
+                $logo = asset('storage/' . ltrim($cskaRecord->logo, '/'));
+            } else {
+                $logo = asset('images/cska.png');
+            }
+        } elseif (in_array($originalName, ['Vihren Sandanski', 'Vihren'])) {
             $logo = asset('images/vihren.png');
+        } elseif ($local && !empty($local->logo)) {
+            $logo = asset('storage/' . ltrim($local->logo, '/'));
+        } else {
+            $logo = $item['team']['logo'] ?? null;
         }
 
         if ($logo && !str_starts_with($logo, 'http')) {
             $logo = asset('storage/' . ltrim($logo, '/'));
         }
+
+        $isCska = str_contains(mb_strtolower($translated), 'цска');
 
         return [
             'rank'           => $item['rank'],
