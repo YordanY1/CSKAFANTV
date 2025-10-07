@@ -47,4 +47,10 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    'livescore' => [
+        'key' => env('LIVESCORE_KEY'),
+        'secret' => env('LIVESCORE_SECRET'),
+    ],
+
+
 ];

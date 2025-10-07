@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Pages;
 
-use App\Models\Standing;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Services\LiveScoreService;
 
 class FullStandingsPage extends Component
 {
@@ -19,15 +19,15 @@ class FullStandingsPage extends Component
     public function mount()
     {
         $this->layoutData = [
-            'title' => 'Класиране – Таблица на отборите | CSKA FAN TV',
-            'description' => 'Виж текущото класиране на отборите: точки, победи, загуби и форма. Подробна таблица със сортиране и търсене.',
-            'robots' => 'index, follow',
-            'canonical' => url('/standings'),
-            'og_title' => 'Класиране на отборите | CSKA FAN TV',
-            'og_description' => 'Актуална таблица с класирането на всички отбори. Проследи битката за върха и анализирай формата на любимия си тим.',
-            'og_image' => asset('images/og-cska.png'),
-            'og_url' => url('/standings'),
-            'og_type' => 'website',
+            'title'       => 'Класиране – Таблица на отборите | CSKA FAN TV',
+            'description' => 'Виж текущото класиране на отборите: точки, победи, загуби и форма.',
+            'robots'      => 'index, follow',
+            'canonical'   => url('/standings'),
+            'og_title'    => 'Класиране на отборите | CSKA FAN TV',
+            'og_description' => 'Актуална таблица с класирането на всички отбори.',
+            'og_image'    => asset('images/og-cska.png'),
+            'og_url'      => url('/standings'),
+            'og_type'     => 'website',
         ];
     }
 
@@ -41,62 +41,43 @@ class FullStandingsPage extends Component
         }
     }
 
-    public function render()
+    public function render(LiveScoreService $service)
     {
-        $all = Standing::with('team')
-            ->get()
-            ->filter(fn($item) => str_contains(strtolower($item->team?->name), strtolower($this->search)));
-
-        $auto = $all->filter(fn($s) => $s->manual_rank === null);
+        $all = collect($service->getStandingsWithTeams(71))
+            ->filter(fn($item) => str_contains(mb_strtolower($item['bg_name']), mb_strtolower($this->search)));
 
         if ($this->sortColumn === 'points') {
-            $auto = $auto->sort(function ($a, $b) {
+            $all = $all->sort(function ($a, $b) {
                 $multiplier = $this->sortDirection === 'asc' ? 1 : -1;
 
-                if ($a->calculated_points !== $b->calculated_points) {
-                    return $multiplier * ($a->calculated_points <=> $b->calculated_points);
+                if ((int)$a['points'] !== (int)$b['points']) {
+                    return $multiplier * ((int)$a['points'] <=> (int)$b['points']);
                 }
 
-                if ($a->goal_difference !== $b->goal_difference) {
-                    return $multiplier * ($a->goal_difference <=> $b->goal_difference);
+                if ((int)$a['goal_diff'] !== (int)$b['goal_diff']) {
+                    return $multiplier * ((int)$a['goal_diff'] <=> (int)$b['goal_diff']);
                 }
 
-                if ($a->goals_scored !== $b->goals_scored) {
-                    return $multiplier * ($a->goals_scored <=> $b->goals_scored);
+                if ((int)$a['goals_scored'] !== (int)$b['goals_scored']) {
+                    return $multiplier * ((int)$a['goals_scored'] <=> (int)$b['goals_scored']);
                 }
 
-                return $multiplier * strcmp(strtolower($a->team?->name), strtolower($b->team?->name));
+                return $multiplier * strcmp(
+                    mb_strtolower($a['bg_name'] ?? $a['name']),
+                    mb_strtolower($b['bg_name'] ?? $b['name'])
+                );
             });
         } else {
-            $auto = $auto->sortBy(function ($item) {
+            $all = $all->sortBy(function ($item) {
                 return match ($this->sortColumn) {
-                    'team' => strtolower($item->team?->name),
-                    'goal_diff' => $item->goal_difference,
-                    'manual_rank' => $item->manual_rank,
-                    default => $item->{$this->sortColumn},
+                    'team'       => mb_strtolower($item['bg_name'] ?? $item['name']),
+                    'goal_diff'  => (int)$item['goal_diff'],
+                    default      => $item[$this->sortColumn] ?? null,
                 };
             }, SORT_REGULAR, $this->sortDirection === 'desc');
         }
 
-        $auto = $auto->values();
-        $manuals = $all->filter(fn($s) => $s->manual_rank !== null);
-
-        $final = collect();
-
-        foreach ($manuals as $m) {
-            $final->put($m->manual_rank - 1, $m);
-        }
-
-        $i = 0;
-        foreach ($auto as $team) {
-            while ($final->has($i)) {
-                $i++;
-            }
-            $final->put($i, $team);
-            $i++;
-        }
-
-        $standings = $final->sortKeys()->values();
+        $standings = $all->values();
 
         return view('livewire.pages.full-standings-page', [
             'standings' => $standings,

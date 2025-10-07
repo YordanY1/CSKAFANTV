@@ -2,52 +2,32 @@
 
 namespace App\Livewire\Components;
 
-use App\Models\Standing;
 use Livewire\Component;
+use App\Services\LiveScoreService;
 
 class LeagueStandings extends Component
 {
-    public function render()
+    public function render(LiveScoreService $service)
     {
-        $all = Standing::with('team')->get();
+        $all = collect($service->getStandingsWithTeams(71));
 
-        $auto = $all->filter(fn($s) => $s->manual_rank === null);
-
-        $sorted = $auto->sort(function ($a, $b) {
-            if ($a->calculated_points !== $b->calculated_points) {
-                return $b->calculated_points <=> $a->calculated_points;
+        $sorted = $all->sort(function ($a, $b) {
+            if ($a['points'] !== $b['points']) {
+                return $b['points'] <=> $a['points'];
             }
 
-            if ($a->goal_difference !== $b->goal_difference) {
-                return $b->goal_difference <=> $a->goal_difference;
+            if ($a['goal_diff'] !== $b['goal_diff']) {
+                return $b['goal_diff'] <=> $a['goal_diff'];
             }
 
-            if ($a->goals_scored !== $b->goals_scored) {
-                return $b->goals_scored <=> $a->goals_scored;
+            if ($a['goals_scored'] !== $b['goals_scored']) {
+                return $b['goals_scored'] <=> $a['goals_scored'];
             }
 
-            return strcmp(strtolower($a->team?->name), strtolower($b->team?->name));
+            return strcmp(mb_strtolower($a['name']), mb_strtolower($b['name']));
         })->values();
 
-        $final = collect();
-        $manuals = $all->filter(fn($s) => $s->manual_rank !== null);
-
-        foreach ($manuals as $m) {
-            $final->put($m->manual_rank - 1, $m);
-        }
-
-        $i = 0;
-        foreach ($sorted as $team) {
-            while ($final->has($i)) {
-                $i++;
-            }
-            $final->put($i, $team);
-            $i++;
-        }
-
-        $final = $final->sortKeys()->values();
-        
-        $standings = $final->take(5);
+        $standings = $sorted->take(5);
 
         return view('livewire.components.league-standings', [
             'standings' => $standings,
