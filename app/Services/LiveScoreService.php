@@ -17,6 +17,9 @@ class LiveScoreService
         $this->secret = config('services.livescore.secret');
     }
 
+    /**
+     * Първа лига
+     */
     public function getStandingsWithTeams(int $competitionId = 71): array
     {
         $response = Http::get("{$this->baseUrl}/competitions/table.json", [
@@ -37,11 +40,17 @@ class LiveScoreService
             ->keyBy('external_id');
 
         return collect(data_get($response, 'data.stages', []))
-            ->flatMap(fn($stage) => collect($stage['groups'] ?? [])->flatMap(fn($group) => $group['standings'] ?? []))
+            ->flatMap(
+                fn($stage) =>
+                collect($stage['groups'] ?? [])->flatMap(fn($group) => $group['standings'] ?? [])
+            )
             ->map(fn($item) => $this->mapTeamData($item, $localTeams))
             ->toArray();
     }
 
+    /**
+     * Втора лига
+     */
     public function getSecondLeagueStandings(): array
     {
         $response = Http::get("{$this->baseUrl}/competitions/table.json", [
@@ -62,31 +71,38 @@ class LiveScoreService
             ->keyBy('external_id');
 
         return collect(data_get($response, 'data.stages', []))
-            ->flatMap(fn($stage) => collect($stage['groups'] ?? [])->flatMap(fn($group) => $group['standings'] ?? []))
+            ->flatMap(
+                fn($stage) =>
+                collect($stage['groups'] ?? [])->flatMap(fn($group) => $group['standings'] ?? [])
+            )
             ->map(fn($item) => $this->mapTeamData($item, $localTeams))
             ->toArray();
     }
 
+    /**
+     * Унифицирана логика за мапване на отбори
+     */
     protected function mapTeamData(array $item, $localTeams): array
     {
         $translations = [
-            'Dunav Ruse'                   => 'Дунав Русе',
-            'Fratria'                      => 'Фратрия',
-            'Yantra'                       => 'Янтра',
-            'Vihren Sandanski'             => 'Вихрен Сандански',
-            'Pirin Blagoevgrad'            => 'Пирин Благоевград',
-            'Lokomotiv Gorna Oryahovitsa'  => 'Локомотив Горна Оряховица',
-            'CSKA Sofia II'                => 'ЦСКА II',
-            'Minyor Pernik'                => 'Миньор Перник',
-            'Hebar Pazardzhik'             => 'Хебър Пазарджик',
-            'Chernomorets Burgas'          => 'Черноморец Бургас',
-            'Sevlievo'                     => 'Севлиево',
-            'Ludogorets II'                => 'Лудогорец II',
-            'Spartak Pleven'               => 'Спартак Плевен',
-            'Etar'                         => 'Етър',
-            'Marek'                        => 'Марек',
-            'Sportist Svoge'               => 'Спортист Своге',
-            'Belasitsa Petrich'            => 'Беласица Петрич',
+            'PFC CSKA-Sofia'              => 'ЦСКА',
+            'CSKA Sofia II'               => 'ЦСКА II',
+            'CSKA 1948'                   => 'ЦСКА 1948',
+            'Vitosha Bistritsa'           => 'Бистрица',
+            'Levski Sofia'                => 'Левски',
+            'Lokomotiv Plovdiv'           => 'Локо Пд',
+            'Botev Plovdiv'               => 'Ботев Пд',
+            'OFC Botev Vratsa'            => 'Ботев Враца',
+            'Ludogorets Razgrad'          => 'Лудогорец',
+            'Cherno More Varna'           => 'Черно море',
+            'Beroe'                       => 'Берое',
+            'PFC Lokomotiv Sofia 1929'    => 'Локо Сф',
+            'PFC Spartak Varna'           => 'Спартак Вн',
+            'FK Arda Kurdzhali'           => 'Арда',
+            'Slavia Sofia'                => 'Славия',
+            'Septemvri Sofia'             => 'Септември',
+            'PFC Dobrudzha Dobrich'       => 'Добруджа',
+            'Montana'                     => 'Монтана',
         ];
 
         $externalId = $item['team']['id'] ?? null;
@@ -95,31 +111,15 @@ class LiveScoreService
 
         $translated = $local->name ?? ($translations[$originalName] ?? $originalName);
 
-        $isCska = str_contains(mb_strtolower($originalName), 'cska')
-            || str_contains(mb_strtolower($translated), 'цска');
-
-        if ($local && !empty($local->logo)) {
-            $logo = $local->logo;
-        } else {
-            $logo = $item['team']['logo'] ?? null;
+        if (in_array($originalName, ['CSKA 1948', 'Vitosha Bistritsa'])) {
+            $translated = 'Бистрица';
         }
 
-        if (in_array($originalName, ['Vihren Sandanski', 'Vihren'])) {
-            $logo = asset('images/vihren.png');
-        }
+        $isCska = str_contains(mb_strtolower($translated), 'цска');
 
-        if ($isCska) {
-            $cskaRecord = DB::table('teams')
-                ->where('name', 'like', '%ЦСКА%')
-                ->first();
+        $logo = $local->logo ?? ($item['team']['logo'] ?? null);
 
-            if ($cskaRecord && !empty($cskaRecord->logo)) {
-                $logo = asset('storage/' . ltrim($cskaRecord->logo, '/'));
-                $translated = $cskaRecord->name;
-            }
-        }
-
-        if ($logo && !str_starts_with($logo, 'http') && !str_starts_with($logo, asset(''))) {
+        if ($logo && !str_starts_with($logo, 'http')) {
             $logo = asset('storage/' . ltrim($logo, '/'));
         }
 
