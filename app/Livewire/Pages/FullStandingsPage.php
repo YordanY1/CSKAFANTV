@@ -11,8 +11,8 @@ class FullStandingsPage extends Component
     use WithPagination;
 
     public $search = '';
-    public $sortColumn = 'points';
-    public $sortDirection = 'desc';
+    public $sortColumn = 'rank'; // 🔹 По подразбиране сортираме по rank (позиция)
+    public $sortDirection = 'asc'; // 🔹 Най-отгоре са първите отбори
     public string $league = 'first'; // 'first' = Първа лига, 'second' = Втора лига
 
     public array $layoutData = [];
@@ -50,49 +50,61 @@ class FullStandingsPage extends Component
 
     public function render(LiveScoreService $service)
     {
-        // Избира API според избраната лига
         $all = $this->league === 'second'
             ? collect($service->getSecondLeagueStandings())
             : collect($service->getStandingsWithTeams(71));
 
-        // Филтриране по търсене
         if (!empty($this->search)) {
             $all = $all->filter(
                 fn($item) =>
                 str_contains(mb_strtolower($item['bg_name']), mb_strtolower($this->search))
             );
         }
-
-        // Сортиране
-        if ($this->sortColumn === 'points') {
-            $all = $all->sort(function ($a, $b) {
-                $multiplier = $this->sortDirection === 'asc' ? 1 : -1;
-
-                if ((int) $a['points'] !== (int) $b['points']) {
-                    return $multiplier * ((int) $a['points'] <=> (int) $b['points']);
-                }
-
-                if ((int) $a['goal_diff'] !== (int) $b['goal_diff']) {
-                    return $multiplier * ((int) $a['goal_diff'] <=> (int) $b['goal_diff']);
-                }
-
-                if ((int) $a['goals_scored'] !== (int) $b['goals_scored']) {
-                    return $multiplier * ((int) $a['goals_scored'] <=> (int) $b['goals_scored']);
-                }
-
-                return $multiplier * strcmp(
-                    mb_strtolower($a['bg_name'] ?? $a['name']),
-                    mb_strtolower($b['bg_name'] ?? $b['name'])
+        
+        switch ($this->sortColumn) {
+            case 'rank':
+                $all = $all->sortBy(
+                    fn($item) => (int) $item['rank'],
+                    SORT_NUMERIC,
+                    $this->sortDirection === 'desc'
                 );
-            });
-        } else {
-            $all = $all->sortBy(function ($item) {
-                return match ($this->sortColumn) {
-                    'team'      => mb_strtolower($item['bg_name'] ?? $item['name']),
-                    'goal_diff' => (int) $item['goal_diff'],
-                    default     => $item[$this->sortColumn] ?? null,
-                };
-            }, SORT_REGULAR, $this->sortDirection === 'desc');
+                break;
+
+            case 'points':
+                $all = $all->sort(function ($a, $b) {
+                    $multiplier = $this->sortDirection === 'asc' ? 1 : -1;
+
+                    if ((int) $a['points'] !== (int) $b['points']) {
+                        return $multiplier * ((int) $a['points'] <=> (int) $b['points']);
+                    }
+
+                    if ((int) $a['goal_diff'] !== (int) $b['goal_diff']) {
+                        return $multiplier * ((int) $a['goal_diff'] <=> (int) $b['goal_diff']);
+                    }
+
+                    if ((int) $a['goals_scored'] !== (int) $b['goals_scored']) {
+                        return $multiplier * ((int) $a['goals_scored'] <=> (int) $b['goals_scored']);
+                    }
+
+                    return $multiplier * strcmp(
+                        mb_strtolower($a['bg_name'] ?? $a['name']),
+                        mb_strtolower($b['bg_name'] ?? $b['name'])
+                    );
+                });
+                break;
+
+            default:
+                $all = $all->sortBy(function ($item) {
+                    return match ($this->sortColumn) {
+                        'team'      => mb_strtolower($item['bg_name'] ?? $item['name']),
+                        'goal_diff' => (int) $item['goal_diff'],
+                        'won'       => (int) $item['won'],
+                        'drawn'     => (int) $item['drawn'],
+                        'lost'      => (int) $item['lost'],
+                        default     => $item[$this->sortColumn] ?? null,
+                    };
+                }, SORT_REGULAR, $this->sortDirection === 'desc');
+                break;
         }
 
         $standings = $all->values();
