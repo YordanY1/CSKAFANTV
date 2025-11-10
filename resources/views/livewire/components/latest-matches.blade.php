@@ -5,26 +5,23 @@
         </h2>
 
         {{-- Tabs --}}
-
         <div class="flex justify-center mb-8 flex-wrap gap-2 sm:gap-4">
             <button wire:click="setFilter('live')"
                 class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition cursor-pointer
-        {{ $filter === 'live' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+                    {{ $filter === 'live' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
                 На живо
             </button>
             <button wire:click="setFilter('upcoming')"
                 class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition cursor-pointer
-        {{ $filter === 'upcoming' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+                    {{ $filter === 'upcoming' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
                 Предстоящи
             </button>
             <button wire:click="setFilter('completed')"
                 class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl text-[13px] sm:text-sm font-medium transition cursor-pointer
-        {{ $filter === 'completed' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+                    {{ $filter === 'completed' ? 'bg-accent text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
                 Приключени
             </button>
         </div>
-
-
 
         {{-- Matches --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -55,8 +52,6 @@
                         </div>
                     </div>
 
-
-
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-center text-accent mb-2">
                             {{ $match->homeTeam->name }} vs {{ $match->awayTeam->name }}
@@ -80,7 +75,6 @@
                                 <span class="text-2xl font-semibold text-gray-400">– : –</span>
                             @endif
 
-
                             <div class="text-center">
                                 <img src="{{ $match->awayTeam->logo_url }}" alt="{{ $match->awayTeam->name }}"
                                     class="w-12 h-12 mx-auto rounded-full shadow">
@@ -88,15 +82,15 @@
                             </div>
                         </div>
 
+                        @php
+                            $matchEndTime = \Carbon\Carbon::parse($match->match_datetime)->addMinutes(
+                                $match->duration ?? 90,
+                            );
+                            $hoursSinceEnd = now()->diffInHours($matchEndTime, false);
+                            $prediction = $predictions->get($match->id);
+                        @endphp
+
                         <div class="flex justify-center items-center gap-4 mt-4">
-                            @php
-                                $matchEndTime = \Carbon\Carbon::parse($match->match_datetime)->addMinutes(
-                                    $match->duration ?? 90,
-                                );
-                                $hoursSinceEnd = now()->diffInHours($matchEndTime, false);
-                            @endphp
-
-
                             @if ($match->is_finished && $hoursSinceEnd >= -48)
                                 <a href="{{ route('match.show', $match) }}" wire:navigate
                                     class="text-red-600 font-bold uppercase hover:underline">
@@ -104,29 +98,30 @@
                                 </a>
                             @endif
 
-                            {{-- Детайли за мача – винаги --}}
+                            @if ($match->is_finished && $prediction && $hoursSinceEnd < -48)
+                                <button x-data
+                                    @click="$dispatch('open-prediction-modal', { matchId: {{ $match->id }}, readonly: true })"
+                                    class="bg-primary text-white px-3 py-1.5 rounded text-sm cursor-pointer">
+                                    Моята прогноза
+                                </button>
+                            @endif
+
+
                             <a href="{{ route('match.show', $match) }}" wire:navigate
                                 class="text-primary font-semibold hover:underline">
                                 Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
                             </a>
 
-
                             @auth
-                                @php
-                                    $prediction = $predictions->get($match->id);
-                                @endphp
-
                                 @if (!$match->is_finished && $match->match_datetime->isFuture())
                                     <button x-data
-                                        @click="$dispatch('open-prediction-modal', { matchId: {{ $match->id }} })"
+                                        @click="$dispatch('open-prediction-modal', { matchId: {{ $match->id }}, readonly: false })"
                                         class="bg-primary text-white px-3 py-1.5 rounded text-sm cursor-pointer">
                                         {{ $prediction ? 'Моята прогноза' : 'Прогнозирай' }}
                                     </button>
                                 @endif
                             @endauth
                         </div>
-
-
                     </div>
                 </div>
             @empty
