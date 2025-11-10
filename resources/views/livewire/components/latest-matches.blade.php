@@ -91,6 +91,7 @@
                         @endphp
 
                         <div class="flex justify-center items-center gap-4 mt-4">
+                            {{-- 1️⃣ До 48ч след края -> Оцени --}}
                             @if ($match->is_finished && $hoursSinceEnd >= -48)
                                 <a href="{{ route('match.show', $match) }}" wire:navigate
                                     class="text-red-600 font-bold uppercase hover:underline">
@@ -105,7 +106,6 @@
                                     Моята прогноза
                                 </button>
                             @endif
-
 
                             <a href="{{ route('match.show', $match) }}" wire:navigate
                                 class="text-primary font-semibold hover:underline">

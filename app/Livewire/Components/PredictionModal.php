@@ -30,7 +30,7 @@ class PredictionModal extends Component
         'open-prediction-modal' => 'openPredictionModal',
     ];
 
-    public function openPredictionModal($matchId)
+    public function openPredictionModal($matchId, $readonly = false)
     {
         $this->resetValidation();
         $this->matchId = $matchId;
@@ -44,12 +44,12 @@ class PredictionModal extends Component
         if ($prediction) {
             $this->homeScore = $prediction->home_score_prediction;
             $this->awayScore = $prediction->away_score_prediction;
-            $this->isReadonly = true;
         } else {
             $this->homeScore = null;
             $this->awayScore = null;
-            $this->isReadonly = false;
         }
+
+        $this->isReadonly = (bool) $readonly;
     }
 
     public function save()
