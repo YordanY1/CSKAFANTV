@@ -95,12 +95,14 @@
                                 Детайли за мача <i class="fas fa-arrow-right ml-1"></i>
                             </a>
 
-                            @if ($match->is_finished && $hoursSinceEnd >= -48)
+                            @if ($match->is_finished && $hoursSinceEnd <= 48)
                                 <a href="{{ route('match.show', $match) }}" wire:navigate
                                     class="text-red-600 font-bold uppercase hover:underline">
                                     ОЦЕНИ ИГРАЧИТЕ <i class="fas fa-star ml-1"></i>
                                 </a>
-                            @elseif ($match->is_finished && $prediction && $hoursSinceEnd < -48)
+                            @endif
+
+                            @if ($match->is_finished && $prediction && $hoursSinceEnd > 48)
                                 <button x-data
                                     @click="$dispatch('open-prediction-modal', { matchId: {{ $match->id }}, readonly: true })"
                                     class="bg-primary text-white px-3 py-1.5 rounded text-sm cursor-pointer">
