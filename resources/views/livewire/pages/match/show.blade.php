@@ -1,4 +1,6 @@
 <div class="max-w-7xl mx-auto px-6 pt-16 pb-12 bg-card rounded-2xl shadow-2xl border border-primary font-primary">
+
+    {{-- HEADER --}}
     <h1 class="text-4xl font-bold text-center text-primary tracking-wide mb-10 relative">
         {{ $match->homeTeam->name }}
         <span class="mx-2 text-accent">vs</span>
@@ -6,8 +8,15 @@
         <div class="h-1 w-24 bg-accent mx-auto mt-4 rounded-full"></div>
     </h1>
 
+    {{-- TIME LOGIC --}}
+    @php
+        $matchEndTime = $match->match_datetime->copy()->addMinutes($match->duration ?? 90);
+        $hoursSinceEnd = $matchEndTime->diffInHours(now(), false);
+        $canRate = $match->is_finished && $hoursSinceEnd <= 48;
+    @endphp
+
     @auth
-        @if ($match->is_finished)
+        @if ($canRate)
             <form wire:submit.prevent="submitPlayerReviews">
         @endif
     @endauth
@@ -39,7 +48,6 @@
             <p class="text-xl font-semibold text-gray-800">{{ $coach->name }}</p>
             <p class="text-sm text-gray-500 mt-1 italic">Старши треньор на ЦСКА</p>
 
-
             @if ($average)
                 <p class="text-sm mt-3 {{ $avgClass }}">
                     Средна оценка досега:
@@ -47,9 +55,8 @@
                 </p>
             @endif
 
-            {{-- Оценяване: само за логнати и след края --}}
             @auth
-                @if ($match->is_finished)
+                @if ($canRate)
                     @if (!isset($existingReviews[$coachId]))
                         <div x-data="{ selectedRating: '' }" class="mt-4">
                             <label class="text-sm text-accent-2 mt-1 block">Оцени треньора:</label>
@@ -67,6 +74,10 @@
                             <strong>{{ $existingReviews[$coachId] }}</strong>
                         </p>
                     @endif
+                @elseif($match->is_finished && $hoursSinceEnd > 48)
+                    <p class="text-xs text-gray-400 italic mt-3">
+                        ⏳ Оценяването за този мач приключи.
+                    </p>
                 @endif
             @endauth
 
@@ -75,11 +86,12 @@
                     Само регистрираните фенове могат да дават оценки. 🎯
                 </p>
             @endguest
-
         </div>
     @endif
 
+    {{-- PLAYERS --}}
     <div class="grid md:grid-cols-2 gap-10 mt-12">
+
         {{-- STARTERS --}}
         <div>
             <h2 class="text-2xl font-semibold text-text mb-5 border-b-2 border-accent pb-2">Стартов състав</h2>
@@ -109,7 +121,6 @@
                                     {{ $line->player->name ?? 'Неизвестен' }}
                                 </div>
 
-
                                 @if ($average)
                                     <p class="text-sm mt-2 {{ $avgClass }}">
                                         Средна оценка досега:
@@ -117,9 +128,8 @@
                                     </p>
                                 @endif
 
-
                                 @auth
-                                    @if ($match->is_finished)
+                                    @if ($canRate)
                                         @if (!isset($existingReviews[$playerId]))
                                             <div x-data="{ selectedRating: '' }">
                                                 <label class="text-sm text-accent-2 mt-1 block">Оцени играча:</label>
@@ -138,16 +148,18 @@
                                                 <strong>{{ $existingReviews[$playerId] }}</strong>
                                             </p>
                                         @endif
+                                    @elseif($match->is_finished && $hoursSinceEnd > 48)
+                                        <p class="text-xs text-gray-400 italic mt-2">
+                                            ⏳ Оценяването приключи.
+                                        </p>
                                     @endif
                                 @endauth
-
 
                                 @guest
                                     <p class="text-xs text-gray-500 mt-3">
                                         Само регистрираните фенове могат да дават оценки. 🎯
                                     </p>
                                 @endguest
-
                             </div>
                         </li>
                     @endif
@@ -188,7 +200,6 @@
                                     <p class="text-xs text-gray-500">Смени: {{ $line->replacesPlayer->name }}</p>
                                 @endif
 
-
                                 @if ($average)
                                     <p class="text-sm mt-2 {{ $avgClass }}">
                                         Средна оценка досега:
@@ -197,7 +208,7 @@
                                 @endif
 
                                 @auth
-                                    @if ($match->is_finished)
+                                    @if ($canRate)
                                         @if (!isset($existingReviews[$playerId]))
                                             <div x-data="{ selectedRating: '' }" class="mt-1">
                                                 <label class="text-sm text-accent-2 block">Оцени играча:</label>
@@ -216,16 +227,18 @@
                                                 <strong>{{ $existingReviews[$playerId] }}</strong>
                                             </p>
                                         @endif
+                                    @elseif($match->is_finished && $hoursSinceEnd > 48)
+                                        <p class="text-xs text-gray-400 italic mt-2">
+                                            ⏳ Оценяването приключи.
+                                        </p>
                                     @endif
                                 @endauth
-
 
                                 @guest
                                     <p class="text-xs text-gray-500 mt-3">
                                         Само регистрираните фенове могат да дават оценки. 🎯
                                     </p>
                                 @endguest
-
                             </div>
                         </li>
                     @endif
@@ -234,8 +247,9 @@
         </div>
     </div>
 
+    {{-- SUBMIT BUTTON --}}
     @auth
-        @if ($match->is_finished)
+        @if ($canRate)
             <div class="text-center mt-6">
                 <button type="submit"
                     class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-accent transition cursor-pointer font-semibold">
@@ -253,6 +267,7 @@
         @endif
     @endauth
 
+    {{-- EXTRA VIDEOS --}}
     @php
         $extraVideos = [
             '🎤 Гласът на ФЕНА' => $match->voice_of_the_fan_embed,
