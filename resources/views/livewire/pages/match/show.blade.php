@@ -56,24 +56,22 @@
             @endif
 
             @auth
-                @if ($canRate)
-                    @if (!isset($existingReviews[$coachId]))
-                        <div x-data="{ selectedRating: '' }" class="mt-4">
-                            <label class="text-sm text-accent-2 mt-1 block">Оцени треньора:</label>
-                            <select x-model="selectedRating" wire:model.defer="ratings.{{ $coachId }}"
-                                class="mt-1 w-full border-gray-300 rounded text-sm">
-                                <option value="">– Избери –</option>
-                                @for ($i = 1; $i <= 10; $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endfor
-                            </select>
-                        </div>
-                    @else
-                        <p class="text-sm text-gray-500 mt-4">
-                            Вече си оценил треньора:
-                            <strong>{{ $existingReviews[$coachId] }}</strong>
-                        </p>
-                    @endif
+                @if (isset($existingReviews[$coachId]))
+                    <p class="text-sm text-gray-500 mt-4">
+                        Вече си оценил треньора:
+                        <strong>{{ $existingReviews[$coachId] }}</strong>
+                    </p>
+                @elseif ($canRate)
+                    <div x-data="{ selectedRating: '' }" class="mt-4">
+                        <label class="text-sm text-accent-2 mt-1 block">Оцени треньора:</label>
+                        <select x-model="selectedRating" wire:model.defer="ratings.{{ $coachId }}"
+                            class="mt-1 w-full border-gray-300 rounded text-sm">
+                            <option value="">– Избери –</option>
+                            @for ($i = 1; $i <= 10; $i++)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                    </div>
                 @elseif($match->is_finished && $hoursSinceEnd > 48)
                     <p class="text-xs text-gray-400 italic mt-3">
                         ⏳ Оценяването за този мач приключи.
@@ -129,25 +127,22 @@
                                 @endif
 
                                 @auth
-                                    @if ($canRate)
-                                        @if (!isset($existingReviews[$playerId]))
-                                            <div x-data="{ selectedRating: '' }">
-                                                <label class="text-sm text-accent-2 mt-1 block">Оцени играча:</label>
-                                                <select x-model="selectedRating"
-                                                    wire:model.defer="ratings.{{ $playerId }}"
-                                                    class="mt-1 w-full border-gray-300 rounded text-sm">
-                                                    <option value="">– Избери –</option>
-                                                    @for ($i = 1; $i <= 10; $i++)
-                                                        <option value="{{ $i }}">{{ $i }}</option>
-                                                    @endfor
-                                                </select>
-                                            </div>
-                                        @else
-                                            <p class="text-sm text-gray-500 mt-1">
-                                                Вече си оценил:
-                                                <strong>{{ $existingReviews[$playerId] }}</strong>
-                                            </p>
-                                        @endif
+                                    @if (isset($existingReviews[$playerId]))
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            Вече си оценил:
+                                            <strong>{{ $existingReviews[$playerId] }}</strong>
+                                        </p>
+                                    @elseif ($canRate)
+                                        <div x-data="{ selectedRating: '' }">
+                                            <label class="text-sm text-accent-2 mt-1 block">Оцени играча:</label>
+                                            <select x-model="selectedRating" wire:model.defer="ratings.{{ $playerId }}"
+                                                class="mt-1 w-full border-gray-300 rounded text-sm">
+                                                <option value="">– Избери –</option>
+                                                @for ($i = 1; $i <= 10; $i++)
+                                                    <option value="{{ $i }}">{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
                                     @elseif($match->is_finished && $hoursSinceEnd > 48)
                                         <p class="text-xs text-gray-400 italic mt-2">
                                             ⏳ Оценяването приключи.
@@ -208,25 +203,22 @@
                                 @endif
 
                                 @auth
-                                    @if ($canRate)
-                                        @if (!isset($existingReviews[$playerId]))
-                                            <div x-data="{ selectedRating: '' }" class="mt-1">
-                                                <label class="text-sm text-accent-2 block">Оцени играча:</label>
-                                                <select x-model="selectedRating"
-                                                    wire:model.defer="ratings.{{ $playerId }}"
-                                                    class="mt-1 w-full border-gray-300 rounded text-sm">
-                                                    <option value="">– Избери –</option>
-                                                    @for ($i = 1; $i <= 10; $i++)
-                                                        <option value="{{ $i }}">{{ $i }}</option>
-                                                    @endfor
-                                                </select>
-                                            </div>
-                                        @else
-                                            <p class="text-sm text-gray-500 mt-1">
-                                                Вече си оценил:
-                                                <strong>{{ $existingReviews[$playerId] }}</strong>
-                                            </p>
-                                        @endif
+                                    @if (isset($existingReviews[$playerId]))
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            Вече си оценил:
+                                            <strong>{{ $existingReviews[$playerId] }}</strong>
+                                        </p>
+                                    @elseif ($canRate)
+                                        <div x-data="{ selectedRating: '' }" class="mt-1">
+                                            <label class="text-sm text-accent-2 block">Оцени играча:</label>
+                                            <select x-model="selectedRating" wire:model.defer="ratings.{{ $playerId }}"
+                                                class="mt-1 w-full border-gray-300 rounded text-sm">
+                                                <option value="">– Избери –</option>
+                                                @for ($i = 1; $i <= 10; $i++)
+                                                    <option value="{{ $i }}">{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
                                     @elseif($match->is_finished && $hoursSinceEnd > 48)
                                         <p class="text-xs text-gray-400 italic mt-2">
                                             ⏳ Оценяването приключи.
@@ -262,7 +254,6 @@
                     {{ session('message') }}
                 </div>
             @endif
-
             </form>
         @endif
     @endauth
