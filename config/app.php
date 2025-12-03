@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'Europe/Sofia',
+    'timezone' => 'UTC',
 
 
     /*
