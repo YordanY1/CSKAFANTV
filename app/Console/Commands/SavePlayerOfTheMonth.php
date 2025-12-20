@@ -15,8 +15,16 @@ class SavePlayerOfTheMonth extends Command
 
     public function handle(): void
     {
-        $monthStart = Carbon::now()->subMonthNoOverflow()->startOfMonth();
-        $monthEnd = Carbon::now()->subMonthNoOverflow()->endOfMonth();
+        $year = now()->year;
+        $month = 12;
+
+        if (MonthlyPlayerAward::where('year', $year)->where('month', $month)->exists()) {
+            $this->warn("⚠️ Player of the Month for December {$year} is already calculated.");
+            return;
+        }
+
+        $monthStart = Carbon::create($year, $month, 1)->startOfMonth();
+        $monthEnd = Carbon::now();
 
         $winner = PlayerReview::select('player_id', DB::raw('AVG(rating) as avg_rating'))
             ->whereBetween('created_at', [$monthStart, $monthEnd])
