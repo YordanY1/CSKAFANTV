@@ -15,8 +15,10 @@ class SavePlayerOfTheMonth extends Command
 
     public function handle(): void
     {
-        $monthStart = Carbon::now()->subMonthNoOverflow()->startOfMonth();
-        $monthEnd = Carbon::now()->subMonthNoOverflow()->endOfMonth();
+        $date = Carbon::create(2025, 12, 1);
+
+        $monthStart = $date->startOfMonth();
+        $monthEnd = $date->endOfMonth();
 
         $winner = PlayerReview::select('player_id', DB::raw('AVG(rating) as avg_rating'))
             ->whereBetween('created_at', [$monthStart, $monthEnd])
@@ -32,13 +34,13 @@ class SavePlayerOfTheMonth extends Command
         }
 
         MonthlyPlayerAward::updateOrCreate(
-            ['month' => $monthStart->month, 'year' => $monthStart->year],
+            ['month' => 12, 'year' => 2025],
             [
                 'player_id' => $winner->player_id,
                 'average_rating' => round($winner->avg_rating, 2),
             ]
         );
 
-        $this->info("✅ Player of the Month for {$monthStart->format('F Y')} saved successfully.");
+        $this->info("✅ Player of the Month for December 2025 saved successfully.");
     }
 }
