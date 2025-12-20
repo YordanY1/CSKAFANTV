@@ -2,11 +2,11 @@
 
 namespace App\Livewire\Components;
 
+use Livewire\Component;
 use App\Models\Player;
 use App\Models\PlayerReview;
-use Carbon\Carbon;
+use App\Models\MonthlyPlayerAward;
 use Illuminate\Support\Facades\DB;
-use Livewire\Component;
 
 class FeaturedPlayers extends Component
 {
@@ -21,6 +21,7 @@ class FeaturedPlayers extends Component
             ->get()
             ->map(function ($item) {
                 $player = Player::find($item->player_id);
+
                 return [
                     'name'     => $player->name,
                     'number'   => $player->number,
@@ -30,36 +31,27 @@ class FeaturedPlayers extends Component
                 ];
             });
 
-        $monthStart = Carbon::now()->subMonthNoOverflow()->startOfMonth();
-        $monthEnd = Carbon::now()->subMonthNoOverflow()->endOfMonth();
-
-        $playerOfMonth = null;
-
-        if (Carbon::now()->greaterThan(Carbon::now()->startOfMonth())) {
-            $playerOfMonth = PlayerReview::select('player_id', DB::raw('AVG(rating) as avg_rating'))
-                ->whereBetween('created_at', [$monthStart, $monthEnd])
-                ->whereHas('player', fn($q) => $q->where('is_coach', false))
-                ->groupBy('player_id')
-                ->havingRaw('COUNT(*) >= 3')
-                ->orderByDesc('avg_rating')
-                ->first();
-        }
-
         $playerOfMonthData = null;
 
-        if ($playerOfMonth) {
-            $player = Player::find($playerOfMonth->player_id);
+        $playerOfMonthAward = MonthlyPlayerAward::with('player')
+            ->where('year', now()->year)
+            ->where('month', 12)
+            ->first();
+
+        if ($playerOfMonthAward && $playerOfMonthAward->player) {
+            $player = $playerOfMonthAward->player;
+
             $playerOfMonthData = [
                 'name'     => $player->name,
                 'number'   => $player->number,
                 'position' => $player->position,
                 'image'    => asset('storage/' . $player->image_path),
-                'avg'      => round($playerOfMonth->avg_rating, 2),
+                'avg'      => $playerOfMonthAward->average_rating,
             ];
         }
 
         return view('livewire.components.featured-players', [
-            'players' => $topPlayers,
+            'players'       => $topPlayers,
             'playerOfMonth' => $playerOfMonthData,
         ]);
     }
