@@ -22,11 +22,14 @@ class SavePlayerOfTheMonth extends Command
 
         $winner = PlayerReview::select('player_id', DB::raw('AVG(rating) as avg_rating'))
             ->whereBetween('created_at', [$monthStart, $monthEnd])
-            ->whereHas('player', fn($q) => $q->where('is_coach', false))
+            ->whereHas('player', function ($q) {
+                $q->where('is_coach', 0);
+            })
             ->groupBy('player_id')
             ->havingRaw('COUNT(*) >= 3')
             ->orderByDesc('avg_rating')
             ->first();
+
 
         if (!$winner) {
             $this->warn("⚠️ No player qualified for Player of the Month for {$monthStart->format('F Y')}.");
