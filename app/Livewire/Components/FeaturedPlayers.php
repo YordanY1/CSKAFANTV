@@ -13,14 +13,16 @@ class FeaturedPlayers extends Component
     public function render()
     {
 
-        $topPlayers = PlayerReview::select('player_id', DB::raw('AVG(rating) as avg_rating'))
+        $topPlayers = PlayerReview::with('player')
+            ->select('player_id', DB::raw('AVG(rating) as avg_rating'))
             ->whereHas('player', fn($q) => $q->where('is_coach', false))
             ->groupBy('player_id')
             ->orderByDesc('avg_rating')
             ->take(4)
             ->get()
+            ->filter(fn($item) => $item->player) 
             ->map(function ($item) {
-                $player = Player::find($item->player_id);
+                $player = $item->player;
 
                 return [
                     'name'     => $player->name,
@@ -30,6 +32,7 @@ class FeaturedPlayers extends Component
                     'avg'      => round($item->avg_rating, 2),
                 ];
             });
+
 
         $playerOfMonthData = null;
 
