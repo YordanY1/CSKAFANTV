@@ -15,35 +15,11 @@ class LeagueStandings extends Component
     public function mount(LiveScoreService $service): void
     {
         $first = collect($service->getStandingsWithTeams(71))
-            ->sort(function ($a, $b) {
-                if ($a['points'] !== $b['points']) {
-                    return $b['points'] <=> $a['points'];
-                }
-                if ($a['goal_diff'] !== $b['goal_diff']) {
-                    return $b['goal_diff'] <=> $a['goal_diff'];
-                }
-                if ($a['goals_scored'] !== $b['goals_scored']) {
-                    return $b['goals_scored'] <=> $a['goals_scored'];
-                }
-                return strcmp(mb_strtolower($a['name']), mb_strtolower($b['name']));
-            })
             ->values()
             ->take(5)
             ->toArray();
 
         $second = collect($service->getSecondLeagueStandings())
-            ->sort(function ($a, $b) {
-                if ($a['points'] !== $b['points']) {
-                    return $b['points'] <=> $a['points'];
-                }
-                if ($a['goal_diff'] !== $b['goal_diff']) {
-                    return $b['goal_diff'] <=> $a['goal_diff'];
-                }
-                if ($a['goals_scored'] !== $b['goals_scored']) {
-                    return $b['goals_scored'] <=> $a['goals_scored'];
-                }
-                return strcmp(mb_strtolower($a['name']), mb_strtolower($b['name']));
-            })
             ->values()
             ->take(5)
             ->toArray();
