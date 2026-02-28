@@ -15,7 +15,7 @@ class SavePlayerOfTheMonth extends Command
 
     public function handle(): int
     {
-        $targetDate = now()->subMonth();
+        $targetDate = Carbon::now('Europe/Sofia')->subMonth();
 
         $year = $targetDate->year;
         $month = $targetDate->month;
