@@ -3,7 +3,6 @@
 namespace App\Livewire\Components;
 
 use Livewire\Component;
-use App\Models\Player;
 use App\Models\PlayerReview;
 use App\Models\MonthlyPlayerAward;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +11,6 @@ class FeaturedPlayers extends Component
 {
     public function render()
     {
-
         $topPlayers = PlayerReview::with('player')
             ->select('player_id', DB::raw('AVG(rating) as avg_rating'))
             ->whereHas('player', fn($q) => $q->where('is_coach', false))
@@ -20,7 +18,7 @@ class FeaturedPlayers extends Component
             ->orderByDesc('avg_rating')
             ->take(4)
             ->get()
-            ->filter(fn($item) => $item->player) 
+            ->filter(fn($item) => $item->player)
             ->map(function ($item) {
                 $player = $item->player;
 
@@ -33,12 +31,11 @@ class FeaturedPlayers extends Component
                 ];
             });
 
-
         $playerOfMonthData = null;
 
         $playerOfMonthAward = MonthlyPlayerAward::with('player')
-            ->where('year', now()->year)
-            ->where('month', 12)
+            ->orderByDesc('year')
+            ->orderByDesc('month')
             ->first();
 
         if ($playerOfMonthAward && $playerOfMonthAward->player) {
