@@ -11,42 +11,55 @@ use Carbon\Carbon;
 class SavePlayerOfTheMonth extends Command
 {
     protected $signature = 'player:save-monthly-award';
-    protected $description = 'Calculate and store player of the month';
+    protected $description = 'Calculate and store Player of the Month for the previous month';
 
-    public function handle(): void
+    public function handle(): int
     {
-        $year = now()->year;
-        $month = 12;
+        $targetDate = now()->subMonth();
 
-        if (MonthlyPlayerAward::where('year', $year)->where('month', $month)->exists()) {
-            $this->warn("⚠️ Player of the Month for December {$year} is already calculated.");
-            return;
+        $year = $targetDate->year;
+        $month = $targetDate->month;
+
+        if (MonthlyPlayerAward::where('year', $year)
+            ->where('month', $month)
+            ->exists()
+        ) {
+            $this->warn("⚠️ Player of the Month for {$targetDate->format('F Y')} is already calculated.");
+            return Command::SUCCESS;
         }
 
-        $monthStart = Carbon::create($year, $month, 1)->startOfMonth();
-        $monthEnd = Carbon::now();
+        $monthStart = $targetDate->copy()->startOfMonth();
+        $monthEnd = $targetDate->copy()->endOfMonth();
 
-        $winner = PlayerReview::select('player_id', DB::raw('AVG(rating) as avg_rating'))
+        $winner = PlayerReview::select(
+            'player_id',
+            DB::raw('AVG(rating) as avg_rating'),
+            DB::raw('COUNT(*) as reviews_count')
+        )
             ->whereBetween('created_at', [$monthStart, $monthEnd])
-            ->whereHas('player', fn($q) => $q->where('is_coach', false))
+            ->whereHas('player', function ($query) {
+                $query->where('is_coach', false);
+            })
             ->groupBy('player_id')
             ->havingRaw('COUNT(*) >= 3')
             ->orderByDesc('avg_rating')
+            ->orderByDesc('reviews_count')
             ->first();
 
         if (!$winner) {
-            $this->warn("⚠️ No player qualified for Player of the Month for {$monthStart->format('F Y')}.");
-            return;
+            $this->warn("⚠️ No player qualified for {$targetDate->format('F Y')}.");
+            return Command::SUCCESS;
         }
 
-        MonthlyPlayerAward::updateOrCreate(
-            ['month' => $monthStart->month, 'year' => $monthStart->year],
-            [
-                'player_id' => $winner->player_id,
-                'average_rating' => round($winner->avg_rating, 2),
-            ]
-        );
+        MonthlyPlayerAward::create([
+            'player_id'      => $winner->player_id,
+            'month'          => $month,
+            'year'           => $year,
+            'average_rating' => round($winner->avg_rating, 2),
+        ]);
 
-        $this->info("✅ Player of the Month for {$monthStart->format('F Y')} saved successfully.");
+        $this->info("✅ Player of the Month for {$targetDate->format('F Y')} saved successfully.");
+
+        return Command::SUCCESS;
     }
 }
