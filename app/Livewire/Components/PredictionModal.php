@@ -19,15 +19,10 @@ class PredictionModal extends Component
     protected function rules()
     {
         return [
-            'homeScore' => 'required|integer|min:0|max:20',
-            'awayScore' => 'required|integer|min:0|max:20',
+            'homeScore' => 'nullable|integer|min:0|max:20',
+            'awayScore' => 'nullable|integer|min:0|max:20',
         ];
     }
-
-    protected $messages = [
-        'homeScore.required' => 'Попълни резултата за домакина.',
-        'awayScore.required' => 'Попълни резултата за госта.',
-    ];
 
     protected $listeners = [
         'open-prediction-modal' => 'openPredictionModal',
@@ -36,41 +31,39 @@ class PredictionModal extends Component
     public function openPredictionModal($matchId, $readonly = false)
     {
         $this->resetValidation();
-        $this->reset(['homeScore', 'awayScore']);
-
         $this->matchId = $matchId;
         $this->match = FootballMatch::with(['homeTeam', 'awayTeam'])->findOrFail($matchId);
         $this->isOpen = true;
 
-        $prediction = Prediction::where('user_id', Auth::id())
+        $prediction = Prediction::where('user_id', auth()->id())
             ->where('football_match_id', $matchId)
             ->first();
 
         if ($prediction) {
             $this->homeScore = $prediction->home_score_prediction;
             $this->awayScore = $prediction->away_score_prediction;
-            $this->isReadonly = true;
         } else {
-            $this->isReadonly = false;
+            $this->homeScore = null;
+            $this->awayScore = null;
         }
+
+        $this->isReadonly = (bool) $readonly;
     }
 
     public function save()
     {
-        if ($this->isReadonly) {
+        $this->validate();
+
+        if ($this->homeScore === '' || $this->awayScore === '') {
+            $this->addError('empty', 'Попълни резултат и за двата отбора.');
             return;
         }
 
-        $this->validate();
-
-        $existingPrediction = Prediction::where('user_id', Auth::id())
+        $alreadyExists = Prediction::where('user_id', Auth::id())
             ->where('football_match_id', $this->matchId)
-            ->first();
+            ->exists();
 
-        if ($existingPrediction) {
-            $this->homeScore = $existingPrediction->home_score_prediction;
-            $this->awayScore = $existingPrediction->away_score_prediction;
-            $this->isReadonly = true;
+        if ($alreadyExists) {
             $this->addError('empty', 'Вече си дал прогноза за този мач.');
             return;
         }
@@ -81,8 +74,6 @@ class PredictionModal extends Component
             'home_score_prediction' => (int) $this->homeScore,
             'away_score_prediction' => (int) $this->awayScore,
         ]);
-
-        $this->isReadonly = true;
 
         $this->dispatch('prediction-saved', matchId: $this->matchId);
         session()->flash('success', 'Прогнозата е записана успешно!');
