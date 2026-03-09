@@ -36,6 +36,7 @@ class PredictionModal extends Component
     public function openPredictionModal($matchId, $readonly = false)
     {
         $this->resetValidation();
+        $this->reset(['homeScore', 'awayScore']);
 
         $this->matchId = $matchId;
         $this->match = FootballMatch::with(['homeTeam', 'awayTeam'])->findOrFail($matchId);
@@ -48,12 +49,10 @@ class PredictionModal extends Component
         if ($prediction) {
             $this->homeScore = $prediction->home_score_prediction;
             $this->awayScore = $prediction->away_score_prediction;
+            $this->isReadonly = true;
         } else {
-            $this->homeScore = null;
-            $this->awayScore = null;
+            $this->isReadonly = false;
         }
-
-        $this->isReadonly = $readonly || (bool) $prediction;
     }
 
     public function save()
@@ -69,8 +68,10 @@ class PredictionModal extends Component
             ->first();
 
         if ($existingPrediction) {
-            $this->addError('empty', 'Вече си дал прогноза за този мач.');
+            $this->homeScore = $existingPrediction->home_score_prediction;
+            $this->awayScore = $existingPrediction->away_score_prediction;
             $this->isReadonly = true;
+            $this->addError('empty', 'Вече си дал прогноза за този мач.');
             return;
         }
 
