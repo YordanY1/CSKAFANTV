@@ -74,14 +74,14 @@ class DirectRedCardTest extends TestCase
         $this->assertFalse($card2->has_direct_red);
     }
 
-    public function test_total_reds_counts_direct_red_note_as_one(): void
+    public function test_total_reds_does_not_count_note(): void
     {
         $card = $this->createPlayerWithCard([
-            'direct_red_note' => 'Директен червен',
+            'direct_red_note' => 'Някаква бележка',
             'second_yellow_reds' => 2,
         ]);
 
-        $this->assertEquals(3, $card->total_reds);
+        $this->assertEquals(2, $card->total_reds);
     }
 
     public function test_total_reds_without_direct_red_note(): void
