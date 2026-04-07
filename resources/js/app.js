@@ -554,6 +554,9 @@ window.tacticBoard = function () {
             });
 
             // 3) Draw player groups upright with rounded images + name below
+            // Scale up players for vertical export
+            const vertScale = 1.5;
+
             const drawGroupUpright = (group) => {
                 const gx = group.x();
                 const gy = group.y();
@@ -578,7 +581,7 @@ window.tacticBoard = function () {
                 if (imgChild) {
                     const img = imgChild.image();
                     if (!img) return;
-                    const size = imgChild.width() * pr;
+                    const size = imgChild.width() * pr * vertScale;
                     // Center of the group in horizontal coords
                     const centerHx = gx + imgChild.x() + imgChild.width() / 2;
                     const centerHy = gy + imgChild.y() + imgChild.height() / 2;
@@ -595,11 +598,12 @@ window.tacticBoard = function () {
 
                     // Draw name below the image
                     if (textChild) {
+                        const fontSize = textChild.fontSize() * pr * vertScale;
                         ctx.save();
-                        ctx.font = `${textChild.fontSize() * pr}px ${textChild.fontFamily()}`;
+                        ctx.font = `${fontSize}px ${textChild.fontFamily()}`;
                         ctx.fillStyle = textChild.fill();
                         ctx.textAlign = "center";
-                        ctx.fillText(textChild.text(), cx, cy + size / 2 + textChild.fontSize() * pr + 4);
+                        ctx.fillText(textChild.text(), cx, cy + size / 2 + fontSize + 4);
                         ctx.restore();
                     }
                 }
@@ -608,7 +612,7 @@ window.tacticBoard = function () {
                     const centerHx = gx + circleChild.x();
                     const centerHy = gy + circleChild.y();
                     const { x: cx, y: cy } = mapPos(centerHx, centerHy);
-                    const r = circleChild.radius() * pr;
+                    const r = circleChild.radius() * pr * vertScale;
 
                     ctx.save();
                     ctx.beginPath();
@@ -625,7 +629,7 @@ window.tacticBoard = function () {
                     // Draw the number inside the circle
                     if (textChild) {
                         ctx.save();
-                        ctx.font = `${textChild.fontSize() * pr}px ${textChild.fontFamily()}`;
+                        ctx.font = `${textChild.fontSize() * pr * vertScale}px ${textChild.fontFamily()}`;
                         ctx.fillStyle = textChild.fill();
                         ctx.textAlign = "center";
                         ctx.textBaseline = "middle";
