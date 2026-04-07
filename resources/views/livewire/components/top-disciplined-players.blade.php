@@ -21,7 +21,7 @@
                             <span class="text-gray-800 font-medium">
                                 {{ $card->player->name }}
                                 @if ($card->has_direct_red)
-                                    <span class="text-red-600" title="Директен червен картон">★</span>
+                                    <span class="text-red-600" title="Бележки за жълти картони">★</span>
                                 @endif
                             </span>
                             <span class="text-sm font-bold">
@@ -41,7 +41,7 @@
             <div class="flex items-center justify-between">
                 <div><span class="text-yellow-500">🟨</span> Жълт картон</div>
                 <div><span class="text-red-600">🟥</span> Червен картон</div>
-                <div><span class="text-red-600">★</span> Директен червен</div>
+                <div><span class="text-red-600">★</span> Жълти картони</div>
             </div>
         </div>
     </div>

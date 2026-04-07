@@ -15,8 +15,6 @@ window.tacticBoard = function () {
         arrowStart: null,
         ballGroup: null,
         isFullscreen: false,
-        orientation: "horizontal",
-        fieldImageObj: null,
 
         get selectedPlayer() {
             return (
@@ -29,17 +27,12 @@ window.tacticBoard = function () {
             this.selectedPlayerId = null;
         },
 
-        getBoardDimensions() {
-            if (this.orientation === "vertical") {
-                return { width: 596, height: 1104 };
-            }
-            return { width: 1104, height: 596 };
-        },
-
         init() {
             if (this.initialized) return;
             this.initialized = true;
-            const { width, height } = this.getBoardDimensions();
+            const container = document.getElementById("tactic-stage");
+            const width = container.clientWidth;
+            const height = container.clientHeight;
 
             this.stage = new Konva.Stage({
                 container: "tactic-stage",
@@ -50,11 +43,21 @@ window.tacticBoard = function () {
             this.layer = new Konva.Layer();
             this.stage.add(this.layer);
 
-            this.fieldImageObj = new Image();
-            this.fieldImageObj.src = "/images/field.jpg";
+            const imageObj = new Image();
+            imageObj.src = "/images/field.jpg";
 
-            this.fieldImageObj.onload = () => {
-                this.drawBackground();
+            imageObj.onload = () => {
+                const bg = new Konva.Image({
+                    x: 0,
+                    y: 0,
+                    image: imageObj,
+                    width,
+                    height,
+                });
+
+                this.layer.add(bg);
+                bg.moveToBottom();
+                this.layer.draw();
             };
 
             fetch("/api/players")
@@ -70,93 +73,6 @@ window.tacticBoard = function () {
             });
 
             this.setupStageEvents();
-        },
-
-        drawBackground() {
-            const oldBg = this.layer.findOne(".fieldBackground");
-            if (oldBg) oldBg.destroy();
-
-            const { width, height } = this.getBoardDimensions();
-
-            if (this.orientation === "vertical") {
-                const bg = new Konva.Image({
-                    image: this.fieldImageObj,
-                    x: width,
-                    y: 0,
-                    width: height,
-                    height: width,
-                    rotation: 90,
-                    name: "fieldBackground",
-                });
-                this.layer.add(bg);
-            } else {
-                const bg = new Konva.Image({
-                    x: 0,
-                    y: 0,
-                    image: this.fieldImageObj,
-                    width,
-                    height,
-                    name: "fieldBackground",
-                });
-                this.layer.add(bg);
-            }
-
-            const bgNode = this.layer.findOne(".fieldBackground");
-            if (bgNode) bgNode.moveToBottom();
-            this.layer.draw();
-        },
-
-        switchOrientation() {
-            const oldDim = this.getBoardDimensions();
-
-            this.orientation =
-                this.orientation === "horizontal" ? "vertical" : "horizontal";
-
-            const newDim = this.getBoardDimensions();
-
-            this.stage.width(newDim.width);
-            this.stage.height(newDim.height);
-
-            this.drawBackground();
-
-            // Remap player positions proportionally
-            this.playerGroups.forEach((group) => {
-                const oldX = group.x();
-                const oldY = group.y();
-                const newX = (oldX / oldDim.width) * newDim.width;
-                const newY = (oldY / oldDim.height) * newDim.height;
-                group.x(newX);
-                group.y(newY);
-            });
-
-            if (this.ballGroup) {
-                const oldX = this.ballGroup.x();
-                const oldY = this.ballGroup.y();
-                this.ballGroup.x(
-                    (oldX / oldDim.width) * newDim.width
-                );
-                this.ballGroup.y(
-                    (oldY / oldDim.height) * newDim.height
-                );
-            }
-
-            // Remap drawings and arrows
-            this.layer.getChildren().forEach((child) => {
-                if (child.name() !== "drawing") return;
-                if (child instanceof Konva.Line || child instanceof Konva.Arrow) {
-                    const points = child.points();
-                    const newPoints = [];
-                    for (let i = 0; i < points.length; i += 2) {
-                        newPoints.push((points[i] / oldDim.width) * newDim.width);
-                        newPoints.push(
-                            (points[i + 1] / oldDim.height) * newDim.height
-                        );
-                    }
-                    child.points(newPoints);
-                }
-            });
-
-            this.layer.draw();
         },
 
         setupStageEvents() {
@@ -257,7 +173,6 @@ window.tacticBoard = function () {
             }
 
             this.layer.getChildren().each((child) => {
-                if (child.name() === "fieldBackground") return;
                 if (!(child instanceof Konva.Image)) child.destroy();
             });
             this.layer.draw();
@@ -460,7 +375,15 @@ window.tacticBoard = function () {
             this.stage.width(width);
             this.stage.height(height);
 
-            this.drawBackground();
+            const bg = this.layer.findOne(
+                (node) => node instanceof Konva.Image
+            );
+            if (bg) {
+                bg.width(width);
+                bg.height(height);
+            }
+
+            this.layer.draw();
         },
 
         toggleFullscreen() {
@@ -485,7 +408,8 @@ window.tacticBoard = function () {
                 });
             }
         },
-        downloadBoard() {
+
+        downloadBoard(mode) {
             const logoImg = new Image();
             logoImg.src = "/images/logo/logo.jpg";
 
@@ -522,20 +446,236 @@ window.tacticBoard = function () {
                 this.layer.draw();
 
                 setTimeout(() => {
-                    const dataURL = this.stage.toDataURL({ pixelRatio: 2 });
+                    if (mode === "vertical") {
+                        this._downloadVertical(logo, label, deleteButtons, logoImg);
+                    } else {
+                        const dataURL = this.stage.toDataURL({ pixelRatio: 2 });
 
-                    deleteButtons.forEach((btn) => btn.show());
+                        deleteButtons.forEach((btn) => btn.show());
+                        logo.destroy();
+                        label.destroy();
+                        this.layer.draw();
 
-                    logo.destroy();
-                    label.destroy();
-                    this.layer.draw();
-
-                    const link = document.createElement("a");
-                    link.download = "tactic-board.png";
-                    link.href = dataURL;
-                    link.click();
+                        const link = document.createElement("a");
+                        link.download = "tactic-board.png";
+                        link.href = dataURL;
+                        link.click();
+                    }
                 }, 150);
             };
+        },
+
+        _downloadVertical(tempLogo, tempLabel, deleteButtons, logoImg) {
+            const pr = 2;
+            const sw = this.stage.width();
+            const sh = this.stage.height();
+            // Vertical canvas: swap width/height
+            const cw = sh * pr;
+            const ch = sw * pr;
+            const canvas = document.createElement("canvas");
+            canvas.width = cw;
+            canvas.height = ch;
+            const ctx = canvas.getContext("2d");
+
+            // 1) Draw field background rotated 90° CW
+            const fieldBg = this.layer.findOne(
+                (node) =>
+                    node instanceof Konva.Image &&
+                    node !== tempLogo
+            );
+            if (fieldBg) {
+                const fieldImg = fieldBg.image();
+                ctx.save();
+                ctx.translate(cw / 2, ch / 2);
+                ctx.rotate(Math.PI / 2);
+                ctx.drawImage(fieldImg, -ch / 2, -cw / 2, ch, cw);
+                ctx.restore();
+            }
+
+            // Helper: convert horizontal (hx, hy) to vertical position
+            // 90° CW rotation: new_x = sh - hy, new_y = hx
+            const mapPos = (hx, hy) => ({
+                x: (sh - hy) * pr,
+                y: hx * pr,
+            });
+
+            // 2) Draw lines and arrows (remapped points)
+            this.layer.getChildren().forEach((child) => {
+                if (child.name() !== "drawing") return;
+                if (
+                    child instanceof Konva.Line ||
+                    child instanceof Konva.Arrow
+                ) {
+                    const pts = child.points();
+                    ctx.save();
+                    ctx.strokeStyle = child.stroke();
+                    ctx.lineWidth = child.strokeWidth() * pr;
+                    ctx.lineCap = "round";
+                    ctx.lineJoin = "round";
+                    ctx.beginPath();
+                    for (let i = 0; i < pts.length; i += 2) {
+                        const { x, y } = mapPos(pts[i], pts[i + 1]);
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
+
+                    // Draw arrowhead for Arrow shapes
+                    if (child instanceof Konva.Arrow && pts.length >= 4) {
+                        const p1 = mapPos(
+                            pts[pts.length - 4],
+                            pts[pts.length - 3]
+                        );
+                        const p2 = mapPos(
+                            pts[pts.length - 2],
+                            pts[pts.length - 1]
+                        );
+                        const angle = Math.atan2(
+                            p2.y - p1.y,
+                            p2.x - p1.x
+                        );
+                        const headLen = child.pointerLength() * pr;
+                        ctx.fillStyle = child.fill() || child.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(p2.x, p2.y);
+                        ctx.lineTo(
+                            p2.x - headLen * Math.cos(angle - Math.PI / 6),
+                            p2.y - headLen * Math.sin(angle - Math.PI / 6)
+                        );
+                        ctx.lineTo(
+                            p2.x - headLen * Math.cos(angle + Math.PI / 6),
+                            p2.y - headLen * Math.sin(angle + Math.PI / 6)
+                        );
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                    ctx.restore();
+                }
+            });
+
+            // 3) Draw player groups upright with rounded images + name below
+            const drawGroupUpright = (group) => {
+                const gx = group.x();
+                const gy = group.y();
+
+                // Find the children by type
+                let imgChild = null;
+                let textChild = null;
+                let circleChild = null;
+                let numberChild = null;
+
+                group.getChildren().forEach((child) => {
+                    if (child instanceof Konva.Text && child.text() === "❌") return;
+                    if (child instanceof Konva.Image) imgChild = child;
+                    else if (child instanceof Konva.Circle) circleChild = child;
+                    else if (child instanceof Konva.Text) {
+                        if (textChild) numberChild = child;
+                        else textChild = child;
+                    }
+                });
+
+                // For image-based players (with photo)
+                if (imgChild) {
+                    const img = imgChild.image();
+                    if (!img) return;
+                    const size = imgChild.width() * pr;
+                    // Center of the group in horizontal coords
+                    const centerHx = gx + imgChild.x() + imgChild.width() / 2;
+                    const centerHy = gy + imgChild.y() + imgChild.height() / 2;
+                    const { x: cx, y: cy } = mapPos(centerHx, centerHy);
+
+                    // Draw rounded player image
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, size / 2, 0, Math.PI * 2);
+                    ctx.closePath();
+                    ctx.clip();
+                    ctx.drawImage(img, cx - size / 2, cy - size / 2, size, size);
+                    ctx.restore();
+
+                    // Draw name below the image
+                    if (textChild) {
+                        ctx.save();
+                        ctx.font = `${textChild.fontSize() * pr}px ${textChild.fontFamily()}`;
+                        ctx.fillStyle = textChild.fill();
+                        ctx.textAlign = "center";
+                        ctx.fillText(textChild.text(), cx, cy + size / 2 + textChild.fontSize() * pr + 4);
+                        ctx.restore();
+                    }
+                }
+                // For circle-based players (no photo, just number)
+                else if (circleChild) {
+                    const centerHx = gx + circleChild.x();
+                    const centerHy = gy + circleChild.y();
+                    const { x: cx, y: cy } = mapPos(centerHx, centerHy);
+                    const r = circleChild.radius() * pr;
+
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                    ctx.fillStyle = circleChild.fill();
+                    ctx.fill();
+                    if (circleChild.stroke()) {
+                        ctx.strokeStyle = circleChild.stroke();
+                        ctx.lineWidth = (circleChild.strokeWidth() || 1) * pr;
+                        ctx.stroke();
+                    }
+                    ctx.restore();
+
+                    // Draw the number inside the circle
+                    if (textChild) {
+                        ctx.save();
+                        ctx.font = `${textChild.fontSize() * pr}px ${textChild.fontFamily()}`;
+                        ctx.fillStyle = textChild.fill();
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText(textChild.text(), cx, cy);
+                        ctx.restore();
+                    }
+                }
+                // For ball group (just an image, no text)
+                else {
+                    group.getChildren().forEach((child) => {
+                        if (child instanceof Konva.Text && child.text() === "❌") return;
+                        if (child instanceof Konva.Image) {
+                            const img = child.image();
+                            if (!img) return;
+                            const w = child.width() * pr;
+                            const h = child.height() * pr;
+                            const hx = gx + child.x() + child.width() / 2;
+                            const hy = gy + child.y() + child.height() / 2;
+                            const { x, y } = mapPos(hx, hy);
+                            ctx.drawImage(img, x - w / 2, y - h / 2, w, h);
+                        }
+                    });
+                }
+            };
+
+            this.playerGroups.forEach((g) => drawGroupUpright(g));
+            if (this.ballGroup) drawGroupUpright(this.ballGroup);
+
+            // 4) Draw logo in top-right corner of the vertical image
+            const logoPad = 16 * pr;
+            const logoSz = 56 * pr;
+            ctx.drawImage(
+                logoImg,
+                cw - logoSz - logoPad,
+                logoPad,
+                logoSz,
+                logoSz
+            );
+
+            // Cleanup temp Konva nodes
+            deleteButtons.forEach((btn) => btn.show());
+            tempLogo.destroy();
+            tempLabel.destroy();
+            this.layer.draw();
+
+            // Download
+            const link = document.createElement("a");
+            link.download = "tactic-board-vertical.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
         },
 
         onPlayerSelected(event) {

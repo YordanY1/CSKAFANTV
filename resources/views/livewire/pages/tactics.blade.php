@@ -62,15 +62,23 @@
                         <span x-text="isFullscreen ? '❌ Изход от цял екран' : '🔳 Голям екран'"></span>
                     </button>
 
-                    <button @click="downloadBoard"
-                        class="border px-3 py-2 rounded text-sm bg-white text-gray-700 hover:bg-gray-50 transition cursor-pointer">
-                        💾 Свали състава
-                    </button>
-
-                    <button @click="switchOrientation"
-                        class="border px-3 py-2 rounded text-sm bg-white text-gray-700 hover:bg-gray-50 transition cursor-pointer">
-                        <span x-text="orientation === 'horizontal' ? '↕️ Вертикална дъска' : '↔️ Хоризонтална дъска'"></span>
-                    </button>
+                    <div class="relative" x-data="{ downloadOpen: false }">
+                        <button @click="downloadOpen = !downloadOpen"
+                            class="border px-3 py-2 rounded text-sm bg-white text-gray-700 hover:bg-gray-50 transition cursor-pointer">
+                            💾 Свали състава ▾
+                        </button>
+                        <div x-show="downloadOpen" @click.away="downloadOpen = false"
+                            class="absolute z-20 mt-1 bg-white border border-gray-200 rounded shadow-lg min-w-[180px]">
+                            <button @click="downloadBoard('horizontal'); downloadOpen = false"
+                                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
+                                ↔️ Хоризонтална
+                            </button>
+                            <button @click="downloadBoard('vertical'); downloadOpen = false"
+                                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
+                                ↕️ Вертикална
+                            </button>
+                        </div>
+                    </div>
 
                 </div>
 
@@ -88,8 +96,7 @@
                 </div>
             </div>
 
-            <div class="relative mx-auto transition-all duration-300"
-                :style="orientation === 'horizontal' ? 'width: 1104px; height: 596px;' : 'width: 596px; height: 1104px;'">
+            <div class="relative mx-auto" style="width: 1104px; height: 596px;">
                 <img src="/images/cska-logo.png" alt="CSKA Emblem"
                     class="absolute top-2 left-2 w-20 h-20 opacity-90 z-10 rounded-full ring-2 ring-white">
                 <div
@@ -97,7 +104,7 @@
                     <img src="/images/logo/logo.jpg" alt="CSKA FAN TV" class="w-20 h-20 object-contain rounded-full" />
                 </div>
                 <div id="tactic-stage" class="border-2 border-gray-300 rounded shadow-lg bg-white relative z-0"
-                    :style="orientation === 'horizontal' ? 'width: 1104px; height: 596px;' : 'width: 596px; height: 1104px;'">
+                    style="width: 1104px; height: 596px;">
                 </div>
             </div>
 

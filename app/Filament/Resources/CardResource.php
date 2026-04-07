@@ -36,8 +36,8 @@ class CardResource extends Resource
                     ->default(0),
 
                 Forms\Components\Textarea::make('direct_red_note')
-                    ->label('Директни червени картони')
-                    ->placeholder('Напр. „Директен червен за грубо влизане срещу Лудогорец (15-и кръг)"')
+                    ->label('Бележки')
+                    ->placeholder('Напр. „3 жълти картона в последните 2 мача"')
                     ->rows(3)
                     ->nullable(),
 
@@ -54,7 +54,7 @@ class CardResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('player.name')->label('Играч')->searchable(),
                 Tables\Columns\TextColumn::make('yellow_cards')->label('ЖК')->sortable(),
-                Tables\Columns\TextColumn::make('direct_red_note')->label('ЧК (директни)')->limit(40)->sortable(),
+                Tables\Columns\TextColumn::make('direct_red_note')->label('Бележки')->limit(40),
                 Tables\Columns\TextColumn::make('second_yellow_reds')->label('ЧК от 2 ЖК')->sortable(),
             ])
             ->filters([
