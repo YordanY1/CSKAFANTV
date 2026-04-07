@@ -15,6 +15,8 @@ window.tacticBoard = function () {
         arrowStart: null,
         ballGroup: null,
         isFullscreen: false,
+        orientation: "horizontal",
+        fieldImageObj: null,
 
         get selectedPlayer() {
             return (
@@ -27,12 +29,17 @@ window.tacticBoard = function () {
             this.selectedPlayerId = null;
         },
 
+        getBoardDimensions() {
+            if (this.orientation === "vertical") {
+                return { width: 596, height: 1104 };
+            }
+            return { width: 1104, height: 596 };
+        },
+
         init() {
             if (this.initialized) return;
             this.initialized = true;
-            const container = document.getElementById("tactic-stage");
-            const width = container.clientWidth;
-            const height = container.clientHeight;
+            const { width, height } = this.getBoardDimensions();
 
             this.stage = new Konva.Stage({
                 container: "tactic-stage",
@@ -43,20 +50,11 @@ window.tacticBoard = function () {
             this.layer = new Konva.Layer();
             this.stage.add(this.layer);
 
-            const imageObj = new Image();
-            imageObj.src = "/images/field.jpg";
+            this.fieldImageObj = new Image();
+            this.fieldImageObj.src = "/images/field.jpg";
 
-            imageObj.onload = () => {
-                const bg = new Konva.Image({
-                    x: 0,
-                    y: 0,
-                    image: imageObj,
-                    width,
-                    height,
-                });
-
-                this.layer.add(bg);
-                this.layer.draw();
+            this.fieldImageObj.onload = () => {
+                this.drawBackground();
             };
 
             fetch("/api/players")
@@ -72,6 +70,93 @@ window.tacticBoard = function () {
             });
 
             this.setupStageEvents();
+        },
+
+        drawBackground() {
+            const oldBg = this.layer.findOne(".fieldBackground");
+            if (oldBg) oldBg.destroy();
+
+            const { width, height } = this.getBoardDimensions();
+
+            if (this.orientation === "vertical") {
+                const bg = new Konva.Image({
+                    image: this.fieldImageObj,
+                    x: width,
+                    y: 0,
+                    width: height,
+                    height: width,
+                    rotation: 90,
+                    name: "fieldBackground",
+                });
+                this.layer.add(bg);
+            } else {
+                const bg = new Konva.Image({
+                    x: 0,
+                    y: 0,
+                    image: this.fieldImageObj,
+                    width,
+                    height,
+                    name: "fieldBackground",
+                });
+                this.layer.add(bg);
+            }
+
+            const bgNode = this.layer.findOne(".fieldBackground");
+            if (bgNode) bgNode.moveToBottom();
+            this.layer.draw();
+        },
+
+        switchOrientation() {
+            const oldDim = this.getBoardDimensions();
+
+            this.orientation =
+                this.orientation === "horizontal" ? "vertical" : "horizontal";
+
+            const newDim = this.getBoardDimensions();
+
+            this.stage.width(newDim.width);
+            this.stage.height(newDim.height);
+
+            this.drawBackground();
+
+            // Remap player positions proportionally
+            this.playerGroups.forEach((group) => {
+                const oldX = group.x();
+                const oldY = group.y();
+                const newX = (oldX / oldDim.width) * newDim.width;
+                const newY = (oldY / oldDim.height) * newDim.height;
+                group.x(newX);
+                group.y(newY);
+            });
+
+            if (this.ballGroup) {
+                const oldX = this.ballGroup.x();
+                const oldY = this.ballGroup.y();
+                this.ballGroup.x(
+                    (oldX / oldDim.width) * newDim.width
+                );
+                this.ballGroup.y(
+                    (oldY / oldDim.height) * newDim.height
+                );
+            }
+
+            // Remap drawings and arrows
+            this.layer.getChildren().forEach((child) => {
+                if (child.name() !== "drawing") return;
+                if (child instanceof Konva.Line || child instanceof Konva.Arrow) {
+                    const points = child.points();
+                    const newPoints = [];
+                    for (let i = 0; i < points.length; i += 2) {
+                        newPoints.push((points[i] / oldDim.width) * newDim.width);
+                        newPoints.push(
+                            (points[i + 1] / oldDim.height) * newDim.height
+                        );
+                    }
+                    child.points(newPoints);
+                }
+            });
+
+            this.layer.draw();
         },
 
         setupStageEvents() {
@@ -172,6 +257,7 @@ window.tacticBoard = function () {
             }
 
             this.layer.getChildren().each((child) => {
+                if (child.name() === "fieldBackground") return;
                 if (!(child instanceof Konva.Image)) child.destroy();
             });
             this.layer.draw();
@@ -242,6 +328,9 @@ window.tacticBoard = function () {
 
                     deleteBtn.on("click", () => {
                         group.destroy();
+                        this.playerGroups = this.playerGroups.filter(
+                            (g) => g !== group
+                        );
                         this.layer.draw();
                     });
 
@@ -288,6 +377,9 @@ window.tacticBoard = function () {
 
                 deleteBtn.on("click", () => {
                     group.destroy();
+                    this.playerGroups = this.playerGroups.filter(
+                        (g) => g !== group
+                    );
                     this.layer.draw();
                 });
 
@@ -368,15 +460,7 @@ window.tacticBoard = function () {
             this.stage.width(width);
             this.stage.height(height);
 
-            const bg = this.layer.findOne(
-                (node) => node instanceof Konva.Image
-            );
-            if (bg) {
-                bg.width(width);
-                bg.height(height);
-            }
-
-            this.layer.draw();
+            this.drawBackground();
         },
 
         toggleFullscreen() {

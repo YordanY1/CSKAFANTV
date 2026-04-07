@@ -67,6 +67,11 @@
                         💾 Свали състава
                     </button>
 
+                    <button @click="switchOrientation"
+                        class="border px-3 py-2 rounded text-sm bg-white text-gray-700 hover:bg-gray-50 transition cursor-pointer">
+                        <span x-text="orientation === 'horizontal' ? '↕️ Вертикална дъска' : '↔️ Хоризонтална дъска'"></span>
+                    </button>
+
                 </div>
 
                 <div>
@@ -83,7 +88,8 @@
                 </div>
             </div>
 
-            <div class="relative mx-auto" style="width: 1104px; height: 596px;">
+            <div class="relative mx-auto transition-all duration-300"
+                :style="orientation === 'horizontal' ? 'width: 1104px; height: 596px;' : 'width: 596px; height: 1104px;'">
                 <img src="/images/cska-logo.png" alt="CSKA Emblem"
                     class="absolute top-2 left-2 w-20 h-20 opacity-90 z-10 rounded-full ring-2 ring-white">
                 <div
@@ -91,7 +97,7 @@
                     <img src="/images/logo/logo.jpg" alt="CSKA FAN TV" class="w-20 h-20 object-contain rounded-full" />
                 </div>
                 <div id="tactic-stage" class="border-2 border-gray-300 rounded shadow-lg bg-white relative z-0"
-                    style="width: 1104px; height: 596px;">
+                    :style="orientation === 'horizontal' ? 'width: 1104px; height: 596px;' : 'width: 596px; height: 1104px;'">
                 </div>
             </div>
 

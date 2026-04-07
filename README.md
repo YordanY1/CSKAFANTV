@@ -1,61 +1,132 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CSKA Fan TV — Football Fan Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A full-stack web application for CSKA Sofia football fans. Features match tracking, score predictions, player ratings, an interactive tactic board, OBS streaming overlays, video library, and community giveaways.
 
-## About Laravel
+**Live at:** [cskafantv.com](https://cskafantv.com)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tech Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Layer | Technology |
+|-------|-----------|
+| Backend | PHP 8.2+, Laravel 12 |
+| Frontend | Livewire, Blade, Tailwind CSS 4 |
+| Admin Panel | Filament 3.3 |
+| Canvas/Graphics | Konva.js (tactic board) |
+| Build Tool | Vite 6 |
+| Database | MySQL (prod), SQLite (dev/test) |
+| Auth | Laravel Sanctum, Socialite (Google OAuth) |
+| External APIs | LiveScore API, YouTube API, Pusher |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Features
 
-## Learning Laravel
+- **Match Center** — upcoming/past matches, live scores, YouTube embeds for 11 content types
+- **Predictions** — users predict match scores, earn points (1pt correct result, +2pts exact score)
+- **Player Ratings** — community-driven match ratings, monthly awards
+- **Tactic Board** — interactive formation builder with drag-and-drop, drawing tools, PNG export
+- **OBS Overlay** — real-time match timer and score overlay for live streaming
+- **Video Library** — categorized YouTube video archive
+- **League Standings** — synced from LiveScore API
+- **Card Tracker** — red/yellow card statistics
+- **Hall of Fame** — top-rated players
+- **Giveaways** — random draw system for community events
+- **Admin Panel** — full CRUD management via Filament at `/admin`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Getting Started
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Prerequisites
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.2+
+- Composer
+- Node.js & npm
+- MySQL (or SQLite for quick local setup)
 
-## Laravel Sponsors
+### Installation
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+# Clone and install dependencies
+git clone <repo-url> && cd football-site
+composer install
+npm install
 
-### Premium Partners
+# Environment setup
+cp .env.example .env
+php artisan key:generate
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Configure database in .env (MySQL or keep SQLite default)
+# DB_CONNECTION=mysql
+# DB_DATABASE=cskafantv
+# DB_USERNAME=root
+# DB_PASSWORD=
 
-## Contributing
+# Run migrations
+php artisan migrate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Link storage for uploads
+php artisan storage:link
+```
 
-## Code of Conduct
+### Development
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+# Start everything (server, queue, logs, vite) concurrently
+composer dev
 
-## Security Vulnerabilities
+# Or run individually:
+php artisan serve        # Laravel dev server
+npm run dev              # Vite dev server with HMR
+php artisan queue:listen # Process queued jobs
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+The app will be available at `http://localhost:8000`.
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+## Key Commands
+
+```bash
+composer test                                    # Run test suite
+./vendor/bin/pint                                # PHP code style fixer
+php artisan predictions:calculate-points         # Score predictions for finished matches
+php artisan generate:sitemap                     # Regenerate sitemap.xml
+php artisan player:save-monthly-award            # Calculate player of the month
+php artisan sync:team-external-ids               # Sync team IDs from LiveScore API
+```
+
+## Environment Variables
+
+Standard Laravel variables plus:
+
+| Variable | Purpose |
+|----------|---------|
+| `GOOGLE_CLIENT_ID` / `SECRET` / `REDIRECT_URI` | Google OAuth login |
+| `LIVESCORE_API_KEY` / `SECRET` | LiveScore standings sync |
+| `YOUTUBE_API_KEY` | YouTube video integration |
+| `RECAPTCHA_SITE_KEY` / `SECRET_KEY` | Contact form protection |
+| `PUSHER_APP_ID` / `KEY` / `SECRET` | Real-time broadcasting |
+
+## Project Structure
+
+```
+app/
+  Livewire/Pages/         # 15 page components
+  Livewire/Components/    # 9 reusable UI components
+  Filament/Resources/     # 10 admin panel resources
+  Models/                 # 16 Eloquent models
+  Services/               # LiveScoreService (external API)
+  Console/Commands/       # Artisan commands
+resources/
+  views/                  # Blade templates
+  js/app.js               # Main JS (tactic board with Konva.js)
+  css/app.css             # Tailwind CSS entry point
+routes/
+  web.php                 # Web routes
+  api.php                 # API routes (/api/players)
+```
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT

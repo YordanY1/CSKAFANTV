@@ -13,8 +13,16 @@
             @foreach ($cards as $card)
                 @if (!empty($card->player?->name))
                     <tr class="border-t hover:bg-gray-50">
-                        <td class="px-4 py-3 font-medium text-gray-800">
-                            {{ $card->player->name }}
+                        <td class="px-4 py-3">
+                            <span class="font-medium text-gray-800">
+                                {{ $card->player->name }}
+                                @if ($card->has_direct_red)
+                                    <span class="text-red-600" title="Директен червен картон">★</span>
+                                @endif
+                            </span>
+                            @if ($card->has_direct_red)
+                                <div class="text-xs text-red-600 mt-1 leading-snug italic">{{ $card->direct_red_note }}</div>
+                            @endif
                         </td>
                         <td class="px-4 py-3 font-bold text-yellow-600">
                             {{ $card->yellow_cards }}
@@ -26,13 +34,13 @@
                 @endif
             @endforeach
         </tbody>
-
     </table>
 
     <div class="mt-6 border-t pt-4 text-sm text-gray-600 max-w-md mx-auto">
         <div class="flex justify-between items-center">
             <div><span class="text-yellow-500">🟨</span> Жълт картон</div>
             <div><span class="text-red-600">🟥</span> Червен картон</div>
+            <div><span class="text-red-600">★</span> Директен червен</div>
         </div>
     </div>
 </section>

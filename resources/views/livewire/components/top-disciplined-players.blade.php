@@ -16,24 +16,32 @@
         <ul class="space-y-3 mb-6">
             @foreach ($mostCards as $card)
                 @if (!empty($card->player?->name))
-                    <li class="flex items-center justify-between">
-                        <span class="text-gray-800 font-medium">
-                            {{ $card->player->name }}
-                        </span>
-                        <span class="text-sm font-bold">
-                            <span class="text-yellow-500">🟨 {{ $card->yellow_cards }}</span> /
-                            <span class="text-red-600">🟥 {{ $card->total_reds }}</span>
-                        </span>
+                    <li>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-800 font-medium">
+                                {{ $card->player->name }}
+                                @if ($card->has_direct_red)
+                                    <span class="text-red-600" title="Директен червен картон">★</span>
+                                @endif
+                            </span>
+                            <span class="text-sm font-bold">
+                                <span class="text-yellow-500">🟨 {{ $card->yellow_cards }}</span> /
+                                <span class="text-red-600">🟥 {{ $card->total_reds }}</span>
+                            </span>
+                        </div>
+                        @if ($card->has_direct_red)
+                            <div class="text-xs text-red-600 mt-1 leading-snug italic">{{ $card->direct_red_note }}</div>
+                        @endif
                     </li>
                 @endif
             @endforeach
-
         </ul>
 
         <div class="text-xs text-gray-600 border-t pt-4 mt-6">
             <div class="flex items-center justify-between">
                 <div><span class="text-yellow-500">🟨</span> Жълт картон</div>
                 <div><span class="text-red-600">🟥</span> Червен картон</div>
+                <div><span class="text-red-600">★</span> Директен червен</div>
             </div>
         </div>
     </div>
