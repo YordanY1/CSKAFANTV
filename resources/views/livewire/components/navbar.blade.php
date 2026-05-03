@@ -321,11 +321,7 @@
 
                     <div class="space-y-4">
                         <!-- Google -->
-                        <a href="{{ route('auth.google.redirect') }}"
-                            class="inline-flex items-center justify-center w-full gap-2 py-3 px-6 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition shadow-sm">
-                            <i class="fab fa-google text-lg"></i>
-                            Вход с Google
-                        </a>
+                        <x-google-auth-button :url="route('auth.google.redirect')" />
 
                         <div class="text-gray-400 text-sm text-center">или</div>
                         <livewire:auth.register />
@@ -355,11 +351,7 @@
 
                     <div class="space-y-4">
                         <!-- Google Login -->
-                        <a href="{{ route('auth.google.redirect') }}"
-                            class="inline-flex items-center justify-center w-full gap-2 py-3 px-6 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition shadow-sm cursor-pointer">
-                            <i class="fab fa-google text-lg"></i>
-                            Вход с Google
-                        </a>
+                        <x-google-auth-button :url="route('auth.google.redirect')" />
 
                         <div class="text-gray-400 text-sm text-center">или</div>
 

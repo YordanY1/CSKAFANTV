@@ -1,4 +1,5 @@
 import "./bootstrap";
+import "./inapp-browser";
 
 import Konva from "konva";
 
