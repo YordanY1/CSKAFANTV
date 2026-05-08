@@ -19,6 +19,16 @@ class LiveScoreService
 
     public function getStandingsWithTeams(int $competitionId = 71): array
     {
+        return $this->fetchStandings($competitionId);
+    }
+
+    public function getSecondLeagueStandings(): array
+    {
+        return $this->fetchStandings(140);
+    }
+
+    protected function fetchStandings(int $competitionId): array
+    {
         $response = Http::get("{$this->baseUrl}/competitions/table.json", [
             'competition_id' => $competitionId,
             'key'            => $this->key,
@@ -36,41 +46,37 @@ class LiveScoreService
             ->get()
             ->keyBy('external_id');
 
-        return collect(data_get($response, 'data.stages', []))
+        $entries = collect(data_get($response, 'data.stages', []))
             ->flatMap(
                 fn($stage) =>
                 collect($stage['groups'] ?? [])->flatMap(fn($group) => $group['standings'] ?? [])
-            )
-            ->map(fn($item) => $this->mapTeamData($item, $localTeams))
-            ->toArray();
-    }
+            );
 
-    public function getSecondLeagueStandings(): array
-    {
-        $response = Http::get("{$this->baseUrl}/competitions/table.json", [
-            'competition_id' => 140,
-            'key'            => $this->key,
-            'secret'         => $this->secret,
-            'lang'           => 'bg',
-            'include_form'   => 1,
-        ])->json();
+        // First League returns multiple stages (regular season + championship /
+        // 5-8 / relegation playoff groups). Each team appears once per stage,
+        // so dedupe by team id and keep the entry with the most matches played
+        // — that's the live playoff row, not the stale regular-season one.
+        $deduped = $entries
+            ->groupBy(fn($item) => $item['team']['id'] ?? null)
+            ->map(fn($rows) => $rows->sortByDesc(fn($r) => (int) ($r['matches'] ?? 0))->first())
+            ->values();
 
-        if (!data_get($response, 'success')) {
-            return [];
-        }
+        // Playoff groups restart rank at 1 each, so recompute a global rank by
+        // points → goal difference → goals scored.
+        $sorted = $deduped->sort(function ($a, $b) {
+            if ((int) $a['points'] !== (int) $b['points']) {
+                return (int) $b['points'] <=> (int) $a['points'];
+            }
+            if ((int) $a['goal_diff'] !== (int) $b['goal_diff']) {
+                return (int) $b['goal_diff'] <=> (int) $a['goal_diff'];
+            }
+            return (int) $b['goals_scored'] <=> (int) $a['goals_scored'];
+        })->values();
 
-        $localTeams = DB::table('teams')
-            ->select('id', 'name', 'logo', 'external_id', 'stadium', 'manager')
-            ->get()
-            ->keyBy('external_id');
-
-        return collect(data_get($response, 'data.stages', []))
-            ->flatMap(
-                fn($stage) =>
-                collect($stage['groups'] ?? [])->flatMap(fn($group) => $group['standings'] ?? [])
-            )
-            ->map(fn($item) => $this->mapTeamData($item, $localTeams))
-            ->toArray();
+        return $sorted->map(function ($item, $index) use ($localTeams) {
+            $item['rank'] = $index + 1;
+            return $this->mapTeamData($item, $localTeams);
+        })->toArray();
     }
 
     protected function mapTeamData(array $item, $localTeams): array
