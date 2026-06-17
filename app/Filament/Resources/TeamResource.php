@@ -9,15 +9,19 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Forms\Components\FileUpload;
-
 
 class TeamResource extends Resource
 {
     protected static ?string $model = Team::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $navigationLabel = 'Клубове';
+
+    protected static ?string $modelLabel = 'клуб';
+
+    protected static ?string $pluralModelLabel = 'Клубове';
+
     protected static ?string $navigationGroup = 'Футбол';
 
     public static function form(Form $form): Form

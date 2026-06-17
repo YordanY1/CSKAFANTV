@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class FootballMatchResource extends Resource
 {
@@ -21,7 +22,18 @@ class FootballMatchResource extends Resource
 
     protected static ?string $navigationLabel = 'Мачове';
 
+    protected static ?string $modelLabel = 'мач';
+
+    protected static ?string $pluralModelLabel = 'Мачове';
+
     protected static ?string $navigationGroup = 'Футбол';
+
+    public static function getEloquentQuery(): Builder
+    {
+        // В основната секция стоят само мачовете от активния сезон (и напред);
+        // завършилите сезони се намират само в „Архив".
+        return parent::getEloquentQuery()->where('season', '>=', Season::current());
+    }
 
     public static function form(Form $form): Form
     {

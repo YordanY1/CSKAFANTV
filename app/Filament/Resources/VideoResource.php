@@ -15,7 +15,13 @@ class VideoResource extends Resource
     protected static ?string $model = Video::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-video-camera';
+
     protected static ?string $navigationLabel = 'Видеогалерия';
+
+    protected static ?string $modelLabel = 'видео';
+
+    protected static ?string $pluralModelLabel = 'Видеа';
+
     protected static ?string $navigationGroup = 'Медия';
 
     public static function form(Form $form): Form
@@ -53,7 +59,7 @@ class VideoResource extends Resource
 
                 Forms\Components\Hidden::make('category_slug')
                     ->dehydrated()
-                    ->default(fn(Forms\Get $get) => \Str::slug($get('category'))),
+                    ->default(fn (Forms\Get $get) => \Str::slug($get('category'))),
 
                 Forms\Components\RichEditor::make('description')
                     ->label('Описание')
@@ -68,7 +74,7 @@ class VideoResource extends Resource
                         'bulletList',
                         'orderedList',
                         'undo',
-                        'redo'
+                        'redo',
                     ])
                     ->columnSpan('full'),
 

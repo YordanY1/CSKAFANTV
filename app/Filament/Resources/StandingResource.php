@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\StandingResource\Pages;
@@ -10,13 +9,19 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class StandingResource extends Resource
 {
     protected static ?string $model = Standing::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
+
     protected static ?string $navigationLabel = 'Класиране';
+
+    protected static ?string $modelLabel = 'класиране';
+
+    protected static ?string $pluralModelLabel = 'Класиране';
+
     protected static ?string $navigationGroup = 'Футбол';
 
     public static function form(Form $form): Form
@@ -24,7 +29,7 @@ class StandingResource extends Resource
         return $form->schema([
             Forms\Components\Select::make('team_id')
                 ->label('Отбор')
-                ->relationship('team', 'name', fn($query) => $query->orderBy('name'))
+                ->relationship('team', 'name', fn ($query) => $query->orderBy('name'))
                 ->required(),
 
             Forms\Components\TextInput::make('played')->label('Изиграни')->numeric()->default(0)->required(),

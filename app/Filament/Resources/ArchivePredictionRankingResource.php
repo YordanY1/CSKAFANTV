@@ -42,11 +42,12 @@ class ArchivePredictionRankingResource extends Resource
                 MIN(prediction_results.id) as id,
                 users.id as user_id,
                 users.name as user_name,
+                users.email as user_email,
                 football_matches.season as season,
                 SUM(prediction_results.points_awarded) as total_points,
                 COUNT(DISTINCT predictions.football_match_id) as attempts
             ')
-            ->groupBy('users.id', 'users.name', 'football_matches.season');
+            ->groupBy('users.id', 'users.name', 'users.email', 'football_matches.season');
     }
 
     public static function table(Table $table): Table
@@ -55,6 +56,7 @@ class ArchivePredictionRankingResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('season')->label('Сезон')->badge()->sortable(),
                 Tables\Columns\TextColumn::make('user_name')->label('Потребител')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('user_email')->label('Имейл')->searchable()->copyable(),
                 Tables\Columns\TextColumn::make('attempts')->label('Опити')->sortable(),
                 Tables\Columns\TextColumn::make('total_points')->label('Точки')->sortable(),
             ])

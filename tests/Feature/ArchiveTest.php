@@ -190,4 +190,36 @@ class ArchiveTest extends TestCase
             ->assertStatus(200)
             ->assertSee('Няма изиграни мачове');
     }
+
+    public function test_admin_matches_section_excludes_old_seasons(): void
+    {
+        $ids = \App\Filament\Resources\FootballMatchResource::getEloquentQuery()->pluck('id');
+
+        $this->assertTrue($ids->contains($this->matchNew->id));      // active season
+        $this->assertFalse($ids->contains($this->matchOld->id));     // archived
+        $this->assertFalse($ids->contains($this->matchVeryOld->id)); // archived
+    }
+
+    public function test_admin_live_ranking_is_scoped_and_exposes_email(): void
+    {
+        $rows = \App\Filament\Resources\PredictionResultResource::rankingQuery()->get();
+        $names = $rows->pluck('name');
+
+        $this->assertTrue($names->contains('ПрогнозаПетър'));  // current-season predictor
+        $this->assertFalse($names->contains('ПрогнозаИван'));  // archived season only
+
+        $petar = $rows->firstWhere('name', 'ПрогнозаПетър');
+        $this->assertNotEmpty($petar->email);
+    }
+
+    public function test_admin_archive_ranking_exposes_email_and_excludes_active(): void
+    {
+        $rows = \App\Filament\Resources\ArchivePredictionRankingResource::getEloquentQuery()->get();
+
+        $ivan = $rows->firstWhere('user_name', 'ПрогнозаИван');
+        $this->assertNotNull($ivan);
+        $this->assertNotEmpty($ivan->user_email);
+
+        $this->assertNull($rows->firstWhere('user_name', 'ПрогнозаПетър')); // active season excluded
+    }
 }
