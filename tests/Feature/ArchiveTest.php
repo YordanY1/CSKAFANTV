@@ -200,6 +200,14 @@ class ArchiveTest extends TestCase
         $this->assertFalse($ids->contains($this->matchVeryOld->id)); // archived
     }
 
+    public function test_admin_player_ratings_section_excludes_old_seasons(): void
+    {
+        $matchIds = \App\Filament\Resources\PlayerRatingResource::getEloquentQuery()->pluck('match_id');
+
+        $this->assertTrue($matchIds->contains($this->matchNew->id));  // active season review
+        $this->assertFalse($matchIds->contains($this->matchOld->id)); // archived review
+    }
+
     public function test_admin_live_ranking_is_scoped_and_exposes_email(): void
     {
         $rows = \App\Filament\Resources\PredictionResultResource::rankingQuery()->get();

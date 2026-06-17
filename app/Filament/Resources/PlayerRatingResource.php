@@ -2,38 +2,46 @@
 
 namespace App\Filament\Resources;
 
-use App\Models\PlayerReview;
+use App\Filament\Resources\PlayerRatingResource\Pages\ListPlayerRatings;
 use App\Models\FootballMatch;
+use App\Models\PlayerReview;
+use App\Support\Season;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use App\Filament\Resources\PlayerRatingResource\Pages\ListPlayerRatings;
 
 class PlayerRatingResource extends Resource
 {
     protected static ?string $model = PlayerReview::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-star';
+
     protected static ?string $navigationLabel = 'Оценки по мачове';
+
     protected static ?string $pluralModelLabel = 'Оценки на играчи';
+
     protected static ?string $modelLabel = 'Оценка';
+
     protected static ?int $navigationSort = 10;
 
     public static function getEloquentQuery(): Builder
     {
+        // Само оценките от активния сезон; миналите сезони са в „Архив".
         return PlayerReview::query()
+            ->join('football_matches', 'player_reviews.match_id', '=', 'football_matches.id')
+            ->where('football_matches.season', '>=', Season::current())
             ->with(['player'])
             ->selectRaw('
-                MIN(id) as id,
-                player_id,
-                match_id,
-                ROUND(AVG(rating), 2) as average_rating,
+                MIN(player_reviews.id) as id,
+                player_reviews.player_id,
+                player_reviews.match_id,
+                ROUND(AVG(player_reviews.rating), 2) as average_rating,
                 COUNT(*) as total_votes
             ')
-            ->groupBy('player_id', 'match_id');
+            ->groupBy('player_reviews.player_id', 'player_reviews.match_id');
     }
 
     public static function table(Table $table): Table
@@ -50,11 +58,11 @@ class PlayerRatingResource extends Resource
                     ->formatStateUsing(function ($state, $record) {
                         $match = FootballMatch::with(['homeTeam', 'awayTeam'])->find($record->match_id);
 
-                        if (!$match || !$match->homeTeam || !$match->awayTeam) {
+                        if (! $match || ! $match->homeTeam || ! $match->awayTeam) {
                             return 'Непълен мач';
                         }
 
-                        return $match->homeTeam->name . ' vs ' . $match->awayTeam->name . ' (' . $match->match_datetime->format('d.m.Y') . ')';
+                        return $match->homeTeam->name.' vs '.$match->awayTeam->name.' ('.$match->match_datetime->format('d.m.Y').')';
                     }),
 
                 Tables\Columns\TextColumn::make('average_rating')
@@ -65,7 +73,6 @@ class PlayerRatingResource extends Resource
                     ->label('Гласове')
                     ->sortable(),
             ])
-
 
             ->actions([
                 Tables\Actions\DeleteAction::make(),
