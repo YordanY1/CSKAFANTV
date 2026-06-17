@@ -30,6 +30,15 @@ class ArchiveHallOfFameResource extends Resource
 
     protected static ?string $modelLabel = 'играч на месеца';
 
+    public static function getEloquentQuery(): Builder
+    {
+        // Only awards from completed seasons (before the active season starts).
+        [$currentStart] = Season::monthIndexBounds(Season::current());
+
+        return parent::getEloquentQuery()
+            ->whereRaw('(year * 12 + month) < ?', [$currentStart]);
+    }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -47,7 +56,7 @@ class ArchiveHallOfFameResource extends Resource
                 Tables\Filters\SelectFilter::make('season')
                     ->label('Сезон')
                     ->options(fn () => Season::options())
-                    ->default(Season::latest())
+                    ->default(Season::latestArchived())
                     ->query(function (Builder $query, array $data) {
                         if (blank($data['value'])) {
                             return $query;

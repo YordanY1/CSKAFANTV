@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Livewire\Components\UpcomingMatches;
 use App\Models\FootballMatch;
 use App\Models\MonthlyPlayerAward;
 use App\Models\Player;
@@ -11,7 +12,10 @@ use App\Models\Team;
 use App\Models\User;
 use App\Support\Season;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Http;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class ArchiveTest extends TestCase
@@ -20,203 +24,154 @@ class ArchiveTest extends TestCase
 
     private Team $cska;
 
-    private Team $opp2024;
+    private FootballMatch $matchOld;
 
-    private Team $opp2025;
+    private FootballMatch $matchVeryOld;
 
-    private FootballMatch $match2024;
+    private FootballMatch $matchNew;
 
-    private FootballMatch $match2025;
+    private Player $playerOld;
 
-    private FootballMatch $match2025Open;
-
-    private Player $player2024;
-
-    private Player $player2025;
+    private Player $playerNew;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        // Fix "now" to the off-season so the active season is 2026-2027.
+        Carbon::setTestNow(Carbon::parse('2026-06-17 12:00:00'));
+        Http::fake(); // league standings widget must not hit the network
+        config(['services.livescore.key' => 'test', 'services.livescore.secret' => 'test']);
+
         $this->cska = Team::create(['name' => 'ЦСКА София', 'country' => 'BG']);
-        $this->opp2024 = Team::create(['name' => 'Опонент24', 'country' => 'BG']);
-        $this->opp2025 = Team::create(['name' => 'Опонент25', 'country' => 'BG']);
+        $opp = Team::create(['name' => 'Опонент', 'country' => 'BG']);
 
-        // Two finished matches in different seasons + one unfinished current-season match.
-        $this->match2024 = FootballMatch::create([
-            'home_team_id' => $this->cska->id,
-            'away_team_id' => $this->opp2024->id,
-            'match_datetime' => '2024-09-15 18:00:00',
-            'is_finished' => true,
-            'home_score' => 2,
-            'away_score' => 1,
-            'stadium' => 'СтадионС2024',
+        // Archived season (2025-2026): a normal match + a very old one that must be folded in.
+        $this->matchOld = FootballMatch::create([
+            'home_team_id' => $this->cska->id, 'away_team_id' => $opp->id,
+            'match_datetime' => '2025-09-15 18:00:00', 'is_finished' => true,
+            'home_score' => 3, 'away_score' => 0, 'stadium' => 'СтадионСтар',
         ]);
-
-        $this->match2025 = FootballMatch::create([
-            'home_team_id' => $this->cska->id,
-            'away_team_id' => $this->opp2025->id,
-            'match_datetime' => '2025-09-15 18:00:00',
-            'is_finished' => true,
-            'home_score' => 3,
-            'away_score' => 0,
-            'stadium' => 'СтадионС2025',
+        $this->matchVeryOld = FootballMatch::create([
+            'home_team_id' => $this->cska->id, 'away_team_id' => $opp->id,
+            'match_datetime' => '2024-03-01 18:00:00', 'is_finished' => true,
+            'home_score' => 1, 'away_score' => 1, 'stadium' => 'СтадионМногоСтар',
         ]);
 
-        $this->match2025Open = FootballMatch::create([
-            'home_team_id' => $this->cska->id,
-            'away_team_id' => $this->opp2025->id,
-            'match_datetime' => '2026-04-20 18:00:00',
-            'is_finished' => false,
-            'stadium' => 'СтадионОтворен',
+        // Active season (2026-2027): one finished + one upcoming.
+        $this->matchNew = FootballMatch::create([
+            'home_team_id' => $this->cska->id, 'away_team_id' => $opp->id,
+            'match_datetime' => '2026-06-10 18:00:00', 'is_finished' => true,
+            'home_score' => 1, 'away_score' => 0, 'stadium' => 'СтадионНов',
+        ]);
+        FootballMatch::create([
+            'home_team_id' => $this->cska->id, 'away_team_id' => $opp->id,
+            'match_datetime' => '2026-08-20 18:00:00', 'is_finished' => false,
+            'stadium' => 'СтадионПредстоящ',
         ]);
 
-        $this->player2024 = Player::create([
-            'name' => 'Играч_С2024', 'number' => 10, 'position' => 'Midfielder', 'team_id' => $this->cska->id,
-        ]);
-        $this->player2025 = Player::create([
-            'name' => 'Играч_С2025', 'number' => 9, 'position' => 'Forward', 'team_id' => $this->cska->id,
-        ]);
+        $this->playerOld = Player::create(['name' => 'ИгриачСтар', 'number' => 7, 'position' => 'Midfielder', 'team_id' => $this->cska->id, 'is_coach' => false]);
+        $this->playerNew = Player::create(['name' => 'ИгриачНов', 'number' => 9, 'position' => 'Forward', 'team_id' => $this->cska->id, 'is_coach' => false]);
 
         $reviewer = User::factory()->create();
+        PlayerReview::create(['user_id' => $reviewer->id, 'player_id' => $this->playerOld->id, 'match_id' => $this->matchOld->id, 'rating' => 7]);
+        PlayerReview::create(['user_id' => $reviewer->id, 'player_id' => $this->playerNew->id, 'match_id' => $this->matchNew->id, 'rating' => 9]);
 
-        PlayerReview::create([
-            'user_id' => $reviewer->id, 'player_id' => $this->player2024->id,
-            'match_id' => $this->match2024->id, 'rating' => 5,
-        ]);
-        PlayerReview::create([
-            'user_id' => $reviewer->id, 'player_id' => $this->player2025->id,
-            'match_id' => $this->match2025->id, 'rating' => 8,
-        ]);
+        MonthlyPlayerAward::create(['player_id' => $this->playerOld->id, 'month' => 9, 'year' => 2025, 'average_rating' => 8.00]);  // 2025-2026
+        MonthlyPlayerAward::create(['player_id' => $this->playerNew->id, 'month' => 7, 'year' => 2026, 'average_rating' => 9.00]);  // 2026-2027
 
-        // Hall of fame: month 3/2025 belongs to season 2024-2025, month 9/2025 to 2025-2026.
-        MonthlyPlayerAward::create(['player_id' => $this->player2024->id, 'month' => 3, 'year' => 2025, 'average_rating' => 7.00]);
-        MonthlyPlayerAward::create(['player_id' => $this->player2025->id, 'month' => 9, 'year' => 2025, 'average_rating' => 8.50]);
-
-        // Prediction rankings per season.
         $ivan = User::factory()->create(['name' => 'ПрогнозаИван']);
         $petar = User::factory()->create(['name' => 'ПрогнозаПетър']);
-
-        Prediction::create([
-            'user_id' => $ivan->id, 'football_match_id' => $this->match2025->id,
-            'home_score_prediction' => 3, 'away_score_prediction' => 0,
-        ]);
-        Prediction::create([
-            'user_id' => $petar->id, 'football_match_id' => $this->match2024->id,
-            'home_score_prediction' => 2, 'away_score_prediction' => 1,
-        ]);
-
+        Prediction::create(['user_id' => $ivan->id, 'football_match_id' => $this->matchOld->id, 'home_score_prediction' => 3, 'away_score_prediction' => 0]);
+        Prediction::create(['user_id' => $petar->id, 'football_match_id' => $this->matchNew->id, 'home_score_prediction' => 1, 'away_score_prediction' => 0]);
         Artisan::call('predictions:calculate-points');
     }
 
-    public function test_season_helper_derives_labels_correctly(): void
+    protected function tearDown(): void
     {
+        Carbon::setTestNow();
+        parent::tearDown();
+    }
+
+    public function test_season_helper_derives_and_floors_correctly(): void
+    {
+        $this->assertSame('2026-2027', Season::current());
         $this->assertSame('2025-2026', Season::fromDate('2025-09-15'));
-        $this->assertSame('2024-2025', Season::fromDate('2025-06-30'));
-        $this->assertSame('2025-2026', Season::fromDate('2026-05-01'));
-        $this->assertSame('2024-2025', Season::fromYearMonth(2025, 3));
+        $this->assertSame('2025-2026', Season::fromDate('2024-03-01')); // floored
+        $this->assertSame('2026-2027', Season::fromDate('2026-06-10'));
         $this->assertSame('2025-2026', Season::fromYearMonth(2025, 9));
-        $this->assertSame([2025 * 12 + 7, 2026 * 12 + 7], Season::monthIndexBounds('2025-2026'));
-        $this->assertTrue(Season::isValid('2025-2026'));
-        $this->assertFalse(Season::isValid('not-a-season'));
-        $this->assertSame(['2025-2026', '2024-2025'], Season::all());
+        $this->assertSame('2026-2027', Season::fromYearMonth(2026, 7));
+        $this->assertSame([0, 2026 * 12 + 6], Season::monthIndexBounds('2025-2026'));
+        $this->assertSame([2026 * 12 + 6, 2027 * 12 + 6], Season::monthIndexBounds('2026-2027'));
+
+        // Only the completed season is archived; the active season is excluded.
+        $this->assertSame(['2025-2026'], Season::all());
     }
 
-    public function test_match_season_is_auto_filled_and_overridable(): void
+    public function test_match_seasons_are_auto_filled_with_floor(): void
     {
-        $this->assertSame('2024-2025', $this->match2024->season);
-        $this->assertSame('2025-2026', $this->match2025->season);
-        $this->assertSame('2025-2026', $this->match2025Open->season);
-
-        $auto = FootballMatch::create([
-            'home_team_id' => $this->cska->id, 'away_team_id' => $this->opp2024->id,
-            'match_datetime' => '2027-08-01 18:00:00', 'is_finished' => false,
-        ]);
-        $this->assertSame('2027-2028', $auto->season);
-
-        $override = FootballMatch::create([
-            'home_team_id' => $this->cska->id, 'away_team_id' => $this->opp2024->id,
-            'match_datetime' => '2027-08-01 18:00:00', 'is_finished' => false,
-            'season' => '2099-2100',
-        ]);
-        $this->assertSame('2099-2100', $override->fresh()->season);
+        $this->assertSame('2025-2026', $this->matchOld->season);
+        $this->assertSame('2025-2026', $this->matchVeryOld->season); // folded into first season
+        $this->assertSame('2026-2027', $this->matchNew->season);
     }
 
-    public function test_archive_index_lists_seasons(): void
+    public function test_archive_holds_only_the_old_season_data(): void
+    {
+        $this->get('/archive/matches/2025-2026')
+            ->assertStatus(200)
+            ->assertSee('СтадионСтар')
+            ->assertSee('СтадионМногоСтар')
+            ->assertDontSee('СтадионНов');
+
+        $this->get('/archive/player-ratings/2025-2026')
+            ->assertStatus(200)->assertSee('ИгриачСтар')->assertDontSee('ИгриачНов');
+
+        $this->get('/archive/hall-of-fame/2025-2026')
+            ->assertStatus(200)->assertSee('ИгриачСтар')->assertDontSee('ИгриачНов');
+
+        $this->get('/archive/prediction-rankings/2025-2026')
+            ->assertStatus(200)->assertSee('ПрогнозаИван')->assertDontSee('ПрогнозаПетър');
+    }
+
+    public function test_live_pages_show_only_the_active_season(): void
+    {
+        $this->get('/player-ratings')
+            ->assertStatus(200)->assertSee('ИгриачНов')->assertDontSee('ИгриачСтар');
+
+        $this->get('/hall-of-fame')
+            ->assertStatus(200)->assertSee('ИгриачНов')->assertDontSee('ИгриачСтар');
+
+        $this->get('/predictions/rankings')
+            ->assertStatus(200)->assertSee('ПрогнозаПетър')->assertDontSee('ПрогнозаИван');
+
+        Livewire::test(UpcomingMatches::class)
+            ->set('filter', 'completed')
+            ->assertSee('СтадионНов')
+            ->assertDontSee('СтадионСтар')
+            ->assertDontSee('СтадионМногоСтар');
+    }
+
+    public function test_home_page_is_scoped_to_the_active_season(): void
+    {
+        $this->get('/')
+            ->assertStatus(200)
+            ->assertSee('ИгриачНов')
+            ->assertDontSee('ИгриачСтар');
+    }
+
+    public function test_archive_index_lists_only_completed_seasons(): void
     {
         $this->get('/archive')
             ->assertStatus(200)
             ->assertSee('Сезон 2025-2026')
-            ->assertSee('Сезон 2024-2025');
+            ->assertDontSee('Сезон 2026-2027');
     }
 
-    public function test_archive_matches_are_scoped_to_season_and_finished_only(): void
-    {
-        $this->get('/archive/matches/2025-2026')
-            ->assertStatus(200)
-            ->assertSee('СтадионС2025')
-            ->assertDontSee('СтадионС2024')
-            ->assertDontSee('СтадионОтворен'); // unfinished excluded
-
-        $this->get('/archive/matches/2024-2025')
-            ->assertStatus(200)
-            ->assertSee('СтадионС2024')
-            ->assertDontSee('СтадионС2025');
-    }
-
-    public function test_archive_player_ratings_are_scoped_to_season(): void
-    {
-        $this->get('/archive/player-ratings/2025-2026')
-            ->assertStatus(200)
-            ->assertSee('Играч_С2025')
-            ->assertDontSee('Играч_С2024');
-
-        $this->get('/archive/player-ratings/2024-2025')
-            ->assertStatus(200)
-            ->assertSee('Играч_С2024')
-            ->assertDontSee('Играч_С2025');
-    }
-
-    public function test_archive_hall_of_fame_is_scoped_to_season(): void
-    {
-        $this->get('/archive/hall-of-fame/2025-2026')
-            ->assertStatus(200)
-            ->assertSee('Играч_С2025')
-            ->assertDontSee('Играч_С2024');
-
-        $this->get('/archive/hall-of-fame/2024-2025')
-            ->assertStatus(200)
-            ->assertSee('Играч_С2024')
-            ->assertDontSee('Играч_С2025');
-    }
-
-    public function test_archive_prediction_rankings_are_scoped_to_season(): void
-    {
-        $this->get('/archive/prediction-rankings/2025-2026')
-            ->assertStatus(200)
-            ->assertSee('ПрогнозаИван')
-            ->assertDontSee('ПрогнозаПетър');
-
-        $this->get('/archive/prediction-rankings/2024-2025')
-            ->assertStatus(200)
-            ->assertSee('ПрогнозаПетър')
-            ->assertDontSee('ПрогнозаИван');
-    }
-
-    public function test_invalid_season_returns_404_and_empty_season_renders(): void
+    public function test_invalid_season_404_and_empty_season_renders(): void
     {
         $this->get('/archive/matches/not-a-season')->assertStatus(404);
         $this->get('/archive/matches/2030-2031')
             ->assertStatus(200)
             ->assertSee('Няма изиграни мачове');
-    }
-
-    public function test_live_pages_remain_unscoped_and_show_all_seasons(): void
-    {
-        // The existing public pages must be untouched: they still show every season.
-        $this->get('/player-ratings')
-            ->assertStatus(200)
-            ->assertSee('Играч_С2025')
-            ->assertSee('Играч_С2024');
     }
 }
