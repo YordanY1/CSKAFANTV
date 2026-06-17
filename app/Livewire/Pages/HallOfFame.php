@@ -2,8 +2,9 @@
 
 namespace App\Livewire\Pages;
 
-use Livewire\Component;
 use App\Models\MonthlyPlayerAward;
+use App\Support\Season;
+use Livewire\Component;
 
 class HallOfFame extends Component
 {
@@ -26,7 +27,11 @@ class HallOfFame extends Component
 
     public function render()
     {
+        [$startIndex, $endIndex] = Season::monthIndexBounds(Season::current());
+
         $awards = MonthlyPlayerAward::with('player')
+            ->whereRaw('(year * 12 + month) >= ?', [$startIndex])
+            ->whereRaw('(year * 12 + month) < ?', [$endIndex])
             ->orderByDesc('year')
             ->orderByDesc('month')
             ->get();

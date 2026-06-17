@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Pages;
 
-use App\Models\PredictionResult;
+use App\Support\Season;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -30,6 +30,8 @@ class PredictionRankingsPage extends Component
         $rankings = DB::table('prediction_results')
             ->join('predictions', 'prediction_results.prediction_id', '=', 'predictions.id')
             ->join('users', 'predictions.user_id', '=', 'users.id')
+            ->join('football_matches', 'predictions.football_match_id', '=', 'football_matches.id')
+            ->where('football_matches.season', Season::current())
             ->select(
                 'users.id as user_id',
                 'users.name',

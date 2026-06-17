@@ -49,11 +49,12 @@ class FootballMatchResource extends Resource
 
             Forms\Components\Select::make('season')
                 ->label('Сезон')
-                ->options(fn () => Season::options())
+                ->options(fn () => Season::formOptions())
                 ->default(fn () => Season::current())
+                ->required()
                 ->searchable()
                 ->native(false)
-                ->helperText('Ако се остави празно, сезонът се определя автоматично от датата на мача.'),
+                ->helperText('По подразбиране е текущият сезон. Смени само ако мачът е за друг сезон.'),
 
             Forms\Components\TextInput::make('stadium')
                 ->label('Стадион')
@@ -229,11 +230,6 @@ class FootballMatchResource extends Resource
             Tables\Columns\TextColumn::make('away_score')->label('-')->numeric(),
             Tables\Columns\IconColumn::make('is_finished')->label('Приключил')->boolean(),
         ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('season')
-                    ->label('Сезон')
-                    ->options(fn () => Season::options()),
-            ])
             ->defaultSort('match_datetime', 'asc')
             ->actions([
                 Tables\Actions\EditAction::make(),

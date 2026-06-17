@@ -36,6 +36,7 @@ class ArchivePlayerRatingResource extends Resource
             ->join('football_matches', 'player_reviews.match_id', '=', 'football_matches.id')
             ->with('player')
             ->whereNotNull('football_matches.season')
+            ->where('football_matches.season', '<', Season::current())
             ->selectRaw('
                 MIN(player_reviews.id) as id,
                 player_reviews.player_id,
@@ -59,7 +60,7 @@ class ArchivePlayerRatingResource extends Resource
                 Tables\Filters\SelectFilter::make('season')
                     ->label('Сезон')
                     ->options(fn () => Season::options())
-                    ->default(Season::latest())
+                    ->default(Season::latestArchived())
                     ->query(fn (Builder $query, array $data) => filled($data['value'])
                         ? $query->where('football_matches.season', $data['value'])
                         : $query),

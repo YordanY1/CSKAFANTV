@@ -89,7 +89,12 @@
                     </div>
                 </div>
 
-                <!-- Archive Dropdown -->
+                <a href="{{ route('contact') }}" wire:navigate
+                    class="block py-2 px-3 rounded-md transition duration-200 {{ request()->routeIs('contact') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+                    Контакти
+                </a>
+
+                <!-- Archive Dropdown (след Контакти) -->
                 @if (!empty($archiveSeasons))
                     <div class="relative group">
                         <div
@@ -101,7 +106,7 @@
                             </svg>
                         </div>
                         <div
-                            class="absolute left-0 mt-2 bg-white text-primary rounded-md shadow-lg z-50 py-2 w-60 max-h-[28rem] overflow-y-auto invisible opacity-0 group-hover:visible group-hover:opacity-100 transition duration-200">
+                            class="absolute right-0 mt-2 bg-white text-primary rounded-md shadow-lg z-50 py-2 w-60 max-h-[28rem] overflow-y-auto invisible opacity-0 group-hover:visible group-hover:opacity-100 transition duration-200">
                             @foreach ($archiveSeasons as $season)
                                 <div class="px-4 py-1 text-xs font-bold uppercase text-gray-400 tracking-wider">
                                     Сезон {{ $season }}
@@ -123,13 +128,6 @@
                         </div>
                     </div>
                 @endif
-
-
-
-                <a href="{{ route('contact') }}" wire:navigate
-                    class="block py-2 px-3 rounded-md transition duration-200 {{ request()->routeIs('contact') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
-                    Контакти
-                </a>
 
                 @guest
                     <button @click="showLoginDropdown = true"
@@ -280,7 +278,13 @@
             </div>
         </div>
 
-        <!-- Archive Dropdown Mobile -->
+        <a href="{{ route('contact') }}" wire:navigate
+            class="block py-2 px-3 rounded-md transition duration-200
+      {{ request()->routeIs('contact') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
+            Контакти
+        </a>
+
+        <!-- Archive Dropdown Mobile (след Контакти) -->
         @if (!empty($archiveSeasons))
             <div x-data="{ openArchive: false }" class="w-full">
                 <button @click="openArchive = !openArchive"
@@ -313,13 +317,6 @@
                 </div>
             </div>
         @endif
-
-
-        <a href="{{ route('contact') }}" wire:navigate
-            class="block py-2 px-3 rounded-md transition duration-200
-      {{ request()->routeIs('contact') ? 'bg-accent text-white font-bold hover:text-white' : 'hover:text-accent' }}">
-            Контакти
-        </a>
 
         @guest
             <button @click="showLoginDropdown = true"

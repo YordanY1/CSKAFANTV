@@ -9,20 +9,27 @@ use DateTimeInterface;
 /**
  * Central helper for everything "season" related.
  *
- * A Bulgarian football season runs from July of one year to June of the next,
- * so it is labelled "YYYY-YYYY" (e.g. "2025-2026"). This class is the single
- * source of truth used by the front-end archive pages, the navigation menu and
- * the Filament admin resources.
+ * A season is labelled "YYYY-YYYY" and runs from June of one year to May of the
+ * next (START_MONTH). The very first season the club tracks is 2025-2026: any
+ * older data is folded into it, so no earlier season is ever shown. The season
+ * the current date falls into is the "active" one (shown on the live pages);
+ * every completed season before it lives only in the archive.
  */
 class Season
 {
     /**
-     * Calendar month (1-12) on which a new season starts. July = 7.
+     * Calendar month (1-12) on which a new season starts. June = 6, so the
+     * cutover happens during the summer break between campaigns.
      */
-    public const START_MONTH = 7;
+    public const START_MONTH = 6;
 
     /**
-     * Derive the season label from any date/time.
+     * The earliest season the site tracks. Everything older is folded into it.
+     */
+    public const FIRST = '2025-2026';
+
+    /**
+     * Derive the season label from any date/time (floored to FIRST).
      */
     public static function fromDate(DateTimeInterface|string $date): string
     {
@@ -32,17 +39,25 @@ class Season
     }
 
     /**
-     * Derive the season label from a year + month pair (used for monthly awards).
+     * Derive the season label from a year + month pair (floored to FIRST).
      */
     public static function fromYearMonth(int $year, int $month): string
     {
         $startYear = $month >= self::START_MONTH ? $year : $year - 1;
 
-        return $startYear.'-'.($startYear + 1);
+        return self::floor($startYear.'-'.($startYear + 1));
     }
 
     /**
-     * The season the current date falls into.
+     * Never return a season older than FIRST.
+     */
+    public static function floor(string $season): string
+    {
+        return $season < self::FIRST ? self::FIRST : $season;
+    }
+
+    /**
+     * The active season — the one the current date falls into.
      */
     public static function current(): string
     {
@@ -66,21 +81,8 @@ class Season
     }
 
     /**
-     * Start (inclusive) and end (exclusive) datetimes for a season label.
-     *
-     * @return array{0: Carbon, 1: Carbon}
-     */
-    public static function range(string $season): array
-    {
-        $startYear = (int) explode('-', $season)[0];
-        $start = Carbon::create($startYear, self::START_MONTH, 1, 0, 0, 0);
-
-        return [$start, $start->copy()->addYear()];
-    }
-
-    /**
      * Monotonic month-index bounds (year * 12 + month) for a season.
-     * Useful for filtering tables that only store a year + month (monthly awards).
+     * The first season starts at 0 so it absorbs every older monthly award.
      *
      * @return array{0: int, 1: int} [inclusive start, exclusive end]
      */
@@ -89,49 +91,73 @@ class Season
         $startYear = (int) explode('-', $season)[0];
 
         return [
-            $startYear * 12 + self::START_MONTH,
+            $season === self::FIRST ? 0 : $startYear * 12 + self::START_MONTH,
             ($startYear + 1) * 12 + self::START_MONTH,
         ];
     }
 
     /**
-     * All seasons that have at least one match, newest first.
+     * Archived (completed) seasons that have data — newest first.
+     * Excludes the active season, which lives on the live pages.
      *
      * @return array<int, string>
      */
     public static function all(): array
     {
+        $current = self::current();
+
         return FootballMatch::query()
             ->whereNotNull('season')
             ->distinct()
             ->orderByDesc('season')
             ->pluck('season')
+            ->filter(fn (string $season) => $season >= self::FIRST && $season < $current)
+            ->values()
             ->all();
     }
 
     /**
-     * The most recent season that actually has data, falling back to the
-     * current calendar season when the archive is still empty.
+     * The most recent archived season, falling back to FIRST.
      */
-    public static function latest(): string
+    public static function latestArchived(): string
     {
-        return self::all()[0] ?? self::current();
+        return self::all()[0] ?? self::FIRST;
     }
 
     /**
-     * Season options for Filament selects/filters: ["2025-2026" => "Сезон 2025-2026", ...].
+     * Archived season options for Filament archive filters.
      *
      * @return array<string, string>
      */
     public static function options(): array
     {
-        $seasons = collect(self::all());
+        $seasons = self::all() ?: [self::FIRST];
 
-        // Make sure recent seasons are always available even before any match exists.
-        $currentStart = (int) explode('-', self::current())[0];
-        for ($year = $currentStart - 2; $year <= $currentStart + 1; $year++) {
+        return collect($seasons)
+            ->mapWithKeys(fn (string $season) => [$season => self::label($season)])
+            ->all();
+    }
+
+    /**
+     * Season options for the match form: from the first season up to the season
+     * after the active one (so a new match can be marked for the right season),
+     * plus any season already stored. Newest first, defaulting to the current.
+     *
+     * @return array<string, string>
+     */
+    public static function formOptions(): array
+    {
+        $firstStartYear = (int) explode('-', self::FIRST)[0];
+        $currentStartYear = (int) explode('-', self::current())[0];
+
+        $seasons = collect();
+        for ($year = $firstStartYear; $year <= $currentStartYear + 1; $year++) {
             $seasons->push($year.'-'.($year + 1));
         }
+
+        $seasons = $seasons->merge(
+            FootballMatch::query()->whereNotNull('season')->distinct()->pluck('season')
+        );
 
         return $seasons
             ->unique()

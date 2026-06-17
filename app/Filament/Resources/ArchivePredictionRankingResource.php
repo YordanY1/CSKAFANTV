@@ -37,6 +37,7 @@ class ArchivePredictionRankingResource extends Resource
             ->join('users', 'predictions.user_id', '=', 'users.id')
             ->join('football_matches', 'predictions.football_match_id', '=', 'football_matches.id')
             ->whereNotNull('football_matches.season')
+            ->where('football_matches.season', '<', Season::current())
             ->selectRaw('
                 MIN(prediction_results.id) as id,
                 users.id as user_id,
@@ -61,7 +62,7 @@ class ArchivePredictionRankingResource extends Resource
                 Tables\Filters\SelectFilter::make('season')
                     ->label('Сезон')
                     ->options(fn () => Season::options())
-                    ->default(Season::latest())
+                    ->default(Season::latestArchived())
                     ->query(fn (Builder $query, array $data) => filled($data['value'])
                         ? $query->where('football_matches.season', $data['value'])
                         : $query),

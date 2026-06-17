@@ -34,7 +34,8 @@ class ArchiveMatchResource extends Resource
     {
         return parent::getEloquentQuery()
             ->where('is_finished', true)
-            ->whereNotNull('season');
+            ->whereNotNull('season')
+            ->where('season', '<', Season::current());
     }
 
     public static function table(Table $table): Table
@@ -52,7 +53,7 @@ class ArchiveMatchResource extends Resource
                 Tables\Filters\SelectFilter::make('season')
                     ->label('Сезон')
                     ->options(fn () => Season::options())
-                    ->default(Season::latest()),
+                    ->default(Season::latestArchived()),
             ])
             ->defaultSort('match_datetime', 'desc')
             ->actions([])

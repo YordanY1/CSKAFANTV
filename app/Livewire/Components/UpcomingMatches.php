@@ -3,10 +3,10 @@
 namespace App\Livewire\Components;
 
 use App\Models\FootballMatch;
-use Livewire\Component;
-use Illuminate\Support\Carbon;
 use App\Models\Prediction;
-
+use App\Support\Season;
+use Illuminate\Support\Carbon;
+use Livewire\Component;
 
 class UpcomingMatches extends Component
 {
@@ -21,7 +21,6 @@ class UpcomingMatches extends Component
         $this->predictedMatches[] = $matchId;
     }
 
-
     public function mount()
     {
         $now = now();
@@ -35,6 +34,7 @@ class UpcomingMatches extends Component
 
         if ($hasLive) {
             $this->filter = 'live';
+
             return;
         }
 
@@ -44,6 +44,7 @@ class UpcomingMatches extends Component
 
         if ($hasRecentCompleted) {
             $this->filter = 'completed';
+
             return;
         }
 
@@ -62,8 +63,7 @@ class UpcomingMatches extends Component
         $matches = FootballMatch::with(['homeTeam', 'awayTeam'])
             ->when(
                 $this->filter === 'live',
-                fn($q) =>
-                $q->whereBetween('match_datetime', [
+                fn ($q) => $q->whereBetween('match_datetime', [
                     $now->copy()->subHours(2),
                     $now->copy()->addMinutes(30),
                 ])
@@ -71,23 +71,22 @@ class UpcomingMatches extends Component
             )
             ->when(
                 $this->filter === 'upcoming',
-                fn($q) =>
-                $q->where('match_datetime', '>', $now)
+                fn ($q) => $q->where('match_datetime', '>', $now)
                     ->where('is_finished', false)
             )
             ->when(
                 $this->filter === 'completed',
-                fn($q) =>
-                $q->where('is_finished', true)
+                fn ($q) => $q->where('is_finished', true)
+                    ->where('season', Season::current())
             )
             ->orderBy('match_datetime', $this->filter === 'completed' ? 'desc' : 'asc')
             ->get();
 
         $predictions = auth()->check()
             ? Prediction::where('user_id', auth()->id())
-            ->whereIn('football_match_id', $matches->pluck('id'))
-            ->get()
-            ->keyBy('football_match_id')
+                ->whereIn('football_match_id', $matches->pluck('id'))
+                ->get()
+                ->keyBy('football_match_id')
             : collect();
 
         return view('livewire.components.upcoming-matches', [
