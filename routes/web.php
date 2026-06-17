@@ -1,36 +1,36 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Livewire\Pages\Home;
-use App\Livewire\Components\UpcomingMatches;
 use App\Http\Controllers\Auth\SocialiteController;
-use App\Livewire\Pages\UserProfile;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use App\Livewire\Pages\Players;
-use App\Livewire\Pages\Match\Show;
-use App\Livewire\Pages\Videos;
-use App\Livewire\Pages\Tactics;
-use App\Livewire\Pages\Contact;
+use App\Http\Controllers\ObsMatchController;
+use App\Livewire\Components\UpcomingMatches;
+use App\Livewire\Pages\Archive\ArchiveHallOfFame;
+use App\Livewire\Pages\Archive\ArchiveIndex;
+use App\Livewire\Pages\Archive\ArchiveMatches;
+use App\Livewire\Pages\Archive\ArchivePlayerRatings;
+use App\Livewire\Pages\Archive\ArchivePredictionRankings;
 use App\Livewire\Pages\CardsPage;
-use App\Livewire\Pages\PrivacyPolicy;
+use App\Livewire\Pages\Contact;
 use App\Livewire\Pages\CookiePolicy;
 use App\Livewire\Pages\FullStandingsPage;
-use App\Livewire\Pages\PlayerRatingsPage;
-use App\Livewire\Pages\PredictionRankingsPage;
-use App\Livewire\Pages\VideoCategory;
-use App\Http\Controllers\ObsMatchController;
 use App\Livewire\Pages\HallOfFame;
-
-
-
+use App\Livewire\Pages\Home;
+use App\Livewire\Pages\Match\Show;
+use App\Livewire\Pages\PlayerRatingsPage;
+use App\Livewire\Pages\Players;
+use App\Livewire\Pages\PredictionRankingsPage;
+use App\Livewire\Pages\PrivacyPolicy;
+use App\Livewire\Pages\Tactics;
+use App\Livewire\Pages\UserProfile;
+use App\Livewire\Pages\VideoCategory;
+use App\Livewire\Pages\Videos;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', Home::class)->name('home');
 Route::get('/matches', UpcomingMatches::class)->name('matches');
 Route::get('/players', Players::class)->name('players');
 Route::get('/match/{match:slug}', Show::class)->name('match.show');
-
-
 
 Route::get('/auth/google/redirect', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google.redirect');
 Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
@@ -38,10 +38,8 @@ Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCa
 // Route::get('/auth/facebook/redirect', [SocialiteController::class, 'redirectToFacebook'])->name('auth.facebook.redirect');
 // Route::get('/auth/facebook/callback', [SocialiteController::class, 'handleFacebookCallback']);
 
-
 Route::get('/videos', Videos::class)->name('videos');
 Route::get('/videos/category/{slug}', VideoCategory::class)->name('videos.category');
-
 
 Route::get('/tactics', Tactics::class)->name('tactics');
 
@@ -59,7 +57,16 @@ Route::get('/predictions/rankings', PredictionRankingsPage::class)->name('predic
 
 Route::get('/hall-of-fame', HallOfFame::class)->name('hall.of.fame');
 
-
+// Archive (по сезони)
+Route::get('/archive', ArchiveIndex::class)->name('archive.index');
+Route::get('/archive/matches/{season}', ArchiveMatches::class)
+    ->where('season', '[0-9]{4}-[0-9]{4}')->name('archive.matches');
+Route::get('/archive/player-ratings/{season}', ArchivePlayerRatings::class)
+    ->where('season', '[0-9]{4}-[0-9]{4}')->name('archive.player-ratings');
+Route::get('/archive/hall-of-fame/{season}', ArchiveHallOfFame::class)
+    ->where('season', '[0-9]{4}-[0-9]{4}')->name('archive.hall-of-fame');
+Route::get('/archive/prediction-rankings/{season}', ArchivePredictionRankings::class)
+    ->where('season', '[0-9]{4}-[0-9]{4}')->name('archive.prediction-rankings');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', UserProfile::class)->name('profile');
@@ -69,6 +76,7 @@ Route::post('/logout', function (Request $request) {
     Auth::logout();
     $request->session()->invalidate();
     $request->session()->regenerateToken();
+
     return redirect('/');
 })->name('logout');
 

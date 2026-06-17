@@ -2,18 +2,20 @@
 
 namespace App\Livewire\Components;
 
-use Livewire\Component;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Carbon;
 use App\Models\FootballMatch;
 use App\Models\Video;
-
+use App\Support\Season;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Livewire\Component;
 
 class Navbar extends Component
 {
     public ?string $liveMatchYoutubeUrl = null;
 
     public array $videoCategories = [];
+
+    public array $archiveSeasons = [];
 
     public function mount()
     {
@@ -25,7 +27,7 @@ class Navbar extends Component
                     ->where('is_finished', false)
                     ->whereNotNull('youtube_url')
                     ->get()
-                    ->filter(fn($match) => $now->lt($match->match_datetime->copy()->addMinutes($match->duration ?? 90)))
+                    ->filter(fn ($match) => $now->lt($match->match_datetime->copy()->addMinutes($match->duration ?? 90)))
                     ->sortByDesc('match_datetime')
                     ->first()
             )->youtube_url;
@@ -38,6 +40,8 @@ class Navbar extends Component
             ->orderBy('category')
             ->get()
             ->toArray();
+
+        $this->archiveSeasons = Season::all();
     }
 
     public function render()
