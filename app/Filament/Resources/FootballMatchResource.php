@@ -4,23 +4,23 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\FootballMatchResource\Pages;
 use App\Models\FootballMatch;
+use App\Models\Prediction;
+use App\Models\PredictionResult;
+use App\Support\Season;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use App\Models\Prediction;
-use App\Models\PredictionResult;
-use Illuminate\Support\Facades\Log;
-
-
 
 class FootballMatchResource extends Resource
 {
     protected static ?string $model = FootballMatch::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
+
     protected static ?string $navigationLabel = 'Мачове';
+
     protected static ?string $navigationGroup = 'Футбол';
 
     public static function form(Form $form): Form
@@ -45,8 +45,15 @@ class FootballMatchResource extends Resource
                 ->format('Y-m-d H:i')
                 ->timezone('Europe/Sofia')
                 ->required()
-                ->visible(fn(?FootballMatch $record) => is_null($record)),
+                ->visible(fn (?FootballMatch $record) => is_null($record)),
 
+            Forms\Components\Select::make('season')
+                ->label('Сезон')
+                ->options(fn () => Season::options())
+                ->default(fn () => Season::current())
+                ->searchable()
+                ->native(false)
+                ->helperText('Ако се остави празно, сезонът се определя автоматично от датата на мача.'),
 
             Forms\Components\TextInput::make('stadium')
                 ->label('Стадион')
@@ -126,13 +133,11 @@ class FootballMatchResource extends Resource
                 ->columns(2)
                 ->columnSpanFull(),
 
-
             Forms\Components\TextInput::make('youtube_url')
                 ->label('YouTube линк (на живо)')
                 ->url()
                 ->placeholder('https://www.youtube.com/watch?v=...')
                 ->nullable(),
-
 
             Forms\Components\TextInput::make('home_score')
                 ->label('Голове на домакин')
@@ -167,15 +172,13 @@ class FootballMatchResource extends Resource
                         ->searchable()
                         ->preload()
                         ->nullable()
-                        ->visible(fn($get) => $get('is_starter') === false)
-                        ->helperText('Избери играча, когото този замества.')
+                        ->visible(fn ($get) => $get('is_starter') === false)
+                        ->helperText('Избери играча, когото този замества.'),
 
                 ])
                 ->defaultItems(11)
                 ->collapsible()
                 ->columnSpanFull(),
-
-
 
             Forms\Components\Toggle::make('is_finished')
                 ->label('Приключил ли е мачът?')
@@ -187,7 +190,7 @@ class FootballMatchResource extends Resource
                         foreach ($predictions as $prediction) {
                             $points = 0;
 
-                            $hasPrediction = !is_null($prediction->home_score_prediction) && !is_null($prediction->away_score_prediction);
+                            $hasPrediction = ! is_null($prediction->home_score_prediction) && ! is_null($prediction->away_score_prediction);
 
                             if ($hasPrediction) {
                                 $exact = $prediction->home_score_prediction === $record->home_score &&
@@ -211,7 +214,6 @@ class FootballMatchResource extends Resource
                     }
                 }),
 
-
         ]);
     }
 
@@ -221,11 +223,17 @@ class FootballMatchResource extends Resource
             Tables\Columns\TextColumn::make('homeTeam.name')->label('Домакин')->sortable()->searchable(),
             Tables\Columns\TextColumn::make('awayTeam.name')->label('Гост')->sortable()->searchable(),
             Tables\Columns\TextColumn::make('match_datetime')->label('Дата и час')->dateTime('d.m.Y H:i')->sortable(),
+            Tables\Columns\TextColumn::make('season')->label('Сезон')->badge()->sortable(),
             Tables\Columns\TextColumn::make('stadium')->label('Стадион')->limit(20),
             Tables\Columns\TextColumn::make('home_score')->label('Голове')->numeric(),
             Tables\Columns\TextColumn::make('away_score')->label('-')->numeric(),
             Tables\Columns\IconColumn::make('is_finished')->label('Приключил')->boolean(),
         ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('season')
+                    ->label('Сезон')
+                    ->options(fn () => Season::options()),
+            ])
             ->defaultSort('match_datetime', 'asc')
             ->actions([
                 Tables\Actions\EditAction::make(),

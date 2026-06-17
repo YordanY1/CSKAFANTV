@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
+use App\Support\Season;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Models\Team;
-use App\Models\PlayerReview;
 use Illuminate\Support\Str;
-
 
 class FootballMatch extends Model
 {
     protected $table = 'football_matches';
+
     protected $guarded = ['id'];
+
     protected $casts = [
         'match_datetime' => 'datetime',
         'is_finished' => 'boolean',
@@ -48,13 +48,13 @@ class FootballMatch extends Model
 
         if (! $this->is_finished) {
             return [
-                'label' => '⏳ Започва след ' . $now->diffForHumans($start, ['parts' => 1, 'short' => true]),
+                'label' => '⏳ Започва след '.$now->diffForHumans($start, ['parts' => 1, 'short' => true]),
                 'class' => 'text-yellow-600',
             ];
         }
 
         return [
-            'label' => '✅ Приключил ' . $start->diffForHumans($now, ['parts' => 1, 'short' => true]),
+            'label' => '✅ Приключил '.$start->diffForHumans($now, ['parts' => 1, 'short' => true]),
             'class' => 'text-gray-500',
         ];
     }
@@ -63,12 +63,22 @@ class FootballMatch extends Model
     {
         static::creating(function ($match) {
             $match->generateSlug();
+
+            if (empty($match->season) && $match->match_datetime) {
+                $match->season = Season::fromDate($match->match_datetime);
+            }
         });
 
         static::updating(function ($match) {
 
             if ($match->isDirty(['home_team_id', 'away_team_id', 'match_datetime'])) {
                 $match->generateSlug();
+            }
+
+            // Re-derive the season from the date when the date changed, but never
+            // overwrite a season the admin has set explicitly in the same save.
+            if ($match->isDirty('match_datetime') && ! $match->isDirty('season') && $match->match_datetime) {
+                $match->season = Season::fromDate($match->match_datetime);
             }
         });
 
@@ -99,5 +109,10 @@ class FootballMatch extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    public function scopeForSeason(Builder $query, string $season): Builder
+    {
+        return $query->where('season', $season);
     }
 }

@@ -89,6 +89,41 @@
                     </div>
                 </div>
 
+                <!-- Archive Dropdown -->
+                @if (!empty($archiveSeasons))
+                    <div class="relative group">
+                        <div
+                            class="flex items-center gap-1 py-2 px-3 rounded-md hover:text-accent transition duration-200 cursor-pointer">
+                            Архив
+                            <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor"
+                                stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                        <div
+                            class="absolute left-0 mt-2 bg-white text-primary rounded-md shadow-lg z-50 py-2 w-60 max-h-[28rem] overflow-y-auto invisible opacity-0 group-hover:visible group-hover:opacity-100 transition duration-200">
+                            @foreach ($archiveSeasons as $season)
+                                <div class="px-4 py-1 text-xs font-bold uppercase text-gray-400 tracking-wider">
+                                    Сезон {{ $season }}
+                                </div>
+                                <a href="{{ route('archive.matches', $season) }}" wire:navigate
+                                    class="block px-4 py-2 hover:bg-accent hover:text-white transition">Мачове</a>
+                                <a href="{{ route('archive.player-ratings', $season) }}" wire:navigate
+                                    class="block px-4 py-2 hover:bg-accent hover:text-white transition">Оценки на играчи</a>
+                                <a href="{{ route('archive.hall-of-fame', $season) }}" wire:navigate
+                                    class="block px-4 py-2 hover:bg-accent hover:text-white transition">Зала на славата</a>
+                                <a href="{{ route('archive.prediction-rankings', $season) }}" wire:navigate
+                                    class="block px-4 py-2 hover:bg-accent hover:text-white transition">Класиране по
+                                    прогнози</a>
+                                <div class="border-t border-gray-200 my-1"></div>
+                            @endforeach
+                            <a href="{{ route('archive.index') }}" wire:navigate
+                                class="block px-4 py-2 font-semibold hover:bg-accent hover:text-white transition">Виж
+                                целия архив</a>
+                        </div>
+                    </div>
+                @endif
+
 
 
                 <a href="{{ route('contact') }}" wire:navigate
@@ -244,6 +279,40 @@
                 </a>
             </div>
         </div>
+
+        <!-- Archive Dropdown Mobile -->
+        @if (!empty($archiveSeasons))
+            <div x-data="{ openArchive: false }" class="w-full">
+                <button @click="openArchive = !openArchive"
+                    class="w-full py-2 px-3 rounded-md hover:text-accent transition duration-200 flex justify-center items-center gap-2">
+                    Архив
+                    <svg :class="{ 'rotate-180': openArchive }" class="w-4 h-4 transform transition-transform"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div x-show="openArchive" x-collapse class="space-y-2">
+                    @foreach ($archiveSeasons as $season)
+                        <div class="pt-2 text-xs font-bold uppercase text-accent tracking-wider">Сезон {{ $season }}
+                        </div>
+                        <a href="{{ route('archive.matches', $season) }}" wire:navigate
+                            class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Мачове</a>
+                        <a href="{{ route('archive.player-ratings', $season) }}" wire:navigate
+                            class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Оценки на
+                            играчи</a>
+                        <a href="{{ route('archive.hall-of-fame', $season) }}" wire:navigate
+                            class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Зала на
+                            славата</a>
+                        <a href="{{ route('archive.prediction-rankings', $season) }}" wire:navigate
+                            class="block py-2 px-3 rounded-md hover:bg-accent hover:text-white transition">Класиране по
+                            прогнози</a>
+                    @endforeach
+                    <a href="{{ route('archive.index') }}" wire:navigate
+                        class="block py-2 px-3 rounded-md font-semibold hover:bg-accent hover:text-white transition">Виж
+                        целия архив</a>
+                </div>
+            </div>
+        @endif
 
 
         <a href="{{ route('contact') }}" wire:navigate
