@@ -6,6 +6,7 @@ use App\Filament\Resources\FootballMatchResource\Pages;
 use App\Models\FootballMatch;
 use App\Models\Prediction;
 use App\Models\PredictionResult;
+use App\Support\Season;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -45,6 +46,15 @@ class FootballMatchResource extends Resource
                 ->timezone('Europe/Sofia')
                 ->required()
                 ->visible(fn (?FootballMatch $record) => is_null($record)),
+
+            Forms\Components\Select::make('season')
+                ->label('Сезон')
+                ->options(fn () => Season::formOptions())
+                ->default(fn () => Season::current())
+                ->required()
+                ->searchable()
+                ->native(false)
+                ->helperText('По подразбиране е текущият сезон. Смени само ако мачът е за друг сезон.'),
 
             Forms\Components\TextInput::make('stadium')
                 ->label('Стадион')
@@ -214,6 +224,7 @@ class FootballMatchResource extends Resource
             Tables\Columns\TextColumn::make('homeTeam.name')->label('Домакин')->sortable()->searchable(),
             Tables\Columns\TextColumn::make('awayTeam.name')->label('Гост')->sortable()->searchable(),
             Tables\Columns\TextColumn::make('match_datetime')->label('Дата и час')->dateTime('d.m.Y H:i')->sortable(),
+            Tables\Columns\TextColumn::make('season')->label('Сезон')->badge()->sortable(),
             Tables\Columns\TextColumn::make('stadium')->label('Стадион')->limit(20),
             Tables\Columns\TextColumn::make('home_score')->label('Голове')->numeric(),
             Tables\Columns\TextColumn::make('away_score')->label('-')->numeric(),

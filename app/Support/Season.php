@@ -125,7 +125,7 @@ class Season
     }
 
     /**
-     * Archived season options for Filament selects/filters.
+     * Archived season options for Filament archive filters.
      *
      * @return array<string, string>
      */
@@ -134,6 +134,34 @@ class Season
         $seasons = self::all() ?: [self::FIRST];
 
         return collect($seasons)
+            ->mapWithKeys(fn (string $season) => [$season => self::label($season)])
+            ->all();
+    }
+
+    /**
+     * Season options for the match form: from the first season up to the season
+     * after the active one (so a new match can be marked for the right season),
+     * plus any season already stored. Newest first, defaulting to the current.
+     *
+     * @return array<string, string>
+     */
+    public static function formOptions(): array
+    {
+        $firstStartYear = (int) explode('-', self::FIRST)[0];
+        $currentStartYear = (int) explode('-', self::current())[0];
+
+        $seasons = collect();
+        for ($year = $firstStartYear; $year <= $currentStartYear + 1; $year++) {
+            $seasons->push($year.'-'.($year + 1));
+        }
+
+        $seasons = $seasons->merge(
+            FootballMatch::query()->whereNotNull('season')->distinct()->pluck('season')
+        );
+
+        return $seasons
+            ->unique()
+            ->sortDesc()
             ->mapWithKeys(fn (string $season) => [$season => self::label($season)])
             ->all();
     }

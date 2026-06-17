@@ -115,6 +115,22 @@ class ArchiveTest extends TestCase
         $this->assertSame('2026-2027', $this->matchNew->season);
     }
 
+    public function test_form_offers_seasons_and_explicit_choice_is_respected(): void
+    {
+        $options = Season::formOptions();
+        $this->assertArrayHasKey('2025-2026', $options);
+        $this->assertArrayHasKey('2026-2027', $options); // active season is selectable
+        $this->assertArrayHasKey('2027-2028', $options); // and the next one
+
+        // An explicitly marked season is kept and not overwritten by the date.
+        $match = FootballMatch::create([
+            'home_team_id' => $this->cska->id, 'away_team_id' => $this->cska->id,
+            'match_datetime' => '2026-09-01 18:00:00', 'is_finished' => false,
+            'season' => '2025-2026',
+        ]);
+        $this->assertSame('2025-2026', $match->fresh()->season);
+    }
+
     public function test_archive_holds_only_the_old_season_data(): void
     {
         $this->get('/archive/matches/2025-2026')
