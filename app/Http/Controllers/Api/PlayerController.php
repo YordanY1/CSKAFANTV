@@ -10,7 +10,7 @@ class PlayerController extends Controller
     public function index()
     {
         return Player::query()
-            ->whereNot('position', 'like', '%треньор%')
+            ->where('is_coach', false)
             ->orderByRaw("
         FIELD(position,
             'Вратар',
@@ -25,6 +25,15 @@ class PlayerController extends Controller
         )
     ")
             ->get()
+            // In PHP because SQL LIKE/LOWER are not reliably
+            // case-insensitive for Cyrillic across drivers.
+            ->reject(function ($player) {
+                $position = mb_strtolower($player->position ?? '');
+
+                return str_contains($position, 'треньор')
+                    || str_contains($position, 'анализатор');
+            })
+            ->values()
             ->map(function ($player) {
                 $parts = explode(' ', trim($player->name));
                 $second = $parts[1] ?? $parts[0];

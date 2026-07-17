@@ -224,8 +224,9 @@ window.tacticBoard = function () {
                 img.src = `/storage/${player.image_thumb_path || player.image_path}`;
 
                 img.onload = () => {
-                    // Center-crop to a square so portrait photos are not
-                    // squashed into the 70x70 circle.
+                    // Crop to a square so portrait photos are not squashed
+                    // into the 70x70 circle. Top-aligned (y: 0) because the
+                    // photos are head shots — a centered crop cuts the head.
                     const side = Math.min(img.naturalWidth, img.naturalHeight);
                     const playerImg = new Konva.Image({
                         image: img,
@@ -236,7 +237,7 @@ window.tacticBoard = function () {
                         cornerRadius: 60,
                         crop: {
                             x: (img.naturalWidth - side) / 2,
-                            y: (img.naturalHeight - side) / 2,
+                            y: 0,
                             width: side,
                             height: side,
                         },
@@ -611,8 +612,8 @@ window.tacticBoard = function () {
                     const centerHy = gy + imgChild.y() + imgChild.height() / 2;
                     const { x: cx, y: cy } = mapPos(centerHx, centerHy);
 
-                    // Draw rounded player image, center-cropped to a square
-                    // so portrait photos keep their aspect ratio
+                    // Draw rounded player image, cropped to a top-aligned
+                    // square (head shots — same crop as addPlayerToBoard)
                     const iw = img.naturalWidth || img.width;
                     const ih = img.naturalHeight || img.height;
                     const srcSide = Math.min(iw, ih);
@@ -624,7 +625,7 @@ window.tacticBoard = function () {
                     ctx.drawImage(
                         img,
                         (iw - srcSide) / 2,
-                        (ih - srcSide) / 2,
+                        0,
                         srcSide,
                         srcSide,
                         cx - size / 2,

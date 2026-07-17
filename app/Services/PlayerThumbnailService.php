@@ -35,9 +35,11 @@ class PlayerThumbnailService
         }
 
         try {
+            // TOP alignment: player photos are head shots, so cropping from
+            // the top keeps the full head (center crop cuts it off).
             $encoded = ImageManager::usingDriver(GdDriver::class)
                 ->decodePath($disk->path($sourcePath))
-                ->cover(self::SIZE, self::SIZE, Alignment::CENTER)
+                ->cover(self::SIZE, self::SIZE, Alignment::TOP)
                 ->encodeUsingFormat(Format::WEBP, quality: self::QUALITY);
         } catch (Throwable $e) {
             Log::warning("Player thumbnail generation failed for {$sourcePath}: {$e->getMessage()}");
