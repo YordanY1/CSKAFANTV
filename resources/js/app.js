@@ -242,12 +242,14 @@ window.tacticBoard = function () {
                         },
                     });
 
+                    // Wider than the 70px avatar (and wrap disabled) so long
+                    // names stay on one line, centered under the image.
                     const playerName = new Konva.Text({
-                        x: 0,
+                        x: -40,
                         y: 75,
-                        width: 70,
+                        width: 150,
                         text: player.second_name,
-
+                        wrap: "none",
                         fontSize: 17,
                         fontFamily: "Calibri",
                         fill: "white",
