@@ -207,11 +207,26 @@ window.tacticBoard = function () {
 
             // group.add(background);
 
-            if (player.image_path) {
+            if (player.image_thumb_path || player.image_path) {
                 const img = new Image();
-                img.src = `/storage/${player.image_path}`;
+                const originalSrc = player.image_path
+                    ? `/storage/${player.image_path}`
+                    : null;
+
+                // If the thumbnail is missing/broken, retry with the
+                // original photo before giving up.
+                img.onerror = () => {
+                    if (originalSrc && !img.src.endsWith(originalSrc)) {
+                        img.src = originalSrc;
+                    }
+                };
+
+                img.src = `/storage/${player.image_thumb_path || player.image_path}`;
 
                 img.onload = () => {
+                    // Center-crop to a square so portrait photos are not
+                    // squashed into the 70x70 circle.
+                    const side = Math.min(img.naturalWidth, img.naturalHeight);
                     const playerImg = new Konva.Image({
                         image: img,
                         width: 70,
@@ -219,6 +234,12 @@ window.tacticBoard = function () {
                         x: 0,
                         y: 0,
                         cornerRadius: 60,
+                        crop: {
+                            x: (img.naturalWidth - side) / 2,
+                            y: (img.naturalHeight - side) / 2,
+                            width: side,
+                            height: side,
+                        },
                     });
 
                     const playerName = new Konva.Text({
@@ -588,13 +609,27 @@ window.tacticBoard = function () {
                     const centerHy = gy + imgChild.y() + imgChild.height() / 2;
                     const { x: cx, y: cy } = mapPos(centerHx, centerHy);
 
-                    // Draw rounded player image
+                    // Draw rounded player image, center-cropped to a square
+                    // so portrait photos keep their aspect ratio
+                    const iw = img.naturalWidth || img.width;
+                    const ih = img.naturalHeight || img.height;
+                    const srcSide = Math.min(iw, ih);
                     ctx.save();
                     ctx.beginPath();
                     ctx.arc(cx, cy, size / 2, 0, Math.PI * 2);
                     ctx.closePath();
                     ctx.clip();
-                    ctx.drawImage(img, cx - size / 2, cy - size / 2, size, size);
+                    ctx.drawImage(
+                        img,
+                        (iw - srcSide) / 2,
+                        (ih - srcSide) / 2,
+                        srcSide,
+                        srcSide,
+                        cx - size / 2,
+                        cy - size / 2,
+                        size,
+                        size
+                    );
                     ctx.restore();
 
                     // Draw name below the image

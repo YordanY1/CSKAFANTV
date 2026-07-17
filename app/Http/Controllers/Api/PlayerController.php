@@ -28,6 +28,7 @@ class PlayerController extends Controller
             ->map(function ($player) {
                 $parts = explode(' ', trim($player->name));
                 $second = $parts[1] ?? $parts[0];
+
                 return [
                     'id' => $player->id,
                     'name' => $player->name,
@@ -35,6 +36,7 @@ class PlayerController extends Controller
                     'number' => $player->number,
                     'position' => $player->position,
                     'image_path' => $player->image_path,
+                    'image_thumb_path' => $player->image_thumb_path,
                 ];
             });
     }

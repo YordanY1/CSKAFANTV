@@ -28,7 +28,7 @@ class FeaturedPlayers extends Component
                     'name' => $player->name,
                     'number' => $player->number,
                     'position' => $player->position,
-                    'image' => asset('storage/'.$player->image_path),
+                    'image' => $player->avatar_url ?? asset('images/default-player.png'),
                     'avg' => round($item->avg_rating, 2),
                 ];
             });
@@ -51,7 +51,7 @@ class FeaturedPlayers extends Component
                 'name' => $player->name,
                 'number' => $player->number,
                 'position' => $player->position,
-                'image' => asset('storage/'.$player->image_path),
+                'image' => $player->avatar_url ?? asset('images/default-player.png'),
                 'avg' => $playerOfMonthAward->average_rating,
             ];
         }

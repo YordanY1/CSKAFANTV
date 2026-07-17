@@ -41,7 +41,7 @@
                 <i class="fas fa-chalkboard-teacher text-accent"></i> Треньор
             </h2>
 
-            <img src="{{ $coach->image_path ? asset('storage/' . $coach->image_path) : asset('images/default-player.jpg') }}"
+            <img src="{{ $coach->avatar_url ?? asset('images/default-player.png') }}"
                 alt="{{ $coach->name }}"
                 class="w-28 h-28 rounded-full object-cover mx-auto mb-4 border-4 border-accent shadow-lg" />
 
@@ -110,7 +110,7 @@
 
                         <li
                             class="flex items-center gap-5 p-4 bg-white rounded-xl shadow-md border border-accent/30 hover:shadow-lg transition">
-                            <img src="{{ asset('storage/' . ($line->player->image_path ?? 'images/default-player.jpg')) }}"
+                            <img src="{{ $line->player?->avatar_url ?? asset('images/default-player.png') }}"
                                 alt="{{ $line->player->name ?? 'Непознат играч' }}"
                                 class="w-12 h-12 rounded-full object-cover border-2 border-accent shadow" />
                             <div class="text-text flex-1">
@@ -182,7 +182,7 @@
 
                         <li
                             class="flex items-center gap-5 p-4 bg-white rounded-xl shadow-md border border-accent/20 hover:shadow-lg transition">
-                            <img src="{{ $line->player->image_path ? asset('storage/' . $line->player->image_path) : asset('images/default-player.jpg') }}"
+                            <img src="{{ $line->player?->avatar_url ?? asset('images/default-player.png') }}"
                                 alt="{{ $line->player->name ?? 'Непознат играч' }}"
                                 class="w-16 h-16 rounded-full object-cover" />
                             <div class="text-text flex-1">

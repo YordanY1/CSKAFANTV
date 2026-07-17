@@ -25,7 +25,7 @@
                                     <td class="px-4 py-3 font-semibold">{{ $index + 1 }}</td>
                                     <td class="px-4 py-3 font-bold text-primary flex items-center gap-2">
                                         @if (!empty($player->image_path))
-                                            <img src="{{ asset('storage/' . $player->image_path) }}"
+                                            <img src="{{ $player->avatar_url }}"
                                                 alt="{{ $player->name }}"
                                                 class="w-10 h-10 rounded-full object-cover border border-gray-300" />
                                         @endif

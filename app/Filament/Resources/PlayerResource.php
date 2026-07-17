@@ -40,6 +40,12 @@ class PlayerResource extends Resource
                     ->imagePreviewHeight('150')
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                     ->maxSize(4096)
+                    // Cap stored originals at a sane size; avatars are served
+                    // from the generated 384px thumbnails (PlayerObserver).
+                    ->imageResizeMode('contain')
+                    ->imageResizeTargetWidth('1200')
+                    ->imageResizeTargetHeight('1600')
+                    ->imageResizeUpscale(false)
                     ->columnSpan('full'),
 
 

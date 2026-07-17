@@ -22,7 +22,7 @@
                             {{ $monthName }}
                         </div>
 
-                        <img src="{{ asset('storage/' . $award->player->image_path) }}" alt="{{ $award->player->name }}"
+                        <img src="{{ $award->player->avatar_url ?? asset('images/default-player.png') }}" alt="{{ $award->player->name }}"
                             class="w-28 h-28 mx-auto mt-6 mb-4 rounded-full object-cover ring-4 ring-accent shadow" />
 
                         <h3 class="text-xl font-bold text-primary mb-1">{{ $award->player->name }}</h3>

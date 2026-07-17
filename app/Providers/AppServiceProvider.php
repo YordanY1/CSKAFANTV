@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\FootballMatch;
-use Illuminate\Support\Facades\Schema;
+use App\Models\Player;
 use App\Observers\FootballMatchObserver;
+use App\Observers\PlayerObserver;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,11 +22,11 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-
     public function boot(): void
     {
         Schema::defaultStringLength(191);
         FootballMatch::observe(FootballMatchObserver::class);
+        Player::observe(PlayerObserver::class);
 
         // View::composer('*', function ($view) {
         //     $now = Carbon::now();
@@ -38,7 +40,6 @@ class AppServiceProvider extends ServiceProvider
         //         })
         //         ->sortByDesc('match_datetime')
         //         ->first();
-
 
         //     $view->with('liveMatchYoutubeUrl', optional($liveMatch)->youtube_url);
         // });
